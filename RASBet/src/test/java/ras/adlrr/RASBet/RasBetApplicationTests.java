@@ -1,4 +1,4 @@
-package ras.adllr.RASBet;
+package ras.adlrr.RASBet;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
