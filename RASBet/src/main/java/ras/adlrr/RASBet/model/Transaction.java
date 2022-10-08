@@ -1,0 +1,51 @@
+package ras.adlrr.RASBet.model;
+
+import java.time.LocalDateTime;
+
+public class Transaction {
+    private int ID;
+    private double balance_after_mov;
+    private String description;
+    private float value;
+    private LocalDateTime date;
+    private int wallet_id;
+    private int better_id;
+
+    public Transaction(int ID, double balance_after_mov, String description, float value, LocalDateTime date, int wallet_id, int better_id) {
+        this.ID = ID;
+        this.balance_after_mov = balance_after_mov;
+        this.description = description;
+        this.value = value;
+        this.date = date;
+        this.wallet_id = wallet_id;
+        this.better_id = better_id;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public double getBalance_after_mov() {
+        return balance_after_mov;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public float getValue() {
+        return value;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public int getWallet_id() {
+        return wallet_id;
+    }
+
+    public int getBetter_id() {
+        return better_id;
+    }
+}
