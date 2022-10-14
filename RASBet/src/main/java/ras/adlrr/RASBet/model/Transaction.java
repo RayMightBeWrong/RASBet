@@ -3,7 +3,7 @@ package ras.adlrr.RASBet.model;
 import java.time.LocalDateTime;
 
 public class Transaction {
-    private int ID;
+    private int id;
     private double balance_after_mov;
     private String description;
     private float value;
@@ -11,8 +11,8 @@ public class Transaction {
     private int wallet_id;
     private int better_id;
 
-    public Transaction(int ID, double balance_after_mov, String description, float value, LocalDateTime date, int wallet_id, int better_id) {
-        this.ID = ID;
+    public Transaction(int id, double balance_after_mov, String description, float value, LocalDateTime date, int wallet_id, int better_id) {
+        this.id = id;
         this.balance_after_mov = balance_after_mov;
         this.description = description;
         this.value = value;
@@ -21,8 +21,8 @@ public class Transaction {
         this.better_id = better_id;
     }
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
     public double getBalance_after_mov() {
