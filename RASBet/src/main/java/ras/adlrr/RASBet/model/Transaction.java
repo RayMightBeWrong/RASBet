@@ -9,16 +9,16 @@ public class Transaction {
     private float value;
     private LocalDateTime date;
     private int wallet_id;
-    private int better_id;
+    private int gambler_id;
 
-    public Transaction(int id, double balance_after_mov, String description, float value, LocalDateTime date, int wallet_id, int better_id) {
+    public Transaction(int id, double balance_after_mov, String description, float value, LocalDateTime date, int wallet_id, int gambler_id) {
         this.id = id;
         this.balance_after_mov = balance_after_mov;
         this.description = description;
         this.value = value;
         this.date = date;
         this.wallet_id = wallet_id;
-        this.better_id = better_id;
+        this.gambler_id = gambler_id;
     }
 
     public int getId() {
@@ -45,7 +45,7 @@ public class Transaction {
         return wallet_id;
     }
 
-    public int getBetter_id() {
-        return better_id;
+    public int getGambler_id() {
+        return gambler_id;
     }
 }
