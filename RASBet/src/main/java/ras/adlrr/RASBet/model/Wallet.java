@@ -1,3 +1,5 @@
+package ras.adlrr.RASBet.model;
+
 public class Wallet {
     private int ID;
     private float balance;

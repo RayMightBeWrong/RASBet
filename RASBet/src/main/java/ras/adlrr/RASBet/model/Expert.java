@@ -1,3 +1,5 @@
+package ras.adlrr.RASBet.model;
+
 public class Expert extends User{
     public Expert(int ID, String name){
         super(ID, name);

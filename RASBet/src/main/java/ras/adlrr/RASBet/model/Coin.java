@@ -1,3 +1,5 @@
+package ras.adlrr.RASBet.model;
+
 public class Coin {
     private int ID;
     private String name;

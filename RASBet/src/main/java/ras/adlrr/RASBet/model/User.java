@@ -1,3 +1,5 @@
+package ras.adlrr.RASBet.model;
+
 public abstract class User {
     private int ID;
     private String name;
