@@ -8,7 +8,7 @@ public class Gambler extends User{
     private String CC; // cartão de cidadão;
     private String nationality;
     private int NIF;
-    // DEBUG: talvez só se põe depois com a base de dados
+    // TODO: talvez só se põe depois com a base de dados
     private LocalDate date_of_birth;
     private String email;
     private String postal_code;

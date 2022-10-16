@@ -3,7 +3,6 @@ package ras.adlrr.RASBet.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ras.adlrr.RASBet.dao.FakeSportDataAcessService;
 import ras.adlrr.RASBet.dao.SportDAO;
 import ras.adlrr.RASBet.model.Sport;
 

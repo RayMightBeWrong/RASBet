@@ -1,10 +1,8 @@
 package ras.adlrr.RASBet.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ras.adlrr.RASBet.model.Sport;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 

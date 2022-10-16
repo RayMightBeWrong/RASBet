@@ -1,11 +1,13 @@
 package ras.adlrr.RASBet.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Coin {
     private int ID;
     private String name;
     private float ratio_EUR;
 
-    public Coin(int ID, String name, float ratio_EUR){
+    public Coin(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("ratio") float ratio_EUR){
         this.ID = ID;
         this.name = name;
         this.ratio_EUR = ratio_EUR;
