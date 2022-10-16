@@ -8,4 +8,5 @@ public interface BetDAO {
     int getBet(int id);
     int addBet(Bet bet);
     List<Bet> getUserBets(int userID);
+    int removeBet(int betID);
 }

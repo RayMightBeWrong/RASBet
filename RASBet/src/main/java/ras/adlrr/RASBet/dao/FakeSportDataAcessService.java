@@ -9,7 +9,7 @@ import java.util.List;
 @Repository("fakeSportDAO")
 public class FakeSportDataAcessService implements SportDAO{
 
-    private static HashMap<Integer,Sport> DB = new HashMap<>();
+    private final static HashMap<Integer,Sport> DB = new HashMap<>();
     private int id = 0;
 
     @Override
