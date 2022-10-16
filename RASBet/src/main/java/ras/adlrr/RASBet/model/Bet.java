@@ -1,34 +1,47 @@
 package ras.adlrr.RASBet.model;
 
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+//TODO - Provavelmente é melhor esta classe ser independente
 public class Bet extends Transaction{
     private int bet_id;
-    private boolean is_multiple;
     private int state;
-    private int game_id;
+    private List<GameChoice> gameChoices;
 
-    public Bet(int Transaction_id, double balance_after_mov, String description, float value, LocalDateTime date, int wallet_id, int gambler_id, int bet_id, boolean is_multiple, int state, int game_id) {
+    public Bet(@JsonProperty("transaction_id") int Transaction_id, @JsonProperty("balance_after_mov") double balance_after_mov, @JsonProperty("description") String description, @JsonProperty("value") float value, @JsonProperty("date") LocalDateTime date, @JsonProperty("wallet_id") int wallet_id, @JsonProperty("gambler_id") int gambler_id, @JsonProperty("bet_id") int bet_id, @JsonProperty("state") int state, @JsonProperty("gameChoices") List<GameChoice> gameChoices) {
         super(Transaction_id, balance_after_mov, description, value, date, wallet_id, gambler_id);
         this.bet_id = bet_id;
-        this.is_multiple = is_multiple;
         this.state = state;
-        this.game_id = game_id;
+        this.gameChoices = gameChoices.stream().map(GameChoice::new).toList();
     }
+
+    public Bet(Bet bet) {
+        super(bet);
+        this.bet_id = bet.bet_id;
+        this.state = bet.state;
+        this.gameChoices = bet.getGameChoices();
+    }
+
+    public Bet(Transaction t, int bet_id, int state, List<GameChoice> gameChoices) {
+        super(t);
+        this.bet_id = bet_id;
+        this.state = state;
+        this.gameChoices = gameChoices.stream().map(GameChoice::new).toList();;
+    }
+
 
     public int getId() {
         return bet_id;
-    }
-
-    public boolean is_multiple() {
-        return is_multiple;
     }
 
     public int getState() {
         return state;
     }
 
-    public int getGame_id() {
-        return game_id;
+    public List<GameChoice> getGameChoices(){
+        return gameChoices.stream().map(GameChoice::new).toList();
     }
 }
