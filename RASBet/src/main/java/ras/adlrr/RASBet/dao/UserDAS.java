@@ -2,12 +2,14 @@ package ras.adlrr.RASBet.dao;
 
 import java.util.HashMap;
 import java.util.List;
+
 import org.springframework.stereotype.Repository;
+
 import ras.adlrr.RASBet.model.User;
 
-@Repository("fakeDAO")
-public class UserDataAccessService implements UserDAO{
-
+// DAS - Data Access Service
+@Repository("userDAO")
+public class UserDAS implements UserDAO{
     private static HashMap<Integer,User> DB = new HashMap<>();
     private int id = 1;
 

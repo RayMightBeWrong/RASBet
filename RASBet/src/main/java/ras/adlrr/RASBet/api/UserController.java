@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import ras.adlrr.RASBet.model.Admin;
+import ras.adlrr.RASBet.model.Expert;
+import ras.adlrr.RASBet.model.Gambler;
 import ras.adlrr.RASBet.model.User;
 import ras.adlrr.RASBet.service.UserService;
 
@@ -22,8 +26,24 @@ public class UserController {
         this.userService = userService;
     }
 
+    /*
     @PostMapping
     public int addUser(@RequestBody User user){
+        return userService.addUser(user);
+    }*/
+
+    @PostMapping("/admins/")
+    public int addAdmin(@RequestBody Admin user){
+        return userService.addUser(user);
+    }
+
+    @PostMapping("/experts/")
+    public int addExpert(@RequestBody Expert user){
+        return userService.addUser(user);
+    }
+
+    @PostMapping("/gamblers/")
+    public int addGambler(@RequestBody Gambler user){
         return userService.addUser(user);
     }
 
@@ -37,8 +57,8 @@ public class UserController {
         return userService.removeUser(id);
     }
 
-    @GetMapping
-    public List<User> getListOfSports() {
+    @GetMapping("/*")
+    public List<User> getListOfUsers() {
         return userService.getListOfUsers();
     }
 }

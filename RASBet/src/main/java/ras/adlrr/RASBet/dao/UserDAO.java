@@ -8,4 +8,7 @@ public interface UserDAO {
     int addUser(User user);
     int removeUser(int id);
     List<User> getListOfUsers();
+    //List<User> getListOfAdmins();
+    //List<User> getListOfExperts();
+    //List<User> getListOfGamblers();
 }

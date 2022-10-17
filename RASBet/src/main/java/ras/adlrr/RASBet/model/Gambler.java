@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Gambler extends User{
     private String CC; // cartão de cidadão;
     private String nationality;
@@ -18,7 +21,8 @@ public class Gambler extends User{
     private int phoneNumber;
     private Map<Integer, Wallet> wallets;
 
-    public Gambler(int ID, String name, String CC, String nationality, int NIF, String ocupation, int phoneNumber,
+    @JsonCreator
+    public Gambler(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("cc") String CC, String nationality, int NIF, String ocupation, int phoneNumber,
                     LocalDate date_of_birth, String email, String postal_code, String address){
         super(ID, name);
         this.CC = CC;

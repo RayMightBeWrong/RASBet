@@ -12,7 +12,7 @@ public class UserService {
     private final UserDAO userDAO;
 
     @Autowired
-    public UserService(@Qualifier("fakeDAO") UserDAO userDAO){
+    public UserService(@Qualifier("userDAO") UserDAO userDAO){
         this.userDAO = userDAO;
     }
 
@@ -28,7 +28,7 @@ public class UserService {
         return userDAO.removeUser(id);
     }
 
-    public List<User> getListOfUsers() {
+    public List<User> getListOfUsers(){
         return userDAO.getListOfUsers();
     }
 }
