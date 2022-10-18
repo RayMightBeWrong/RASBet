@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Repository("FakeGameDAO")
-public class FakeGameDataAccessService implements GameDAO{
+public class GameDAS_Fake implements GameDAO{
     private static HashMap<Integer,Game> mapOfGames = new HashMap<>();
     private static int nextId = 0;
     @Override

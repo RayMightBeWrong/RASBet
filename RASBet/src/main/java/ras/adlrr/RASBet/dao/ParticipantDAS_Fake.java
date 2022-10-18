@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Repository("FakeParticipantDAO")
-public class FakeParticipantDataAccessService implements ParticipantDAO{
+public class ParticipantDAS_Fake implements ParticipantDAO{
 
     //Key: gameID
     private static HashMap<Integer, List<Participant>> mapOfParticipants = new HashMap<>();

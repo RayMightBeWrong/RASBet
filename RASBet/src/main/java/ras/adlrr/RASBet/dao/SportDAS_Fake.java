@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Repository("fakeSportDAO")
-public class FakeSportDataAcessService implements SportDAO{
+public class SportDAS_Fake implements SportDAO{
 
     private final static HashMap<Integer,Sport> DB = new HashMap<>();
     private int id = 0;
