@@ -40,4 +40,12 @@ public class Wallet {
     public Wallet clone(){
         return new Wallet(this.ID, this.balance, this.coinID);
     }
+
+    public int changeBalance(float change){
+        if (this.balance + change > 0){
+            this.balance += change;
+        }
+        else return 0;
+        return 1;
+    }
 }

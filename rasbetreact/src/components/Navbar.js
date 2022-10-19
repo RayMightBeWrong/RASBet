@@ -11,7 +11,7 @@ function Navbar() {
   const closeMobileMenu = () => setClick(false);
 
   const showButton = () => {
-    if (window.innerWidth <= 960) {
+    if (window.innerWidth <= 1250) {
       setButton(false);
     } else {
       setButton(true);
@@ -29,8 +29,10 @@ function Navbar() {
       <nav className='navbar'>
         <div className='navbar-container'>
           <Link to='/' className='navbar-logo' onClick={closeMobileMenu}>
-            TRVL
-            <i class='fab fa-typo3' />
+            <img className='icon'
+              src={'images/icon.png'}
+              alt={''}
+            />
           </Link>
           <div className='menu-icon' onClick={handleClick}>
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
@@ -38,39 +40,57 @@ function Navbar() {
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
             <li className='nav-item'>
               <Link to='/' className='nav-links' onClick={closeMobileMenu}>
-                Home
+                TODOS
               </Link>
             </li>
             <li className='nav-item'>
               <Link
-                to='/services'
+                to='/futebol'
                 className='nav-links'
                 onClick={closeMobileMenu}
               >
-                Services
+                FUTEBOL
               </Link>
             </li>
             <li className='nav-item'>
               <Link
-                to='/products'
+                to='/basquetebol'
                 className='nav-links'
                 onClick={closeMobileMenu}
               >
-                Products
+                BASQUETEBOL
+              </Link>
+            </li>
+            <li className='nav-item'>
+              <Link
+                to='/tenis'
+                className='nav-links'
+                onClick={closeMobileMenu}
+              >
+                TÉNIS
+              </Link>
+            </li>
+            <li className='nav-item'>
+              <Link
+                to='/motogp'
+                className='nav-links'
+                onClick={closeMobileMenu}
+              >
+                MOTOGP
               </Link>
             </li>
 
             <li>
               <Link
-                to='/sign-up'
+                to='/login'
                 className='nav-links-mobile'
                 onClick={closeMobileMenu}
               >
-                Sign Up
+                Log In
               </Link>
             </li>
           </ul>
-          {button && <Link to='/sign-up' ><Button buttonStyle='btn--outline'>SIGN UP</Button> </Link>}
+          {button && <Link to='/login' ><Button buttonStyle='btn--outline'>Log In</Button> </Link>}
         </div>
       </nav>
     </>

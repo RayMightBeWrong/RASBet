@@ -9,5 +9,6 @@ public interface WalletDAO {
     Wallet getWallet(int id);
     int addWallet(Wallet wallet);
     int removeWallet(int id);
+    int updateWallet(Wallet wallet);
     List<Wallet> getListOfWallets();
 }

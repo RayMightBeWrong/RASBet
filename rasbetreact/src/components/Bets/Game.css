@@ -1,0 +1,32 @@
+.game {
+    border: 2px solid #003915;
+    border-style: dotted;
+    border-radius: 15px;
+    padding: 20px;
+    width: 60vw;
+    display: flex;
+    align-items: center;
+}
+
+.title-hour {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+}
+
+.bets {
+    width: 60%;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    grid-gap: 10px;
+    list-style: none;
+    margin-right: 2rem;
+}
+
+.title {
+    font-size: 1.8rem;
+}
+
+.time {
+    color: grey;
+}

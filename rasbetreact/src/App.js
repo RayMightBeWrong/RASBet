@@ -3,21 +3,26 @@ import Navbar from './components/Navbar';
 import './App.css';
 import Home from './components/pages/Home';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Services from './components/pages/Services';
-import Products from './components/pages/Products';
-import SignUp from './components/pages/SignUp';
+import Futebol from './components/pages/Sports/Futebol';
+import Basquetebol from './components/pages/Sports/Basquetebol';
+import Tenis from './components/pages/Sports/Tenis';
+import Motogp from './components/pages/Sports/Motogp';
+import Login from './components/pages/Login';
+import Registo from './components/pages/Registo';
 
 function App() {
   return (
     <>
       <Router>
         <Navbar />
-        
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path='/services' element={<Services/>} />
-          <Route path='/products' element={<Products/>} />
-          <Route path='/sign-up' element={<SignUp/>} />
+          <Route path='/futebol' element={<Futebol />} />
+          <Route path='/basquetebol' element={<Basquetebol />} />
+          <Route path='/tenis' element={<Tenis />} />
+          <Route path='/motogp' element={<Motogp />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/registo' element={<Registo />} />
         </Routes>
       </Router>
     </>

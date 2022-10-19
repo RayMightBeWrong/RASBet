@@ -31,6 +31,12 @@ public class WalletDAS implements WalletDAO{
         DB.remove(id);
         return 1;
     }
+
+    @Override
+    public int updateWallet(Wallet wallet){
+        DB.put(wallet.getID(), wallet);
+        return 1;
+    }
     
     @Override
     public List<Wallet> getListOfWallets() {
