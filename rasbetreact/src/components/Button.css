@@ -12,15 +12,23 @@
 
 .btn--primary {
   background-color: #dc7633;
-  color:  #0c3e0e ;
+  color: black;
   border: 2px solid #dc7633;
 }
 
 .btn--outline {
   background-color: white;
-  color:  #dc7633 ;
+  color: #dc7633;
   padding: 8px 20px;
-  border: 2px solid  #dc7633 ;
+  border: 2px solid #dc7633;
+  transition: all 0.3s ease-out;
+}
+
+.btn--bet {
+  background-color: white;
+  color: black;
+  padding: 8px 20px;
+  border: 2px solid #003915;
   transition: all 0.3s ease-out;
 }
 
@@ -39,11 +47,21 @@
   width: 100%;
 }
 
+
+
 .btn--large:hover,
 .btn--medium:hover,
 .btn--flex:hover {
   transition: all 0.3s ease-out;
   background: #fff;
+  color: #242424;
+  transition: 250ms;
+}
+
+.btn--bet:hover {
+  transition: all 0.3s ease-out;
+  background: #dc7633;
+  border: 2px solid #dc7633;
   color: #242424;
   transition: 250ms;
 }

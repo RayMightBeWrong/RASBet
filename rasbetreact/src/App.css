@@ -25,19 +25,20 @@
 }
 
 .products {
-  background-color: #0c3e0e;
+  background-color: #003915;
   background-size: cover;
   background-repeat: no-repeat;
   color: #fff;
   font-size: 100px;
 }
 
-.sign-up {
+.login,
+.registo {
   display: flex;
   height: 92vh;
   align-items: center;
   justify-content: center;
-  background-color: #0c3e0e;
+  background-color: #003915;
   background-size: cover;
   background-repeat: no-repeat;
   color: #fff;

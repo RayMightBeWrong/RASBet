@@ -1,15 +1,19 @@
 import React from 'react';
 import '../../App.css';
-import Cards from '../Cards';
-import HeroSection from '../HeroSection';
-import Footer from '../Footer';
+import { Game } from '../Bets/Game'
+import { GamesTab } from '../Bets/GamesTab'
+
 
 function Home() {
+  const jogo1 = <Game title={"Benfica - Sporting"} time={"Hoje 22 horas"} betsArray={["Benfica", "Empate", "Sporting"]} odsArray={[1.4, 2.2, 3.9]} />
+  const jogo2 = <Game title={"Braga - Maritimo"} time={"Amanha 19 horas"} betsArray={["Braga", "Empate", "Maritimo"]} odsArray={[1.4, 2.2, 3.9]} />
+  const jogo3 = <Game title={"Corrida motogp"} time={"Hoje 15 horas"} betsArray={["Zeca", "Luis", "Ray", "Alex", "Diogo", "Gama"]} odsArray={[1, 0.0, 1, 9999, 1, 1]} />
+  const jogos = [jogo1, jogo2, jogo3]
   return (
     <>
-      <HeroSection />
-      <Cards />
-      <Footer />
+      <div>
+        <GamesTab games={jogos} />
+      </div>
     </>
   );
 }
