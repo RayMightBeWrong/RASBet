@@ -1,11 +1,13 @@
 package ras.adlrr.RASBet.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Wallet {
     private int ID;
     private float balance;
     private int coinID;
     
-    public Wallet(int iD, float balance, int coinID) {
+    public Wallet(@JsonProperty("id") int iD, @JsonProperty("balance") float balance, @JsonProperty("coin") int coinID) {
         ID = iD;
         this.balance = balance;
         this.coinID = coinID;

@@ -1,5 +1,7 @@
 package ras.adlrr.RASBet.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 
 public class Transaction {
@@ -11,7 +13,7 @@ public class Transaction {
     private int wallet_id;
     private int gambler_id;
 
-    public Transaction(int id, double balance_after_mov, String description, float value, LocalDateTime date, int wallet_id, int gambler_id) {
+    public Transaction(@JsonProperty("id") int id, @JsonProperty("balance_after_mov") double balance_after_mov, @JsonProperty("description") String description, @JsonProperty("value") float value, @JsonProperty("date") LocalDateTime date, @JsonProperty("wallet_id") int wallet_id, @JsonProperty("gambler_id") int gambler_id) {
         this.id = id;
         this.balance_after_mov = balance_after_mov;
         this.description = description;
@@ -19,6 +21,16 @@ public class Transaction {
         this.date = date;
         this.wallet_id = wallet_id;
         this.gambler_id = gambler_id;
+    }
+
+    public Transaction(Transaction transaction) {
+        this.id = transaction.id;
+        this.balance_after_mov = transaction.balance_after_mov;
+        this.description = transaction.description;
+        this.value = transaction.value;
+        this.date = transaction.date;
+        this.wallet_id = transaction.wallet_id;
+        this.gambler_id = transaction.gambler_id;
     }
 
     public int getId() {
@@ -48,4 +60,6 @@ public class Transaction {
     public int getGambler_id() {
         return gambler_id;
     }
+
+
 }

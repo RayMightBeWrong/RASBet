@@ -1,7 +1,11 @@
 package ras.adlrr.RASBet.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Expert extends User{
-    public Expert(int ID, String name){
+    @JsonCreator
+    public Expert(@JsonProperty("id") int ID, @JsonProperty("name") String name){
         super(ID, name);
     }
 

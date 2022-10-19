@@ -1,17 +1,15 @@
 package ras.adlrr.RASBet.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ras.adlrr.RASBet.model.Sport;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 @Repository("fakeSportDAO")
-public class FakeSportDataAcessService implements SportDAO{
+public class SportDAS_Fake implements SportDAO{
 
-    private static HashMap<Integer,Sport> DB = new HashMap<>();
+    private final static HashMap<Integer,Sport> DB = new HashMap<>();
     private int id = 0;
 
     @Override
