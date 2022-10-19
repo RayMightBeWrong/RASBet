@@ -15,7 +15,6 @@ export const Game = ({
     for (let i = 0; i < betsArray.length; i++) {
         dicionario[i] = { bet: betsArray[i], odd: odsArray[i], count: i }
     }
-
     return (
         <>
             <div className='game'>
