@@ -3,11 +3,11 @@ package ras.adlrr.RASBet.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Participant {
-    private int name;
+    private String name;
     private float odd;
     private int score;
 
-    public Participant(@JsonProperty("name") int name, @JsonProperty("odd") float odd, @JsonProperty("score") int score) {
+    public Participant(@JsonProperty("name") String name, @JsonProperty("odd") float odd, @JsonProperty("score") int score) {
         this.name = name;
         this.odd = odd;
         this.score = score;
@@ -19,7 +19,7 @@ public class Participant {
         this.score = p.score;
     }
 
-    public int getName() {
+    public String getName() {
         return name;
     }
 

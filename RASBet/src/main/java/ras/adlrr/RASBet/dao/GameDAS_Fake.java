@@ -10,6 +10,7 @@ import java.util.List;
 public class GameDAS_Fake implements GameDAO{
     private static HashMap<Integer,Game> mapOfGames = new HashMap<>();
     private static int nextId = 0;
+
     @Override
     public List<Game> getGames() {
         return mapOfGames.values().stream().toList();
@@ -30,27 +31,27 @@ public class GameDAS_Fake implements GameDAO{
     }
 
     @Override
-    public int suspendGame(int id) {
+    public int changeGameState(int id, String state){
         Game g = mapOfGames.get(id);
-        if(g == null){
-            return 0;
-        }
-        else {
-            g.setState(1);
-            return 1;
-        }
-    }
 
-    @Override
-    public int resumeGame(int id) {
-        Game g = mapOfGames.get(id);
-        if(g == null){
-            return 0;
+        if(g != null){
+            if (state.equals("SUSPENDED")){
+                g.setState(Game.SUSPENDED);
+                mapOfGames.put(g.getId(), new Game(g));
+                return 1;
+            }
+            if (state.equals("CLOSED")){
+                g.setState(Game.CLOSED);
+                mapOfGames.put(g.getId(), new Game(g));
+                return 1;
+            }
+            if (state.equals("OPEN")){
+                g.setState(Game.OPEN);
+                mapOfGames.put(g.getId(), new Game(g));
+                return 1;
+            }
         }
-        else {
-            g.setState(0);
-            return 1;
-        }
+        return 0;
     }
 
     @Override

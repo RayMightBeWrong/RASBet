@@ -3,7 +3,6 @@ package ras.adlrr.RASBet.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
@@ -14,6 +13,9 @@ public class Game {
     private Float drawOdd; //Odd of draw - If 'null' indicates that the game does not allow draws
     private int state;
 
+    public static final int SUSPENDED = 1;
+    public static final int CLOSED = 2;
+    public static final int OPEN = 3;
 
     public Game(@JsonProperty("id") int id, @JsonProperty("date") LocalDateTime date, @JsonProperty("participants") List<Participant> participants, @JsonProperty("sportID") int sportID, @JsonProperty("drawOdd") float drawOdd, @JsonProperty("state") int state) {
         this.id = id;

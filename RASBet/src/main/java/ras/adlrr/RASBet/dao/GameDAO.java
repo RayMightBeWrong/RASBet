@@ -8,7 +8,6 @@ public interface GameDAO {
     List<Game> getGames();
     Game getGame(int id);
     int addGame(Game g);
-    int suspendGame(int id);
-    int resumeGame(int id);
+    int changeGameState(int id, String state);
     int changeGameDate(int id, LocalDateTime date);
 }

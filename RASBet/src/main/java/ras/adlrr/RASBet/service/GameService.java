@@ -35,12 +35,8 @@ public class GameService {
         return gameDAO.addGame(g);
     }
 
-    public int suspendGame(int id) {
-        return gameDAO.suspendGame(id);
-    }
-
-    public int resumeGame(int id) {
-        return gameDAO.resumeGame(id);
+    public int changeGameState(int id, String state){
+        return gameDAO.changeGameState(id, state);
     }
 
     public int changeGameDate(int id, LocalDateTime date) {

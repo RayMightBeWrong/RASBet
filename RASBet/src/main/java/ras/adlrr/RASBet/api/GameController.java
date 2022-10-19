@@ -1,11 +1,7 @@
 package ras.adlrr.RASBet.api;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
-import ras.adlrr.RASBet.dao.GameDAO;
-import ras.adlrr.RASBet.dao.ParticipantDAO;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 import ras.adlrr.RASBet.service.GameService;
@@ -40,14 +36,9 @@ public class GameController {
         return gameService.addGame(g);
     }
 
-    @PutMapping(path = "/suspend/{id}")
-    public int suspendGame(@PathVariable("id") int id) {
-        return gameService.suspendGame(id);
-    }
-
-    @PutMapping(path = "/resume/{id}")
-    public int resumeGame(@PathVariable("id") int id) {
-        return gameService.resumeGame(id);
+    @PutMapping(path = "/{id}/state/{state}")
+    public int changeGameState(@PathVariable("id") int id, @PathVariable("state") String state) {
+        return gameService.changeGameState(id, state);
     }
 
     @PutMapping(path = "/changeDate/{id}")
