@@ -2,16 +2,34 @@ package ras.adlrr.RASBet.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "coin")
 public class Coin {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID")
     private int ID;
     private String name;
     private float ratio_EUR;
 
-    public Coin(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("ratio") float ratio_EUR){
+    @OneToMany(
+            mappedBy = "coin",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Wallet> wallets = new ArrayList<>();
+    public Coin() {}
+    public Coin(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("ratio_EUR") float ratio_EUR){
         this.ID = ID;
         this.name = name;
         this.ratio_EUR = ratio_EUR;
     }
+
 
     public void setID(int iD) {
         ID = iD;
