@@ -3,20 +3,29 @@ package ras.adlrr.RASBet.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.persistence.*;
+
+@MappedSuperclass
 public abstract class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID")
     private int ID;
     private String name;
-    // TODO: falta password (meter depois com a base de dados)
+    private String password;
 
     @JsonCreator
-    public User(@JsonProperty("id") int ID, @JsonProperty("name") String name){
+    public User(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("password") String password){
         this.ID = ID;
         this.name = name;
+        this.password = password;
     }
 
+    public User() {}
     public User(User user){
         this.ID = user.ID;
         this.name = user.name;
+        this.password = user.password;
     }
 
     public void setID(int iD) {
@@ -34,6 +43,10 @@ public abstract class User {
     public String getName() {
         return name;
     }
+
+    public String getPassword() { return password; }
+
+    public void setPassword(String password) { this.password = password; }
 
     public abstract User clone();
 }
