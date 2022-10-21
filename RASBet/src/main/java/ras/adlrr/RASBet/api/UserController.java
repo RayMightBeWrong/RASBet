@@ -29,17 +29,17 @@ public class UserController {
     }
 
     @PostMapping("/admins/")
-    public int addAdmin(@RequestBody Admin user){
+    public int registerAdmin(@RequestBody Admin user){
         return userService.addUser(user);
     }
 
     @PostMapping("/experts/")
-    public int addExpert(@RequestBody Expert user){
+    public int registerExpert(@RequestBody Expert user){
         return userService.addUser(user);
     }
 
     @PostMapping("/gamblers/")
-    public int addGambler(@RequestBody Gambler user){
+    public int registerGambler(@RequestBody Gambler user){
         return userService.addUser(user);
     }
 
