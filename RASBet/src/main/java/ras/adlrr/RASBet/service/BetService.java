@@ -28,22 +28,20 @@ public class BetService {
     public int addBet(Bet bet) {
         Transaction transaction = tr.findById(bet.getId()).orElse(null);
         if(transaction == null)
-            return 0;
+            return -1;
         else {
             bet.setTransaction(transaction);
-            br.save(bet);
-            return 1;
+            return br.save(bet).getId();
         }
     }
 
-
-    public List<Bet> getUserBets(int userID) {
-        return null;//return br.getUserBets(userID);
+    public void removeBet(int betID) {
+        br.deleteById(betID);
     }
 
-
-    public int removeBet(int betID) {
-        br.deleteById(betID);
-        return 1;
+    //TODO
+    public List<Bet> getUserBets(int userID) {
+        //return br.findAllByGamblerId(userID);
+        return null;
     }
 }
