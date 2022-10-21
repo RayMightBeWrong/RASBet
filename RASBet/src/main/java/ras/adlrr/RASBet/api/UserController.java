@@ -16,6 +16,8 @@ import ras.adlrr.RASBet.model.Gambler;
 import ras.adlrr.RASBet.model.User;
 import ras.adlrr.RASBet.service.UserService;
 
+
+
 @RequestMapping("/api/users/")
 @RestController
 public class UserController {
@@ -25,12 +27,6 @@ public class UserController {
     public UserController(UserService userService){
         this.userService = userService;
     }
-
-    /*
-    @PostMapping
-    public int addUser(@RequestBody User user){
-        return userService.addUser(user);
-    }*/
 
     @PostMapping("/admins/")
     public int addAdmin(@RequestBody Admin user){

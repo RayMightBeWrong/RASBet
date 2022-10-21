@@ -7,36 +7,40 @@ import java.util.List;
 
 public class Game {
     private int id;
+    private String extID;
     private LocalDateTime date;
     private List<Participant> participants;
     private int sportID;
-    private Float drawOdd; //Odd of draw - If 'null' indicates that the game does not allow draws
     private int state;
 
     public static final int SUSPENDED = 1;
     public static final int CLOSED = 2;
     public static final int OPEN = 3;
 
-    public Game(@JsonProperty("id") int id, @JsonProperty("date") LocalDateTime date, @JsonProperty("participants") List<Participant> participants, @JsonProperty("sportID") int sportID, @JsonProperty("drawOdd") float drawOdd, @JsonProperty("state") int state) {
+    public Game(@JsonProperty("id") int id, @JsonProperty("extID") String extID, @JsonProperty("date") LocalDateTime date, @JsonProperty("participants") List<Participant> participants, @JsonProperty("sportID") int sportID, @JsonProperty("state") int state) {
         this.id = id;
+        this.extID = extID;
         this.date = date;
         this.participants = participants != null ? participants.stream().map(Participant::new).toList() : null;
         this.sportID = sportID;
-        this.drawOdd = drawOdd;
         this.state = state;
     }
 
     public Game(Game g) {
         this.id = g.id;
+        this.extID = g.extID;
         this.date = g.date;
         this.participants = g.getParticipants();
         this.sportID = g.sportID;
-        this.drawOdd = g.drawOdd;
         this.state = g.state;
     }
 
     public int getId() {
         return id;
+    }
+
+    public String getExtID() {
+        return extID;
     }
 
     public LocalDateTime getDate() {
@@ -49,10 +53,6 @@ public class Game {
 
     public int getSportID() {
         return this.sportID;
-    }
-
-    public Float getDrawOdd() {
-        return drawOdd;
     }
 
     public int getState() {
@@ -73,5 +73,9 @@ public class Game {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setExtID(String extID) {
+        this.extID = extID;
     }
 }
