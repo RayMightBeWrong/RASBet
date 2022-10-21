@@ -2,16 +2,27 @@ package ras.adlrr.RASBet.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "transactions")
 public class Transaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private int id;
+
+    @OneToOne(mappedBy = "transaction")
+    private Bet bet;
     private double balance_after_mov;
     private String description;
     private float value;
     private LocalDateTime date;
     private int wallet_id;
     private int gambler_id;
+
+    public Transaction(){}
 
     public Transaction(@JsonProperty("id") int id, @JsonProperty("balance_after_mov") double balance_after_mov, @JsonProperty("description") String description, @JsonProperty("value") float value, @JsonProperty("date") LocalDateTime date, @JsonProperty("wallet_id") int wallet_id, @JsonProperty("gambler_id") int gambler_id) {
         this.id = id;
