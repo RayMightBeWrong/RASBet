@@ -32,7 +32,7 @@ public class BetController {
         return betService.getUserBets(userID);
     }
 
-    @PutMapping(path = "remove/{id}")
+    @DeleteMapping(path = "{id}")
     public int removeBet(@PathVariable("id") int betID) {
         return betService.removeBet(betID);
     }

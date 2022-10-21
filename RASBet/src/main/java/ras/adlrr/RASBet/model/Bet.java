@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-//TODO - Provavelmente é melhor esta classe ser independente
 @Entity
 @Table(name = "bets")
 public class Bet implements Serializable {
@@ -16,14 +15,14 @@ public class Bet implements Serializable {
     private int id;
     private int state;
     //private List<GameChoice> gameChoices;
-
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @JoinColumn(name = "id")
+    @MapsId
     private Transaction transaction;
 
     public Bet(){}
 
-    public Bet(@JsonProperty int id, @JsonProperty("state") int state) {
+    public Bet(@JsonProperty("id") int id, @JsonProperty("state") int state) {
         this.id = id;
         this.state = state;
         //this.gameChoices = gameChoices.stream().map(GameChoice::new).toList();

@@ -31,4 +31,13 @@ public class TransactionService {
         //return tr.findBy(User.class, userID);
         return null;
     }
+
+    public int removeTransaction(int id) {
+        tr.deleteById(id);
+        return 1;
+    }
+
+    public List<Transaction> getTransactions() {
+        return tr.findAll();
+    }
 }
