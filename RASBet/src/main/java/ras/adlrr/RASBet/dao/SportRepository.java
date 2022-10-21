@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ras.adlrr.RASBet.model.Sport;
 
 @Repository
-public interface SportRepository extends JpaRepository<Sport,String> {
+public interface SportRepository extends JpaRepository<Sport,Integer> {
 }
