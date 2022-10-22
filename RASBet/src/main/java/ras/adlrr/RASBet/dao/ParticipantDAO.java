@@ -7,4 +7,5 @@ import java.util.List;
 public interface ParticipantDAO {
     List<Participant> getGameParticipants(int gameID);
     int addParticipantToGame(int gameID, Participant p);
+    //int insertOddToParticipant(int gameID, Participant p);
 }

@@ -1,11 +1,9 @@
 package ras.adlrr.RASBet.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.TransactionRepository;
 import ras.adlrr.RASBet.model.Transaction;
-import ras.adlrr.RASBet.model.User;
 
 import java.util.List;
 

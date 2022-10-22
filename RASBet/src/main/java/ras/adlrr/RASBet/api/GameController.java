@@ -58,4 +58,10 @@ public class GameController {
     public int addParticipantToGame(@PathVariable("id") int gameID, @RequestBody Participant p) {
         return gameService.addParticipantToGame(gameID, p);
     }
+
+    //@PutMapping(path = "/{id}/participant/")
+    //public int insertOddToParticipant(@PathVariable("id") int gameID, @RequestBody Participant p) {
+    //    System.out.println(p.getName() + ": " + p.getOdd());
+    //    return 1;
+    //}
 }

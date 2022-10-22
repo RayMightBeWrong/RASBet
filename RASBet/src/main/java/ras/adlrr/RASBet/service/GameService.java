@@ -1,24 +1,34 @@
 package ras.adlrr.RASBet.service;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import ras.adlrr.RASBet.dao.GameDAO;
-import ras.adlrr.RASBet.dao.ParticipantDAO;
-import ras.adlrr.RASBet.model.Game;
-import ras.adlrr.RASBet.model.Participant;
-
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
+import ras.adlrr.RASBet.dao.GameDAO;
+import ras.adlrr.RASBet.dao.ParticipantDAO;
+import ras.adlrr.RASBet.model.APIGameReader;
+import ras.adlrr.RASBet.model.Game;
+import ras.adlrr.RASBet.model.Participant;
+import ras.adlrr.RASBet.model.readers.FootballAPISportsReader;
 
 @Service
 public class GameService {
@@ -34,6 +44,7 @@ public class GameService {
 
     public List<Game> getGames() {
         //updateGames();
+        updateGames2();
         return gameDAO.getGames();
     }
 
@@ -53,6 +64,7 @@ public class GameService {
         return gameDAO.changeGameDate(id,date);
     }
 
+    // TODO: fazer uma função de jeito
     public int updateGames(){
         String json = readJSONfromHTTPRequest("http://ucras.di.uminho.pt/v1/games/");
         
@@ -106,6 +118,31 @@ public class GameService {
         }
         
         return 1;
+    }
+
+    public void updateGames2(){
+        //HttpResponse<String> response = Unirest.get("https://v3.football.api-sports.io/odds?season=2022&bet=1&fixture=898685&league=94")
+        //                                    .header("x-rapidapi-key", "b68a93e4291b512a0f3179eb9ee1bc2b")
+        //                                    .header("x-rapidapi-host", "v3.football.api-sports.io").asString();
+        //try {
+        //    Files.write( Paths.get("/home/ray/odd_fixture.json"), response.getBody().getBytes());
+        //} catch (Exception e) {
+        //    e.printStackTrace();
+        //}
+        try{
+            BufferedReader br1 = new BufferedReader(new FileReader(new File("/home/ray/jogos.json")));
+            StringBuilder sb1 = new StringBuilder();
+            
+            String st;
+            while ((st = br1.readLine()) != null)
+                sb1.append(st);
+
+            APIGameReader reader = new FootballAPISportsReader(sb1.toString(), gameDAO);
+            reader.loadGames();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public String readJSONfromHTTPRequest(String urlString){

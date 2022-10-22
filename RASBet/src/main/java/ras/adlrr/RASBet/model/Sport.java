@@ -23,7 +23,6 @@ public class Sport {
     }
 
     public Sport(@JsonProperty("name") String name, @JsonProperty("type") int type) {
-        this.id = id;
         this.name = name;
         this.type = type;
     }
