@@ -1,6 +1,8 @@
 package ras.adlrr.RASBet.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.model.Bet;
 import ras.adlrr.RASBet.service.BetService;
@@ -25,6 +27,13 @@ public class BetController {
     @PostMapping
     public int addBet(@RequestBody Bet bet) {
         return betService.addBet(bet);
+        /*
+        int r = betService.addBet(bet);
+        if(r == -1)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(r);
+        else
+            return ResponseEntity.status(HttpStatus.OK).body(r);
+        */
     }
 
     @GetMapping(path = "/user/{id}")
@@ -32,8 +41,8 @@ public class BetController {
         return betService.getUserBets(userID);
     }
 
-    @PutMapping(path = "remove/{id}")
-    public int removeBet(@PathVariable("id") int betID) {
-        return betService.removeBet(betID);
+    @DeleteMapping(path = "{id}")
+    public void removeBet(@PathVariable("id") int betID) {
+        betService.removeBet(betID);
     }
 }

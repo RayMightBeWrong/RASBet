@@ -1,5 +1,6 @@
 package ras.adlrr.RASBet.api;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,12 @@ public class WalletController {
     }
 
     @PostMapping("/wallet")
-    public int addWallet(@RequestBody Wallet wallet){
-        return walletService.addWallet(wallet);
+    public int addWallet(@RequestBody HashMap<String,String> map){
+        var balance = map.get("balance");
+        var coinID = map.get("coin_id");
+        Wallet wallet = new Wallet();
+        wallet.setBalance(Float.parseFloat(balance));
+        return walletService.addWallet(Integer.parseInt(coinID),wallet);
     }
 
     @GetMapping(path = "/wallet/{id}")

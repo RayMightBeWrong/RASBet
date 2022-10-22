@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.BetRepository;
 import ras.adlrr.RASBet.dao.TransactionRepository;
 import ras.adlrr.RASBet.model.Bet;
+import ras.adlrr.RASBet.model.Transaction;
 
 import java.util.List;
 
@@ -25,20 +26,22 @@ public class BetService {
     }
 
     public int addBet(Bet bet) {
-        if (tr.existsById(bet.getId())) {
-            br.save(bet);
-            return 1;
-        }else return 0;
+        Transaction transaction = tr.findById(bet.getId()).orElse(null);
+        if(transaction == null)
+            return -1;
+        else {
+            bet.setTransaction(transaction);
+            return br.save(bet).getId();
+        }
     }
 
-
-    public List<Bet> getUserBets(int userID) {
-        return null;//return br.getUserBets(userID);
-    }
-
-
-    public int removeBet(int betID) {
+    public void removeBet(int betID) {
         br.deleteById(betID);
-        return 1;
+    }
+
+    //TODO
+    public List<Bet> getUserBets(int userID) {
+        //return br.findAllByGamblerId(userID);
+        return null;
     }
 }

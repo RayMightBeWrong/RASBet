@@ -13,7 +13,8 @@ public class Transaction {
     @Column(name = "id")
     private int id;
 
-    @OneToOne(mappedBy = "transaction")
+    @OneToOne(mappedBy = "transaction", cascade = CascadeType.ALL)
+    //@JoinColumn(name = "id", referencedColumnName = "id")
     private Bet bet;
     private double balance_after_mov;
     private String description;

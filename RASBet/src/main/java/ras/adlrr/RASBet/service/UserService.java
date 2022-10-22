@@ -5,30 +5,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.UserDAO;
+import ras.adlrr.RASBet.dao.UserRepository;
 import ras.adlrr.RASBet.model.User;
 
 @Service
 public class UserService {
-    private final UserDAO userDAO;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserService(@Qualifier("userDAO") UserDAO userDAO){
-        this.userDAO = userDAO;
+    public UserService(UserRepository userRepository){
+        this.userRepository = userRepository;
     }
 
     public User getUser(int id){
-        return userDAO.getUser(id);
+        return userRepository.findById(id).orElse(null);
     }
 
     public int addUser(User user){
-        return userDAO.addUser(user);
+        userRepository.save(user);
+        return 1;
     }
 
     public int removeUser(int id){
-        return userDAO.removeUser(id);
+        userRepository.deleteById(id);
+        return 1;
     }
 
     public List<User> getListOfUsers(){
-        return userDAO.getListOfUsers();
+        return userRepository.findAll();
     }
 }

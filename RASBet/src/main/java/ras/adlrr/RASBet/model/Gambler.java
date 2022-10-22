@@ -22,10 +22,11 @@ public class Gambler extends User{
     private Map<Integer, Wallet> wallets;
 
     @JsonCreator
-    public Gambler(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("cc") String CC, String nationality, int NIF, String ocupation, int phoneNumber,
+    public Gambler(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("password") String password, @JsonProperty("cc") String CC, String nationality, int NIF, String ocupation, int phoneNumber,
                     LocalDate date_of_birth, String email, String postal_code, String address){
-        super(ID, name);
+        super(ID, name, password);
         this.CC = CC;
+        this.nationality = nationality;
         this.NIF = NIF;
         this.date_of_birth = date_of_birth;
         this.email = email;
@@ -34,6 +35,9 @@ public class Gambler extends User{
         this.ocupation = ocupation;
         this.phoneNumber = phoneNumber;
         this.wallets = new HashMap<>();
+    }
+
+    public Gambler(int nif, String city, String cc, String nationality, String ocupation, int phoneNumber, LocalDate date_of_birth, String email, String postal_code, String address) {
     }
 
     public void setCC(String cC) {
@@ -125,6 +129,6 @@ public class Gambler extends User{
     }
 
     public User clone(){
-        return new Gambler(NIF, city, CC, nationality, NIF, ocupation, phoneNumber, date_of_birth, email, postal_code, address);
+        return new Gambler(NIF, city, CC, nationality, ocupation, phoneNumber, date_of_birth, email, postal_code, address);
     }
 }

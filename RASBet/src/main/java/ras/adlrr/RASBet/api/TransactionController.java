@@ -27,8 +27,18 @@ public class TransactionController {
         return transactionService.addTransaction(t);
     }
 
-    @GetMapping
-    public List<Transaction> getUserTransactions(int userID) {
+    @GetMapping(path = "/user/{id}")
+    public List<Transaction> getUserTransactions(@PathVariable("id") int userID) {
         return transactionService.getUserTransactions(userID);
+    }
+
+    @GetMapping
+    public List<Transaction> getTransactions(){
+        return transactionService.getTransactions();
+    }
+
+    @DeleteMapping(path = "{id}")
+    public int removeTransaction(@PathVariable int id) {
+        return transactionService.removeTransaction(id);
     }
 }
