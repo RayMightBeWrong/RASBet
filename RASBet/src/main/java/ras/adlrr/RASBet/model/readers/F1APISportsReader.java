@@ -12,6 +12,7 @@ import kong.unirest.json.JSONObject;
 import ras.adlrr.RASBet.dao.GameDAO;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
+import ras.adlrr.RASBet.model.APIGameReader;
 
 //TODO: erros + criar ID para a corrida + getID de F1
 public class F1APISportsReader implements APIGameReader{

@@ -10,6 +10,7 @@ import kong.unirest.json.JSONObject;
 import ras.adlrr.RASBet.dao.GameDAO;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
+import ras.adlrr.RASBet.model.APIGameReader;
 
 // TODO: criar ID para o jogo, tratar de erros na loadGames e getID de NFL
 public class NFLOddsAPIReader implements APIGameReader{

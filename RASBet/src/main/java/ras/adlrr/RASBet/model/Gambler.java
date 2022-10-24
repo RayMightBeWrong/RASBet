@@ -1,29 +1,32 @@
 package ras.adlrr.RASBet.model;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.yaml.snakeyaml.events.Event;
 
+import javax.persistence.Entity;
+
+@Entity
 public class Gambler extends User{
     private String CC; // cartão de cidadão;
     private String nationality;
     private int NIF;
-    // TODO: talvez só se põe depois com a base de dados
     private LocalDate date_of_birth;
     private String email;
     private String postal_code;
     private String city;
     private String address;
-    private String ocupation;
+    private String occupation;
     private int phoneNumber;
-    private Map<Integer, Wallet> wallets;
+    private List<Wallet> wallets;
 
     @JsonCreator
-    public Gambler(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("password") String password, @JsonProperty("cc") String CC, String nationality, int NIF, String ocupation, int phoneNumber,
-                    LocalDate date_of_birth, String email, String postal_code, String address){
+    public Gambler(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("password") String password, @JsonProperty("cc") String CC, @JsonProperty("nationality") String nationality, @JsonProperty("nif") int NIF, @JsonProperty("occupation") String occupation, @JsonProperty("phone_numer") int phoneNumber,
+                   @JsonProperty("date_of_birth") LocalDate date_of_birth, @JsonProperty("email") String email, @JsonProperty("postal_code") String postal_code, @JsonProperty("address") String address){
         super(ID, name, password);
         this.CC = CC;
         this.nationality = nationality;
@@ -32,9 +35,24 @@ public class Gambler extends User{
         this.email = email;
         this.postal_code = postal_code;
         this.address = address;
-        this.ocupation = ocupation;
+        this.occupation = occupation;
         this.phoneNumber = phoneNumber;
-        this.wallets = new HashMap<>();
+        this.wallets = new ArrayList<>();
+    }
+
+    public Gambler(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("password") String password, @JsonProperty("cc") String CC, @JsonProperty("nationality") String nationality, @JsonProperty("nif") int NIF, @JsonProperty("occupation") String occupation, @JsonProperty("phone_numer") int phoneNumber,
+                   @JsonProperty("date_of_birth") LocalDate date_of_birth, @JsonProperty("email") String email, @JsonProperty("postal_code") String postal_code, @JsonProperty("address") String address, @JsonProperty("wallets") List<Wallet> wallets){
+        super(ID, name, password);
+        this.CC = CC;
+        this.nationality = nationality;
+        this.NIF = NIF;
+        this.date_of_birth = date_of_birth;
+        this.email = email;
+        this.postal_code = postal_code;
+        this.address = address;
+        this.occupation = occupation;
+        this.phoneNumber = phoneNumber;
+        this.wallets = wallets.stream().map(Wallet::clone).toList();
     }
 
     public Gambler(int nif, String city, String cc, String nationality, String ocupation, int phoneNumber, LocalDate date_of_birth, String email, String postal_code, String address) {
@@ -72,20 +90,16 @@ public class Gambler extends User{
         this.address = address;
     }
 
-    public void setOcupation(String ocupation) {
-        this.ocupation = ocupation;
+    public void setOcupation(String occupation) {
+        this.occupation = occupation;
     }
 
     public void setPhoneNumber(int phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setWallets(Map<Integer, Wallet> wallets) {
-        Map<Integer, Wallet> copycat = new HashMap<>();
-        for (Map.Entry<Integer, Wallet> entry : wallets.entrySet()) {
-            copycat.put(entry.getKey(), entry.getValue().clone());
-        }
-        this.wallets = copycat;
+    public void setWallets(List<Wallet> wallets) {
+        this.wallets = wallets.stream().map(Wallet::clone).toList();;
     }
 
     public String getCC() {
@@ -120,15 +134,11 @@ public class Gambler extends User{
         return this.address;
     }
 
-    public Map<Integer, Wallet> getWallets() {
-        Map<Integer, Wallet> copycat = new HashMap<>();
-        for (Map.Entry<Integer, Wallet> entry : this.wallets.entrySet()) {
-            copycat.put(entry.getKey(), entry.getValue().clone());
-        }
-        return copycat;
+    public List<Wallet> getWallets() {
+        return wallets.stream().map(Wallet::clone).toList();
     }
 
     public User clone(){
-        return new Gambler(NIF, city, CC, nationality, ocupation, phoneNumber, date_of_birth, email, postal_code, address);
+        return new Gambler(this.getID(), this.getName(), this.getPassword(), CC, nationality, NIF, occupation, phoneNumber, date_of_birth, email, postal_code, address, wallets) ;
     }
 }
