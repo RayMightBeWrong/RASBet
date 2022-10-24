@@ -3,6 +3,7 @@ package ras.adlrr.RASBet.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "sport")
@@ -13,6 +14,9 @@ public class Sport {
     private int id; //Unique identifier of the sport
     private String name;
     private int type; //Type of sport (E.g.: Collective and without draw / Non collective and with draw ...)
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sport")
+    private List<Game> games;
 
     public Sport(){}
 

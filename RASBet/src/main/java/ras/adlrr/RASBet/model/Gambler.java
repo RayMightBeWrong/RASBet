@@ -8,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.yaml.snakeyaml.events.Event;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Gambler extends User{
@@ -22,6 +24,7 @@ public class Gambler extends User{
     private String address;
     private String occupation;
     private int phoneNumber;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gambler")
     private List<Wallet> wallets;
 
     @JsonCreator
