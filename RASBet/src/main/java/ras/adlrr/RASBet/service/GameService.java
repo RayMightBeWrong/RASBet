@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -21,10 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import kong.unirest.HttpResponse;
-import kong.unirest.Unirest;
-import ras.adlrr.RASBet.dao.GameDAO;
-import ras.adlrr.RASBet.dao.ParticipantDAO;
+import ras.adlrr.RASBet.dao.GameRepository;
+import ras.adlrr.RASBet.dao.ParticipantRepository;
 import ras.adlrr.RASBet.model.APIGameReader;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
@@ -32,36 +28,42 @@ import ras.adlrr.RASBet.model.readers.FootballAPISportsReader;
 
 @Service
 public class GameService {
-    private final GameDAO gameDAO;
-    private final ParticipantDAO participantDAO;
+    private final GameRepository gameRepository;
+    private final ParticipantRepository participantRepository;
 
     /* **** Game Methods **** */
     @Autowired
-    public GameService(@Qualifier("FakeGameDAO") GameDAO gameDAO, @Qualifier("FakeParticipantDAO") ParticipantDAO participantDAO){
-        this.gameDAO = gameDAO;
-        this.participantDAO = participantDAO;
+    public GameService(GameRepository gameRepository, ParticipantRepository participantRepository){
+        this.gameRepository = gameRepository;
+        this.participantRepository = participantRepository;
     }
 
     public List<Game> getGames() {
         //updateGames();
         updateGames2();
-        return gameDAO.getGames();
+        //TODO
+        return null;//gameRepository.getGames();
     }
 
     public Game getGame(int id){
-        return gameDAO.getGame(id);
+
+        //TODO
+        return null; //gameRepository.getGame(id);
     }
 
     public int addGame(Game g) {
-        return gameDAO.addGame(g);
+        //TODO
+        return 0; //gameRepository.addGame(g);
     }
 
     public int changeGameState(int id, String state){
-        return gameDAO.changeGameState(id, state);
+        //TODO
+        return 0;// gameRepository.changeGameState(id, state);
     }
 
     public int changeGameDate(int id, LocalDateTime date) {
-        return gameDAO.changeGameDate(id,date);
+        //TODO
+        return 0;//gameRepository.changeGameDate(id,date);
     }
 
     // TODO: fazer uma função de jeito
@@ -114,7 +116,8 @@ public class GameService {
             // TODO: mudar para diferentes desportos e mudar o resultado
             // TODO: get ID do desporto
             Game g = new Game(5, (String) jo.get("id"), ldt, ps, 1, Game.CLOSED);
-            gameDAO.addGame(g);
+            //TODO
+            //gameRepository.addGame(g);
         }
         
         return 1;
@@ -137,7 +140,7 @@ public class GameService {
             while ((st = br1.readLine()) != null)
                 sb1.append(st);
 
-            APIGameReader reader = new FootballAPISportsReader(sb1.toString(), gameDAO);
+            APIGameReader reader = new FootballAPISportsReader(sb1.toString(), gameRepository);
             reader.loadGames();
         }
         catch (Exception e){
@@ -179,10 +182,14 @@ public class GameService {
 
     /* **** Participants Methods **** */
     public List<Participant> getGameParticipants(int gameID) {
-        return participantDAO.getGameParticipants(gameID);
+        //TODO
+        //return participantRepository.getGameParticipants(gameID);
+        return null;
     }
 
     public int addParticipantToGame(int gameID, Participant p) {
-        return participantDAO.addParticipantToGame(gameID, p);
+        //return participantRepository.addParticipantToGame(gameID, p);
+        //TODO
+        return 0;
     }
 }

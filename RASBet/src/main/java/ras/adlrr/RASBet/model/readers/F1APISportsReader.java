@@ -9,7 +9,7 @@ import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
-import ras.adlrr.RASBet.dao.GameDAO;
+import ras.adlrr.RASBet.dao.GameRepository;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 import ras.adlrr.RASBet.model.APIGameReader;
@@ -18,12 +18,12 @@ import ras.adlrr.RASBet.model.APIGameReader;
 public class F1APISportsReader implements APIGameReader{
     private JSONArray response;
     private JSONObject nextRace;
-    private GameDAO gameDAO;
+    private GameRepository gameRepository;
     
-    public F1APISportsReader(String response, GameDAO gameDAO){
+    public F1APISportsReader(String response, GameRepository gameRepository){
         this.response = (JSONArray) (new JSONObject(response).get("response"));
         this.nextRace = (JSONObject) this.response.get(0);
-        this.gameDAO = gameDAO;
+        this.gameRepository = gameRepository;
     }
     
     public String getRaceExternalId(){
@@ -71,7 +71,8 @@ public class F1APISportsReader implements APIGameReader{
     public int loadGames() {
         //Game g = new Game(1, getRaceExternalId(), getGameDate(), getDrivers(), getSportID(), getGameState());
         Game g = new Game(1, getRaceExternalId(), getGameDate(), null, getSportID(), getGameState());
-        gameDAO.addGame(g);
+        // TODO - Ray
+        //gameRepository.addGame(g);
         return 0;
     }
 }

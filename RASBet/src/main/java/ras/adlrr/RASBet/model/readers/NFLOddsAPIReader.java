@@ -7,7 +7,7 @@ import java.util.List;
 
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
-import ras.adlrr.RASBet.dao.GameDAO;
+import ras.adlrr.RASBet.dao.GameRepository;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 import ras.adlrr.RASBet.model.APIGameReader;
@@ -15,11 +15,11 @@ import ras.adlrr.RASBet.model.APIGameReader;
 // TODO: criar ID para o jogo, tratar de erros na loadGames e getID de NFL
 public class NFLOddsAPIReader implements APIGameReader{
     private JSONArray response;
-    private GameDAO gameDAO;
+    private GameRepository gameRepository;
     
-    public NFLOddsAPIReader(String response, GameDAO gameDAO){
+    public NFLOddsAPIReader(String response, GameRepository gameRepository){
         this.response = new JSONArray(response);
-        this.gameDAO = gameDAO;
+        this.gameRepository = gameRepository;
     }
 
     public String getGameExternalId(JSONObject game){
@@ -97,7 +97,8 @@ public class NFLOddsAPIReader implements APIGameReader{
             JSONObject obj = (JSONObject) response.get(i);
 
             Game g = new Game(i, getGameExternalId(obj), getGameDate(obj), getGameParticipants(obj), getSportID(), getGameState(obj));
-            gameDAO.addGame(g);
+            //TODO - Ray
+            //gameRepository.addGame(g);
         }
         return 0;
     }
