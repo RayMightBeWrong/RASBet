@@ -9,7 +9,8 @@ import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
-import ras.adlrr.RASBet.dao.GameDAO;
+import ras.adlrr.RASBet.dao.GameRepository;
+import ras.adlrr.RASBet.model.APIGameReader;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 
@@ -17,11 +18,11 @@ import ras.adlrr.RASBet.model.Participant;
 public class FootballAPISportsReader implements APIGameReader{
     private int footballID;
     private JSONArray games;
-    private GameDAO gameDAO;
+    private GameRepository gameRepository;
 
-    public FootballAPISportsReader(String games, GameDAO gameDAO){
+    public FootballAPISportsReader(String games, GameRepository gameRepository){
         this.games = (JSONArray) (new JSONObject(games).get("response"));
-        this.gameDAO = gameDAO;
+        this.gameRepository = gameRepository;
     }
 
     public int getGameId(JSONObject game) {
@@ -121,7 +122,8 @@ public class FootballAPISportsReader implements APIGameReader{
 
             if (league.get("round").equals("Regular Season - 10")){       
                 Game g = new Game(k, getGameExternalId(obj), getGameDate(obj), getGameParticipants(obj), getSportID(), getGameState(obj));
-                gameDAO.addGame(g);
+                // TODO - RAy
+                //gameRepository.addGame(g);
                 k++;
             }
         }

@@ -5,11 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 
+//@Entity
+//@Inheritance(strategy = InheritanceType.JOINED)
+//@Table(name = "users")
 @MappedSuperclass
-public abstract class User {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID")
+    @Column(name = "id")
     private int ID;
     private String name;
     private String password;
@@ -48,5 +51,4 @@ public abstract class User {
 
     public void setPassword(String password) { this.password = password; }
 
-    public abstract User clone();
 }
