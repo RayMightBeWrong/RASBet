@@ -19,12 +19,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
 import ras.adlrr.RASBet.dao.GameRepository;
 import ras.adlrr.RASBet.dao.ParticipantRepository;
-import ras.adlrr.RASBet.model.APIGameReader;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
+import ras.adlrr.RASBet.model.readers.APIGameReader;
+import ras.adlrr.RASBet.model.readers.F1APISportsReader;
 import ras.adlrr.RASBet.model.readers.FootballAPISportsReader;
+import ras.adlrr.RASBet.model.readers.NFLOddsAPIReader;
 
 @Service
 public class GameService {
@@ -124,16 +128,19 @@ public class GameService {
     }
 
     public void updateGames2(){
-        //HttpResponse<String> response = Unirest.get("https://v3.football.api-sports.io/odds?season=2022&bet=1&fixture=898685&league=94")
-        //                                    .header("x-rapidapi-key", "b68a93e4291b512a0f3179eb9ee1bc2b")
-        //                                    .header("x-rapidapi-host", "v3.football.api-sports.io").asString();
-        //try {
-        //    Files.write( Paths.get("/home/ray/odd_fixture.json"), response.getBody().getBytes());
-        //} catch (Exception e) {
-        //    e.printStackTrace();
-        //}
+        /* 
+        HttpResponse<String> response = Unirest.get("https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/?regions=us&oddsFormat=american&apiKey=70d50d68d47a79f93f43e9d7353e16ed")
+                                            .header("x-rapidapi-key", "b68a93e4291b512a0f3179eb9ee1bc2b")
+                                            .header("x-rapidapi-host", "v3.football.api-sports.io").asString();
+        try {
+            Files.write( Paths.get("/home/ray/nfl.json"), response.getBody().getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        */
+
         try{
-            BufferedReader br1 = new BufferedReader(new FileReader(new File("/home/ray/jogos.json")));
+            BufferedReader br1 = new BufferedReader(new FileReader(new File("/home/ray/nfl.json")));
             StringBuilder sb1 = new StringBuilder();
             
             String st;

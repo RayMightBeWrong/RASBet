@@ -14,6 +14,7 @@ import ras.adlrr.RASBet.model.APIGameReader;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 
+// TODO: criar ID para o jogo, tratar de erros na loadGames e getID de futebol
 public class FootballAPISportsReader implements APIGameReader{
     private int footballID;
     private JSONArray games;
@@ -25,7 +26,6 @@ public class FootballAPISportsReader implements APIGameReader{
     }
 
     public int getGameId(JSONObject game) {
-        // TODO: criar ID para o jogo
         return 0;
     }
 
@@ -97,9 +97,7 @@ public class FootballAPISportsReader implements APIGameReader{
     }
 
     public int getSportID() {
-        this.footballID = 1;
-        // TODO: get ID de futebol
-        return this.footballID;
+        return 1;
     }
 
     public int getGameState(JSONObject game) {
