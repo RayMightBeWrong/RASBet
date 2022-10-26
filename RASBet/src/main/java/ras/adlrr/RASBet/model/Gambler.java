@@ -30,6 +30,8 @@ public class Gambler extends User{
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "gambler")
     private List<Transaction> transactions;
 
+    public Gambler(){}
+
     @JsonCreator
     public Gambler(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("password") String password, @JsonProperty("cc") String CC, @JsonProperty("nationality") String nationality, @JsonProperty("nif") int NIF, @JsonProperty("occupation") String occupation, @JsonProperty("phone_numer") int phoneNumber,
                    @JsonProperty("date_of_birth") LocalDate date_of_birth, @JsonProperty("email") String email, @JsonProperty("postal_code") String postal_code, @JsonProperty("address") String address){
