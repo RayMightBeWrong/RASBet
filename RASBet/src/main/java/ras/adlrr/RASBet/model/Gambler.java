@@ -27,6 +27,9 @@ public class Gambler extends User{
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "gambler")
     private List<Wallet> wallets;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gambler")
+    private List<Transaction> transactions;
+
     @JsonCreator
     public Gambler(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("password") String password, @JsonProperty("cc") String CC, @JsonProperty("nationality") String nationality, @JsonProperty("nif") int NIF, @JsonProperty("occupation") String occupation, @JsonProperty("phone_numer") int phoneNumber,
                    @JsonProperty("date_of_birth") LocalDate date_of_birth, @JsonProperty("email") String email, @JsonProperty("postal_code") String postal_code, @JsonProperty("address") String address){
@@ -141,7 +144,7 @@ public class Gambler extends User{
         return wallets.stream().map(Wallet::clone).toList();
     }
 
-    public User clone(){
+    public Gambler clone(){
         return new Gambler(this.getID(), this.getName(), this.getPassword(), CC, nationality, NIF, occupation, phoneNumber, date_of_birth, email, postal_code, address, wallets) ;
     }
 }
