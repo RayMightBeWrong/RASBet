@@ -44,6 +44,10 @@ public class Game {
         this.state = g.state;
     }
 
+    public Game() {
+
+    }
+
     public int getId() {
         return id;
     }

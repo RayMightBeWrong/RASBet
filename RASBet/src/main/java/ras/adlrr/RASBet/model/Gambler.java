@@ -3,11 +3,10 @@ package ras.adlrr.RASBet.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.yaml.snakeyaml.events.Event;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -48,7 +47,7 @@ public class Gambler extends User{
     }
 
     public Gambler(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("password") String password, @JsonProperty("cc") String CC, @JsonProperty("nationality") String nationality, @JsonProperty("nif") int NIF, @JsonProperty("occupation") String occupation, @JsonProperty("phone_numer") int phoneNumber,
-                   @JsonProperty("date_of_birth") LocalDate date_of_birth, @JsonProperty("email") String email, @JsonProperty("postal_code") String postal_code, @JsonProperty("address") String address, @JsonProperty("wallets") List<Wallet> wallets){
+                   @JsonProperty("date_of_birth") LocalDate date_of_birth, @JsonProperty("email") String email, @JsonProperty("postal_code") String postal_code, @JsonProperty("address") String address, @JsonProperty("wallets") List<Wallet> wallets, @JsonProperty("transactions") List<Transaction> transactions){
         super(ID, name, password,email);
         this.CC = CC;
         this.nationality = nationality;
@@ -58,7 +57,7 @@ public class Gambler extends User{
         this.address = address;
         this.occupation = occupation;
         this.phoneNumber = phoneNumber;
-        this.wallets = wallets.stream().map(Wallet::clone).toList();
+        this.wallets = Objects.requireNonNullElseGet(wallets, ArrayList::new);
     }
 
     public Gambler(int nif, String city, String cc, String nationality, String ocupation, int phoneNumber, LocalDate date_of_birth, String postal_code, String address) {
@@ -92,7 +91,7 @@ public class Gambler extends User{
         this.address = address;
     }
 
-    public void setOcupation(String occupation) {
+    public void setOccupation(String occupation) {
         this.occupation = occupation;
     }
 
@@ -101,7 +100,7 @@ public class Gambler extends User{
     }
 
     public void setWallets(List<Wallet> wallets) {
-        this.wallets = wallets.stream().map(Wallet::clone).toList();;
+        this.wallets = wallets;
     }
 
     public String getCC() {
@@ -133,10 +132,20 @@ public class Gambler extends User{
     }
 
     public List<Wallet> getWallets() {
-        return wallets.stream().map(Wallet::clone).toList();
+        return wallets;
     }
 
     public Gambler clone(){
-        return new Gambler(this.getID(), this.getName(), this.getPassword(), CC, nationality, NIF, occupation, phoneNumber, date_of_birth, this.getEmail(), postal_code, address, wallets) ;
+        return new Gambler(this.getID(), this.getName(), this.getPassword(), CC, nationality, NIF, occupation, phoneNumber, date_of_birth, this.getEmail(), postal_code, address, wallets, transactions) ;
+    }
+
+    public void addTransaction(Transaction t){
+        if(transactions == null) transactions = new ArrayList<>();
+        transactions.add(t);
+    }
+
+    public void addWallet(Wallet w){
+        if(wallets == null) wallets = new ArrayList<>();
+        wallets.add(w);
     }
 }

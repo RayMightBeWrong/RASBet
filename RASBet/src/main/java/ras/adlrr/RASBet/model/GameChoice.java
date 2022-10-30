@@ -22,9 +22,12 @@ public class GameChoice {
 
     //TODO - ver todas as funcoes
 
-    public GameChoice(@JsonProperty("game_id") int game_id, @JsonProperty("participant") String participant) {
-        //this.game_id = game_id;
-        //this.participant = participant;
+    public GameChoice() {
+    }
+
+    public GameChoice(@JsonProperty("game_id") int game_id, @JsonProperty("participant") Participant participant) {
+        this.game = new Game(); game.setId(game_id);
+        this.participant = participant;
     }
 
     public GameChoice(GameChoice g){
