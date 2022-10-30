@@ -28,16 +28,34 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * Save a admin to table
+     *
+     * @param  user    the admin that you want to add
+     * @return         0 case added, 1 case emailExists
+     */
     @PostMapping("/admins/")
     public int registerAdmin(@RequestBody Admin user){
         return userService.addAdmin(user);
     }
 
+    /**
+     * Save a expert to table
+     *
+     * @param  user    the expert that you want to add
+     * @return         0 case added, 1 case emailExists
+     */
     @PostMapping("/experts/")
     public int registerExpert(@RequestBody Expert user){
         return userService.addExpert(user);
     }
 
+    /**
+     * Save a gambler to table
+     *
+     * @param  user    the gambler that you want to add
+     * @return         0 case added, 1 case emailExists
+     */
     @PostMapping("/gamblers/")
     public int registerGambler(@RequestBody Gambler user){
         return userService.addGambler(user);
@@ -86,5 +104,10 @@ public class UserController {
     @GetMapping("/gamblers/*")
     public List<Gambler> getListOfGamblers() {
         return userService.getListOfGamblers();
+    }
+
+    //todo add mapping
+    public User getUserByEmail(String email) {
+        return userService.getUserByEmail(email);
     }
 }

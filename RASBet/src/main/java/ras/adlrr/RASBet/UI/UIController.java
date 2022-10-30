@@ -1,10 +1,15 @@
 package ras.adlrr.RASBet.UI;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import ras.adlrr.RASBet.api.*;
 import ras.adlrr.RASBet.model.Admin;
 import ras.adlrr.RASBet.model.Expert;
 import ras.adlrr.RASBet.model.Gambler;
+
+import javax.persistence.Column;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class UIController implements Runnable
 {
@@ -46,20 +51,18 @@ public class UIController implements Runnable
             this.flag = flag;
         }
     }
-
-
+    Flag flag = new Flag();
+    Integer clienteID = null;
 
     @Override
     public void run() {
-        Flag flag = new Flag();
-        Integer clienteID = null;
 
         //Menu de autenticacao
         Menu menuAutenticao = new Menu("Menu de autenticacao", new String[]{"Registar gambler", "Registar adminstrador","Registar expert", "Autenticar"});
         menuAutenticao.setHandler(1, () -> registarGamblerHandler());
         menuAutenticao.setHandler(2, () -> registarAdminHandler());
         menuAutenticao.setHandler(3, () -> registarExpertHandler());
-        menuAutenticao.setHandler(4, () -> autenticarHandler(flag, clienteID));
+        menuAutenticao.setHandler(4, () -> autenticarHandler());
 
         /*
         //Menu de cliente
@@ -110,14 +113,40 @@ public class UIController implements Runnable
         MenuInput m1 = new MenuInput("Insira um username", "Username:");
         MenuInput m2 = new MenuInput("Insira um email", "Email:");
         MenuInput m3 = new MenuInput("Insira uma password", "Password:");
+        MenuInput m4 = new MenuInput("Insira o seu cartão de cidadão", "Cartão de Cidadão:");
+        MenuInput m5 = new MenuInput("Insira a sua nacionalidade", "Nacionalidade:");
+        MenuInput m6 = new MenuInput("Insira o seu NIF", "NIF:"); //todo limitar a inteiro
+        MenuInput m7 = new MenuInput("Insira a sua ocupação","Ocupação:");
+        MenuInput m8 = new MenuInput("Insira a sua data de nascimento", "dd/MM/yyyy:"); //todo limitar a idade
+        MenuInput m9 = new MenuInput("Insira o seu código postal", "Código postal:");
+        MenuInput m10 = new MenuInput("Insira a sua cidade","Cidade:");
+        MenuInput m11 = new MenuInput("Insira o seu endereço","Endereço:");
+        MenuInput m12 = new MenuInput("Insira o seu número de télemovel:","Télemovel:"); //todo limitar a inteiro
         m1.executa();
         m2.executa();
         m3.executa();
+        m4.executa();
+        m5.executa();
+        m6.executa();
+        m7.executa();
+        m8.executa();
+        m9.executa();
+        m10.executa();
+        m11.executa();
+        m12.executa();
 
-        String headerPedido = "Criacao de conta Gambler";
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate date = LocalDate.parse(m8.getOpcao(), dateFormat);
+
+        int flagInterna = userController.registerGambler(new Gambler(0,m1.getOpcao(),m3.getOpcao(),m4.getOpcao(), m5.getOpcao(), Integer.parseInt(m6.getOpcao()),m7.getOpcao(),Integer.parseInt(m12.getOpcao()),date,m2.getOpcao(),m9.getOpcao(),m11.getOpcao(),m10.getOpcao()));
+        switch (flagInterna) {
+            case 0 -> System.out.println("Gambler criado com sucesso");
+            case 1 -> System.out.println("Email repetido, a conta gambler não foi criada");
+        }
     }
 
     private void registarAdminHandler() {
+        userController.getUserByEmail("arrozcomedor");
         MenuInput m1 = new MenuInput("Insira um username", "Username:");
         MenuInput m2 = new MenuInput("Insira um email", "Email:");
         MenuInput m3 = new MenuInput("Insira uma password", "Password:");
@@ -125,8 +154,11 @@ public class UIController implements Runnable
         m2.executa();
         m3.executa();
 
-        userController.registerAdmin(new Admin(0,m1.getOpcao(),m3.getOpcao(),m2.getOpcao()));
-        String headerPedido = "Criacao de conta Admin";
+        int flagInterna = userController.registerAdmin(new Admin(0,m1.getOpcao(),m3.getOpcao(),m2.getOpcao()));
+        switch (flagInterna) {
+            case 0 -> System.out.println("Admininistrador criado com sucesso");
+            case 1 -> System.out.println("Email repetido, a conta administrador não foi criada");
+        }
     }
 
     private void registarExpertHandler() {
@@ -137,11 +169,14 @@ public class UIController implements Runnable
         m2.executa();
         m3.executa();
 
-        userController.registerExpert(new Expert(0,m1.getOpcao(),m3.getOpcao(),m2.getOpcao()));
-        String headerPedido = "Criacao de conta Expert";
+        int flagInterna = userController.registerExpert(new Expert(0,m1.getOpcao(),m3.getOpcao(),m2.getOpcao()));
+        switch (flagInterna) {
+            case 0 -> System.out.println("Expert criado com sucesso");
+            case 1 -> System.out.println("Email repetido, a conta expert não foi criada");
+        }
     }
 
-    private void autenticarHandler(Flag flag, Integer clienteID) {
+    private void autenticarHandler() {
         //Atualizacao do número de pedido
         MenuInput m1 = new MenuInput("Insira o seu email", "Email:");
         MenuInput m2 = new MenuInput("Insira o seu password", "Password:");

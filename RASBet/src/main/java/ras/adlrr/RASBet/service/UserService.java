@@ -1,8 +1,14 @@
 package ras.adlrr.RASBet.service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.AdminRepository;
 import ras.adlrr.RASBet.dao.ExpertRepository;
@@ -38,20 +44,61 @@ public class UserService {
         return expertRepository.findById(id).orElse(null);
     }
 
+
+    /**
+     * Save a gambler to table
+     *
+     * @param  user    the gambler that you want to add
+     * @return         0 case added, 1 case emailExists
+     */
     public int addGambler(Gambler user){
+        int returnValue = 0;
+        try {
         gamblerRepository.save(user);
-        return 1;
+        }
+        catch (DataIntegrityViolationException e){ //Isto pode ser mudado
+            returnValue = 1;
+        }
+        return returnValue;
     }
 
+    /**
+     * Save a admin to table
+     *
+     * @param  user    the admin that you want to add
+     * @return         0 case added, 1 case emailExists
+     */
     public int addAdmin(Admin user){
-        adminRepository.save(user);
-        return 1;
+        int returnValue = 0;
+        try {
+            adminRepository.save(user);
+        }
+        catch (DataIntegrityViolationException e){ //Isto pode ser mudado
+            returnValue = 1;
+        }
+        return returnValue;
     }
 
+    /**
+     * Save a expert to table
+     *
+     * @param  user    the expert that you want to add
+     * @return         0 case added, 1 case emailExists
+     */
     public int addExpert(Expert user){
+        int returnValue = 0;
+        try {
         expertRepository.save(user);
-        return 1;
+        }
+        catch (DataIntegrityViolationException e){ //Isto pode ser mudado
+            returnValue = 1;
+        }
+        return returnValue;
     }
+
+
+
+
     public int removeGambler(int id){
         gamblerRepository.deleteById(id);
         return 1;
@@ -76,5 +123,29 @@ public class UserService {
 
     public List<Expert> getListOfExperts(){
         return expertRepository.findAll();
+    }
+
+    public User getUserByEmail(String email){
+        User user = new User();
+
+        List<Integer> ids = adminRepository.findIdByEmail(email);
+
+        if(ids.isEmpty()){
+            ids = gamblerRepository.findIdByEmail(email);
+
+            if(ids.isEmpty()){
+                ids = expertRepository.findIdByEmail(email);
+
+                if(!ids.isEmpty()) //Caso encontre expert
+                    user = this.getExpert(ids.get(0));
+
+            } else { //Caso encontre gambler
+                user = this.getGambler(ids.get(0));
+            }
+
+        } else { //Caso encontre admin
+            user = this.getAdmin(ids.get(0));
+        }
+        return user;
     }
 }

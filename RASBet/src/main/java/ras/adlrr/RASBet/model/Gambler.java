@@ -8,20 +8,37 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 @Entity
 public class Gambler extends User{
+    @Column(nullable = false)
     private String CC; // cartão de cidadão;
+
+    @Column(nullable = false)
     private String nationality;
+
+    @Column(nullable = false)
     private int NIF;
+
+    @Column(nullable = false)
     private LocalDate date_of_birth;
 
+    @Column(nullable = false)
     private String postal_code;
+
+    @Column(nullable = false)
     private String city;
+
+    @Column(nullable = false)
     private String address;
+
+    @Column(nullable = false)
     private String occupation;
+
+    @Column(nullable = false)
     private int phoneNumber;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "gambler")
     private List<Wallet> wallets;
@@ -33,7 +50,7 @@ public class Gambler extends User{
 
     @JsonCreator
     public Gambler(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("password") String password, @JsonProperty("cc") String CC, @JsonProperty("nationality") String nationality, @JsonProperty("nif") int NIF, @JsonProperty("occupation") String occupation, @JsonProperty("phone_numer") int phoneNumber,
-                   @JsonProperty("date_of_birth") LocalDate date_of_birth, @JsonProperty("email") String email, @JsonProperty("postal_code") String postal_code, @JsonProperty("address") String address){
+                   @JsonProperty("date_of_birth") LocalDate date_of_birth, @JsonProperty("email") String email, @JsonProperty("postal_code") String postal_code, @JsonProperty("address") String address, @JsonProperty("city") String city){
         super(ID, name, password,email);
         this.CC = CC;
         this.nationality = nationality;
@@ -44,10 +61,11 @@ public class Gambler extends User{
         this.occupation = occupation;
         this.phoneNumber = phoneNumber;
         this.wallets = new ArrayList<>();
+        this.city = city;
     }
 
     public Gambler(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("password") String password, @JsonProperty("cc") String CC, @JsonProperty("nationality") String nationality, @JsonProperty("nif") int NIF, @JsonProperty("occupation") String occupation, @JsonProperty("phone_numer") int phoneNumber,
-                   @JsonProperty("date_of_birth") LocalDate date_of_birth, @JsonProperty("email") String email, @JsonProperty("postal_code") String postal_code, @JsonProperty("address") String address, @JsonProperty("wallets") List<Wallet> wallets, @JsonProperty("transactions") List<Transaction> transactions){
+                   @JsonProperty("date_of_birth") LocalDate date_of_birth, @JsonProperty("email") String email, @JsonProperty("postal_code") String postal_code, @JsonProperty("address") String address, @JsonProperty("wallets") List<Wallet> wallets, @JsonProperty("transactions") List<Transaction> transactions, @JsonProperty("city") String city){
         super(ID, name, password,email);
         this.CC = CC;
         this.nationality = nationality;
@@ -58,6 +76,7 @@ public class Gambler extends User{
         this.occupation = occupation;
         this.phoneNumber = phoneNumber;
         this.wallets = Objects.requireNonNullElseGet(wallets, ArrayList::new);
+        this.city = city;
     }
 
     public Gambler(int nif, String city, String cc, String nationality, String ocupation, int phoneNumber, LocalDate date_of_birth, String postal_code, String address) {
@@ -136,7 +155,7 @@ public class Gambler extends User{
     }
 
     public Gambler clone(){
-        return new Gambler(this.getID(), this.getName(), this.getPassword(), CC, nationality, NIF, occupation, phoneNumber, date_of_birth, this.getEmail(), postal_code, address, wallets, transactions) ;
+        return new Gambler(this.getID(), this.getName(), this.getPassword(), CC, nationality, NIF, occupation, phoneNumber, date_of_birth, this.getEmail(), postal_code, address, wallets, transactions,city) ;
     }
 
     public void addTransaction(Transaction t){
