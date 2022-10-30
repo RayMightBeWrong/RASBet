@@ -25,7 +25,7 @@ import ras.adlrr.RASBet.dao.GameRepository;
 import ras.adlrr.RASBet.dao.ParticipantRepository;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
-import ras.adlrr.RASBet.model.readers.APIGameReader;
+import ras.adlrr.RASBet.model.APIGameReader;
 import ras.adlrr.RASBet.model.readers.F1APISportsReader;
 import ras.adlrr.RASBet.model.readers.FootballAPISportsReader;
 import ras.adlrr.RASBet.model.readers.NFLOddsAPIReader;

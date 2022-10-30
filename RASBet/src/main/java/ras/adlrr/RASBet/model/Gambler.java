@@ -18,7 +18,7 @@ public class Gambler extends User{
     private String nationality;
     private int NIF;
     private LocalDate date_of_birth;
-    private String email;
+
     private String postal_code;
     private String city;
     private String address;
@@ -35,12 +35,11 @@ public class Gambler extends User{
     @JsonCreator
     public Gambler(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("password") String password, @JsonProperty("cc") String CC, @JsonProperty("nationality") String nationality, @JsonProperty("nif") int NIF, @JsonProperty("occupation") String occupation, @JsonProperty("phone_numer") int phoneNumber,
                    @JsonProperty("date_of_birth") LocalDate date_of_birth, @JsonProperty("email") String email, @JsonProperty("postal_code") String postal_code, @JsonProperty("address") String address){
-        super(ID, name, password);
+        super(ID, name, password,email);
         this.CC = CC;
         this.nationality = nationality;
         this.NIF = NIF;
         this.date_of_birth = date_of_birth;
-        this.email = email;
         this.postal_code = postal_code;
         this.address = address;
         this.occupation = occupation;
@@ -50,12 +49,11 @@ public class Gambler extends User{
 
     public Gambler(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("password") String password, @JsonProperty("cc") String CC, @JsonProperty("nationality") String nationality, @JsonProperty("nif") int NIF, @JsonProperty("occupation") String occupation, @JsonProperty("phone_numer") int phoneNumber,
                    @JsonProperty("date_of_birth") LocalDate date_of_birth, @JsonProperty("email") String email, @JsonProperty("postal_code") String postal_code, @JsonProperty("address") String address, @JsonProperty("wallets") List<Wallet> wallets){
-        super(ID, name, password);
+        super(ID, name, password,email);
         this.CC = CC;
         this.nationality = nationality;
         this.NIF = NIF;
         this.date_of_birth = date_of_birth;
-        this.email = email;
         this.postal_code = postal_code;
         this.address = address;
         this.occupation = occupation;
@@ -63,7 +61,7 @@ public class Gambler extends User{
         this.wallets = wallets.stream().map(Wallet::clone).toList();
     }
 
-    public Gambler(int nif, String city, String cc, String nationality, String ocupation, int phoneNumber, LocalDate date_of_birth, String email, String postal_code, String address) {
+    public Gambler(int nif, String city, String cc, String nationality, String ocupation, int phoneNumber, LocalDate date_of_birth, String postal_code, String address) {
     }
 
     public void setCC(String cC) {
@@ -80,10 +78,6 @@ public class Gambler extends User{
 
     public void setDate_of_birth(LocalDate date_of_birth) {
         this.date_of_birth = date_of_birth;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public void setPostal_code(String postal_code) {
@@ -126,10 +120,6 @@ public class Gambler extends User{
         return this.date_of_birth;
     }
 
-    public String getEmail() {
-        return this.email;
-    }
-
     public String getPostal_code() {
         return this.postal_code;
     }
@@ -147,6 +137,6 @@ public class Gambler extends User{
     }
 
     public Gambler clone(){
-        return new Gambler(this.getID(), this.getName(), this.getPassword(), CC, nationality, NIF, occupation, phoneNumber, date_of_birth, email, postal_code, address, wallets) ;
+        return new Gambler(this.getID(), this.getName(), this.getPassword(), CC, nationality, NIF, occupation, phoneNumber, date_of_birth, this.getEmail(), postal_code, address, wallets) ;
     }
 }

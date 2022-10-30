@@ -8,11 +8,15 @@ import javax.persistence.Entity;
 @Entity
 public class Expert extends User{
     @JsonCreator
-    public Expert(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("password") String password){
-        super(ID, name, password);
+    public Expert(@JsonProperty("id") int ID, @JsonProperty("name") String name, @JsonProperty("password") String password, @JsonProperty("email") String email){
+        super(ID, name, password,email);
+    }
+
+    public Expert() {
+
     }
 
     public User clone(){
-        return new Expert(this.getID(), this.getName(),this.getPassword());
+        return new Expert(this.getID(), this.getName(),this.getPassword(),this.getEmail());
     }
 }

@@ -2,8 +2,8 @@ package ras.adlrr.RASBet.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ras.adlrr.RASBet.model.Gambler;
+import ras.adlrr.RASBet.model.Admin;
 
 @Repository
-public interface GamblerRepository extends JpaRepository<Gambler,Integer> {
+public interface AdminRepository extends JpaRepository<Admin,Integer> {
 }
