@@ -2,6 +2,9 @@ package ras.adlrr.RASBet.UI;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import ras.adlrr.RASBet.api.*;
+import ras.adlrr.RASBet.model.Admin;
+import ras.adlrr.RASBet.model.Expert;
+import ras.adlrr.RASBet.model.Gambler;
 
 public class UIController implements Runnable
 {
@@ -31,7 +34,7 @@ public class UIController implements Runnable
         public static final int NOT_AUTHENTICATED =   -1;
         public static final int CLIENT_LOGGED_IN  =    0;
         public static final int ADMIN_LOGGED_IN   =    1;
-        public static final int EXPERT_LOGGED_IN   =    1;
+        public static final int EXPERT_LOGGED_IN   =   2;
 
         public Flag(){
             flag = NOT_AUTHENTICATED;
@@ -52,10 +55,11 @@ public class UIController implements Runnable
         Integer clienteID = null;
 
         //Menu de autenticacao
-        Menu menuAutenticao = new Menu("Menu de autenticacao", new String[]{"Registar cliente", "Registar adminstrador", "Autenticar"});
-        menuAutenticao.setHandler(1, () -> registarClienteHandler());
+        Menu menuAutenticao = new Menu("Menu de autenticacao", new String[]{"Registar gambler", "Registar adminstrador","Registar expert", "Autenticar"});
+        menuAutenticao.setHandler(1, () -> registarGamblerHandler());
         menuAutenticao.setHandler(2, () -> registarAdminHandler());
-        menuAutenticao.setHandler(3, () -> autenticarHandler(flag, clienteID));
+        menuAutenticao.setHandler(3, () -> registarExpertHandler());
+        menuAutenticao.setHandler(4, () -> autenticarHandler(flag, clienteID));
 
         /*
         //Menu de cliente
@@ -101,7 +105,7 @@ public class UIController implements Runnable
 
     // ****** Handlers Autenticacao ****** //
 
-    private void registarClienteHandler() {
+    private void registarGamblerHandler() {
         //Atualizacao do número de pedido
         MenuInput m1 = new MenuInput("Insira um username", "Username:");
         MenuInput m2 = new MenuInput("Insira um email", "Email:");
@@ -110,10 +114,10 @@ public class UIController implements Runnable
         m2.executa();
         m3.executa();
 
-        String headerPedido = "Criacao de conta Cliente";
+        String headerPedido = "Criacao de conta Gambler";
     }
 
-    private static void registarAdminHandler() {
+    private void registarAdminHandler() {
         MenuInput m1 = new MenuInput("Insira um username", "Username:");
         MenuInput m2 = new MenuInput("Insira um email", "Email:");
         MenuInput m3 = new MenuInput("Insira uma password", "Password:");
@@ -121,10 +125,11 @@ public class UIController implements Runnable
         m2.executa();
         m3.executa();
 
+        userController.registerAdmin(new Admin(0,m1.getOpcao(),m3.getOpcao(),m2.getOpcao()));
         String headerPedido = "Criacao de conta Admin";
     }
 
-    private static void registarExpertHandler() {
+    private void registarExpertHandler() {
         MenuInput m1 = new MenuInput("Insira um username", "Username:");
         MenuInput m2 = new MenuInput("Insira um email", "Email:");
         MenuInput m3 = new MenuInput("Insira uma password", "Password:");
@@ -132,10 +137,11 @@ public class UIController implements Runnable
         m2.executa();
         m3.executa();
 
+        userController.registerExpert(new Expert(0,m1.getOpcao(),m3.getOpcao(),m2.getOpcao()));
         String headerPedido = "Criacao de conta Expert";
     }
 
-    private static void autenticarHandler(Flag flag, Integer clienteID) {
+    private void autenticarHandler(Flag flag, Integer clienteID) {
         //Atualizacao do número de pedido
         MenuInput m1 = new MenuInput("Insira o seu email", "Email:");
         MenuInput m2 = new MenuInput("Insira o seu password", "Password:");

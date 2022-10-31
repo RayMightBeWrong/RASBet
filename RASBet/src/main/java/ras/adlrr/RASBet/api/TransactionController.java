@@ -1,6 +1,8 @@
 package ras.adlrr.RASBet.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.model.Transaction;
 import ras.adlrr.RASBet.service.TransactionService;
@@ -23,8 +25,12 @@ public class TransactionController {
     }
 
     @PostMapping
-    public int addTransaction(@RequestBody Transaction t) {
-        return transactionService.addTransaction(t);
+    public ResponseEntity<Transaction> addTransaction(@RequestBody Transaction t) {
+        t = transactionService.addTransaction(t);
+        if(t != null)
+            return new ResponseEntity<>(t, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping(path = "/user/{id}")

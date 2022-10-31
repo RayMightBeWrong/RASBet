@@ -30,31 +30,61 @@ public class UserController {
 
     @PostMapping("/admins/")
     public int registerAdmin(@RequestBody Admin user){
-        return userService.addUser(user);
+        return userService.addAdmin(user);
     }
 
     @PostMapping("/experts/")
     public int registerExpert(@RequestBody Expert user){
-        return userService.addUser(user);
+        return userService.addExpert(user);
     }
 
     @PostMapping("/gamblers/")
     public int registerGambler(@RequestBody Gambler user){
-        return userService.addUser(user);
+        return userService.addGambler(user);
     }
 
-    @GetMapping(path = "{id}")
-    public User getUser(@PathVariable("id") int id){
-        return userService.getUser(id);
+    @GetMapping(path = "/admins/{id}")
+    public Admin getAdmin(@PathVariable("id") int id){
+        return userService.getAdmin(id);
     }
 
-    @DeleteMapping(path = "{id}")
-    public int removeUser(@PathVariable int id) {
-        return userService.removeUser(id);
+    @GetMapping(path = "/experts/{id}")
+    public Expert getExpert(@PathVariable("id") int id){
+        return userService.getExpert(id);
     }
 
-    @GetMapping("/*")
-    public List<User> getListOfUsers() {
-        return userService.getListOfUsers();
+    @GetMapping(path = "/gamblers/{id}")
+    public Gambler getGambler(@PathVariable("id") int id){
+        return userService.getGambler(id);
+    }
+
+    @DeleteMapping(path = "/admins/{id}")
+    public int removeAdmin(@PathVariable int id) {
+        return userService.removeAdmin(id);
+    }
+
+    @DeleteMapping(path = "/expert/{id}")
+    public int removeExpert(@PathVariable int id) {
+        return userService.removeExpert(id);
+    }
+
+    @DeleteMapping(path = "/gamblers/{id}")
+    public int removeGambler(@PathVariable int id) {
+        return userService.removeGambler(id);
+    }
+
+    @GetMapping("/admins/*")
+    public List<Admin> getListOfAdmins() {
+        return userService.getListOfAdmins();
+    }
+
+    @GetMapping("/experts/*")
+    public List<Expert> getListOfExperts() {
+        return userService.getListOfExperts();
+    }
+
+    @GetMapping("/gamblers/*")
+    public List<Gambler> getListOfGamblers() {
+        return userService.getListOfGamblers();
     }
 }
