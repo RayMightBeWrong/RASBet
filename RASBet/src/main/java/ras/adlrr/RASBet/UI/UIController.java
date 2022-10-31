@@ -6,6 +6,7 @@ import ras.adlrr.RASBet.api.*;
 import ras.adlrr.RASBet.model.Admin;
 import ras.adlrr.RASBet.model.Expert;
 import ras.adlrr.RASBet.model.Gambler;
+import ras.adlrr.RASBet.model.User;
 
 import javax.persistence.Column;
 import java.time.LocalDate;
@@ -146,7 +147,6 @@ public class UIController implements Runnable
     }
 
     private void registarAdminHandler() {
-        userController.getUserByEmail("arrozcomedor");
         MenuInput m1 = new MenuInput("Insira um username", "Username:");
         MenuInput m2 = new MenuInput("Insira um email", "Email:");
         MenuInput m3 = new MenuInput("Insira uma password", "Password:");
@@ -183,20 +183,18 @@ public class UIController implements Runnable
         m1.executa();
         m2.executa();
 
-        String headerPedido = "Autenticacao";
-
-        //int flagInterna = cliente.login(nr, m1.getOpcao(), m2.getOpcao());
-        int flagInterna = 0;
+        int flagInterna = userController.logIn(m1.getOpcao(),m2.getOpcao());
         if (flagInterna == -1)
             System.out.println("Falha no login");
         else if (flagInterna == 0) {
-            System.out.println("Cliente logado com sucesso");
+            System.out.println("Gambler logado com sucesso");
             flag.setValue(Flag.CLIENT_LOGGED_IN);
         } else if (flagInterna == 1) {
             System.out.println("Administrador logado com sucesso");
             flag.setValue(Flag.ADMIN_LOGGED_IN);
-        } else if (flagInterna == -2){
-            System.out.println("Erro de conexao. Tente novamente. Se o problema persistir o servidor pode estar offline.");
+        } else if (flagInterna == 2) {
+            System.out.println("Expert logado com sucesso");
+            flag.setValue(Flag.EXPERT_LOGGED_IN);
         }
     }
 }

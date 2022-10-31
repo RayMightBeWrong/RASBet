@@ -110,4 +110,17 @@ public class UserController {
     public User getUserByEmail(String email) {
         return userService.getUserByEmail(email);
     }
+
+
+    /**
+     * Save a expert to table
+     *
+     * @param  email      email of the account
+     * @param  password   password that corresponds to the email account
+     * @return            -1 unsuccessful logIn, 0 Gambler, 1 Admin, 2 Expert
+     */
+    //todo add mapping
+    public int logIn(String email,String password){
+        return userService.logIn(email,password);
+    }
 }

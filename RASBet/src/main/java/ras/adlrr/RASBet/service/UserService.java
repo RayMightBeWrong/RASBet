@@ -52,12 +52,10 @@ public class UserService {
      * @return         0 case added, 1 case emailExists
      */
     public int addGambler(Gambler user){
-        int returnValue = 0;
-        try {
-        gamblerRepository.save(user);
-        }
-        catch (DataIntegrityViolationException e){ //Isto pode ser mudado
-            returnValue = 1;
+        int returnValue = 1;
+        if(emailIsAvailable (user.getEmail())){
+            gamblerRepository.save(user);
+            returnValue = 0;
         }
         return returnValue;
     }
@@ -69,12 +67,10 @@ public class UserService {
      * @return         0 case added, 1 case emailExists
      */
     public int addAdmin(Admin user){
-        int returnValue = 0;
-        try {
+        int returnValue = 1;
+        if(emailIsAvailable (user.getEmail())){
             adminRepository.save(user);
-        }
-        catch (DataIntegrityViolationException e){ //Isto pode ser mudado
-            returnValue = 1;
+            returnValue = 0;
         }
         return returnValue;
     }
@@ -86,12 +82,10 @@ public class UserService {
      * @return         0 case added, 1 case emailExists
      */
     public int addExpert(Expert user){
-        int returnValue = 0;
-        try {
-        expertRepository.save(user);
-        }
-        catch (DataIntegrityViolationException e){ //Isto pode ser mudado
-            returnValue = 1;
+        int returnValue = 1;
+        if(emailIsAvailable (user.getEmail())){
+            expertRepository.save(user);
+            returnValue = 0;
         }
         return returnValue;
     }
@@ -126,7 +120,7 @@ public class UserService {
     }
 
     public User getUserByEmail(String email){
-        User user = new User();
+        User user = null;
 
         List<Integer> ids = adminRepository.findIdByEmail(email);
 
@@ -147,5 +141,30 @@ public class UserService {
             user = this.getAdmin(ids.get(0));
         }
         return user;
+    }
+
+    public Boolean emailIsAvailable (String email){
+        return this.getUserByEmail(email)==null;
+    }
+
+    /**
+     * Save a expert to table
+     *
+     * @param  email      email of the account
+     * @param  password   password that corresponds to the email account
+     * @return            -1 unsuccessful logIn, 0 Gambler, 1 Admin, 2 Expert
+     */
+    public int logIn(String email,String password){
+        int retValue = -1;
+        User user = this.getUserByEmail(email);
+        if(user!=null && user.getPassword().equals(password)){
+            if (user instanceof Gambler)
+                retValue = 0;
+            else if (user instanceof  Admin)
+                retValue = 1;
+            else if (user instanceof Expert)
+                retValue = 2;
+        }
+        return retValue;
     }
 }
