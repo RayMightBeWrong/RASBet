@@ -2,37 +2,15 @@ package ras.adlrr.RASBet.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import ras.adlrr.RASBet.dao.SportRepository;
+import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Sport;
 
 import java.util.List;
 
 @Service
 public class SportService {
-    /*
-    private final SportDAO sportDAO;
-
-    @Autowired
-    public SportService(@Qualifier("fakeSportDAO") SportDAO sportDAO){
-        this.sportDAO = sportDAO;
-    }
-
-    public int addSport(Sport sport){
-        return sportDAO.addSport(sport);
-    }
-
-    public Sport getSport(int id){
-        return sportDAO.getSport(id);
-    }
-
-    public int removeSport(int id) {
-        return sportDAO.removeSport(id);
-    }
-
-    public List<Sport> getListOfSports() {
-        return sportDAO.getListOfSports();
-    }
-    */
     @Autowired
     private final SportRepository sportRepository;
 
@@ -41,18 +19,21 @@ public class SportService {
         this.sportRepository = sportRepository;
     }
 
-    public int addSport(Sport sport){
+    public Sport addSport(Sport sport){
+        // TODO: validate method
         sportRepository.save(sport);
-        return 1;
+        return sport;
     }
 
     public Sport getSport(int id){
         return sportRepository.findById(id).orElse(null);
     }
 
-    public int removeSport(int id) {
-        sportRepository.deleteById(id);
-        return 1;
+    public Sport removeSport(int id) {
+        Sport s = sportRepository.findById(id).orElse(null);
+        if(s != null)
+            sportRepository.deleteById(id);
+        return s;
     }
 
     public List<Sport> getListOfSports() {
