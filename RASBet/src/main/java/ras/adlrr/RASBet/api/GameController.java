@@ -6,7 +6,6 @@ import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 import ras.adlrr.RASBet.service.GameService;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RequestMapping("/api/games/")
@@ -15,15 +14,14 @@ public class GameController {
     private final GameService gameService;
 
     /* **** Game Methods **** */
-
     @Autowired
     public GameController(GameService gameService){
         this.gameService = gameService;
     }
 
-    @GetMapping
-    public List<Game> getGames() {
-        return gameService.getGames();
+    @PostMapping
+    public Game addGame(@RequestBody Game g) {
+        return gameService.addGame(g);
     }
 
     @GetMapping(path = "{id}")
@@ -31,37 +29,34 @@ public class GameController {
         return gameService.getGame(id);
     }
 
-    @PostMapping
-    public int addGame(@RequestBody Game g) {
-        return gameService.addGame(g);
+    @DeleteMapping(path = "{id}")
+    public Game deleteGame(@PathVariable("id") int id) {
+        return gameService.removeGame(id);
     }
 
-    @PutMapping(path = "/{id}/state/{state}")
-    public int changeGameState(@PathVariable("id") int id, @PathVariable("state") String state) {
-        return gameService.changeGameState(id, state);
+    @GetMapping
+    public List<Game> getGames() {
+        return gameService.getGames();
     }
-
-    @PutMapping(path = "/changeDate/{id}")
-    public int changeGameDate(@PathVariable("id") int id, @RequestBody LocalDateTime date) {
-        return gameService.changeGameDate(id,date);
-    }
-
 
     /* **** Participants Methods **** */
-
-    @GetMapping("/{id}/participants/")
-    public List<Participant> getGameParticipants(@PathVariable int gameID) {
+    @GetMapping("/{game_id}/participants/")
+    public List<Participant> getGameParticipants(@PathVariable("game_id") int gameID) {
         return gameService.getGameParticipants(gameID);
     }
 
-    @PutMapping("/{id}/addParticipant/")
-    public int addParticipantToGame(@PathVariable("id") int gameID, @RequestBody Participant p) {
+    @PutMapping("/{game_id}/participants/")
+    public Participant addParticipantToGame(@PathVariable("game_id") int gameID, @RequestBody Participant p){
         return gameService.addParticipantToGame(gameID, p);
     }
 
-    //@PutMapping(path = "/{id}/participant/")
-    //public int insertOddToParticipant(@PathVariable("id") int gameID, @RequestBody Participant p) {
-    //    System.out.println(p.getName() + ": " + p.getOdd());
-    //    return 1;
-    //}
+    @DeleteMapping("/{game_id}/participants/{pid}")
+    public Participant deleteParticipantFromGame(@PathVariable("game_id") int gameID, @PathVariable("pid") int participant_id){
+        return gameService.removeParticipantFromGame(gameID, participant_id);
+    }
+
+    @GetMapping("/{game_id}/participants/{pid}")
+    public Participant getParticipantFromGame(@PathVariable("game_id") int gameID, @PathVariable("pid") int participant_id){
+        return gameService.getParticipantFromGame(participant_id);
+    }
 }

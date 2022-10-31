@@ -9,20 +9,16 @@ import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
-import ras.adlrr.RASBet.dao.GameRepository;
 import ras.adlrr.RASBet.model.APIGameReader;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 
 // TODO: criar ID para o jogo, tratar de erros na loadGames e getID de futebol
 public class FootballAPISportsReader implements APIGameReader{
-    private int footballID;
     private JSONArray games;
-    private GameRepository gameRepository;
 
-    public FootballAPISportsReader(String games, GameRepository gameRepository){
+    public FootballAPISportsReader(String games){
         this.games = (JSONArray) (new JSONObject(games).get("response"));
-        this.gameRepository = gameRepository;
     }
 
     public int getGameId(JSONObject game) {
@@ -121,8 +117,8 @@ public class FootballAPISportsReader implements APIGameReader{
             JSONObject league = (JSONObject) obj.get("league");
 
             if (league.get("round").equals("Regular Season - 10")){       
-                Game g = new Game(k, getGameExternalId(obj), getGameDate(obj), getGameParticipants(obj), getSportID(), getGameState(obj));
-                // TODO - RAy
+                //Game g = new Game(k, getGameExternalId(obj), getGameDate(obj), getGameParticipants(obj), getSportID(), getGameState(obj));
+                // TODO - Ray
                 //gameRepository.addGame(g);
                 k++;
             }

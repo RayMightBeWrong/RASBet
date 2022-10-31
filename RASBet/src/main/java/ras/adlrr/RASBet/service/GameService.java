@@ -23,54 +23,105 @@ import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import ras.adlrr.RASBet.dao.GameRepository;
 import ras.adlrr.RASBet.dao.ParticipantRepository;
+import ras.adlrr.RASBet.dao.SportRepository;
+import ras.adlrr.RASBet.model.APIGameReader;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
-import ras.adlrr.RASBet.model.APIGameReader;
+import ras.adlrr.RASBet.model.Sport;
 import ras.adlrr.RASBet.model.readers.F1APISportsReader;
 import ras.adlrr.RASBet.model.readers.FootballAPISportsReader;
 import ras.adlrr.RASBet.model.readers.NFLOddsAPIReader;
 
 @Service
 public class GameService {
-    private final GameRepository gameRepository;
-    private final ParticipantRepository participantRepository;
+    private final GameRepository gr;
+    private final ParticipantRepository pr;
+    private final SportRepository sr;
 
     /* **** Game Methods **** */
     @Autowired
-    public GameService(GameRepository gameRepository, ParticipantRepository participantRepository){
-        this.gameRepository = gameRepository;
-        this.participantRepository = participantRepository;
+    public GameService(GameRepository gameRepository, ParticipantRepository participantRepository, SportRepository sportRepository){
+        this.gr = gameRepository;
+        this.pr = participantRepository;
+        this.sr = sportRepository;
     }
 
     public List<Game> getGames() {
         //updateGames();
-        updateGames2();
-        //TODO
-        return null;//gameRepository.getGames();
+        //updateGames2();
+        return gr.findAll();
     }
 
     public Game getGame(int id){
-
-        //TODO
-        return null; //gameRepository.getGame(id);
+        return gr.findById(id).orElse(null);
     }
 
-    public int addGame(Game g) {
-        //TODO
-        return 0; //gameRepository.addGame(g);
+    public Game addGame(Game g) {
+        try {
+            // TODO: validate method
+            List<Game> res = gr.findAllByExtID(g.getExtID());
+            if (res.size() == 0){
+                Sport s = sr.findById(g.getSport().getId()).orElse(null);
+                assert s != null;
+
+                if (g.getState() != Game.CLOSED || g.getState() != Game.OPEN || g.getState() != Game.SUSPENDED)
+                    throw new Exception("Estado de jogo não reconhecido!");
+                    
+                g.setSport(s);
+                s.addGame(g);
+                gr.save(g);
+                sr.save(s);
+            }
+            return g;
+        }
+        catch (Exception e) { return null; }
     }
 
-    public int changeGameState(int id, String state){
-        //TODO
-        return 0;// gameRepository.changeGameState(id, state);
+    public Game removeGame(int id) {
+        Game game = gr.findById(id).orElse(null);
+        if (game != null)
+            gr.deleteById(id);
+        return game;
     }
 
-    public int changeGameDate(int id, LocalDateTime date) {
-        //TODO
-        return 0;//gameRepository.changeGameDate(id,date);
+    /* **** Participants Methods **** */
+    public List<Participant> getGameParticipants(int gameID) {
+        Game game = getGame(gameID);
+        return pr.findAllByGame(game);
     }
 
-    // TODO: fazer uma função de jeito
+    public Participant addParticipantToGame(int gameID, Participant p) {
+        try {
+            // TODO: validate method
+            Game game = gr.findById(gameID).orElse(null);
+            assert game != null;
+
+            p.setGame(game);
+            game.addParticipantToGame(p);
+            pr.save(p);
+            gr.save(game);
+
+            return p;
+        }
+        catch (Exception e) { return null; }
+    }
+
+    public Participant removeParticipantFromGame(int gameID, int participant_id){
+        Participant participant = pr.findById(participant_id).orElse(null);
+        if (participant != null)
+            pr.deleteById(participant_id);
+        return participant;
+    }
+
+    public Participant getParticipantFromGame(int participant_id){
+        return pr.findById(participant_id).orElse(null);
+    }
+
+
+
+    /*  UPDATE DE JOGOS */
+
+     // TODO: fazer uma função de jeito
     public int updateGames(){
         String json = readJSONfromHTTPRequest("http://ucras.di.uminho.pt/v1/games/");
         
@@ -119,7 +170,7 @@ public class GameService {
 
             // TODO: mudar para diferentes desportos e mudar o resultado
             // TODO: get ID do desporto
-            Game g = new Game(5, (String) jo.get("id"), ldt, ps, 1, Game.CLOSED);
+            //Game g = new Game(5, (String) jo.get("id"), ldt, ps, 1, Game.CLOSED);
             //TODO
             //gameRepository.addGame(g);
         }
@@ -147,8 +198,8 @@ public class GameService {
             while ((st = br1.readLine()) != null)
                 sb1.append(st);
 
-            APIGameReader reader = new FootballAPISportsReader(sb1.toString(), gameRepository);
-            reader.loadGames();
+            //APIGameReader reader = new FootballAPISportsReader(sb1.toString(), gameRepository);
+            //reader.loadGames();
         }
         catch (Exception e){
             e.printStackTrace();
@@ -186,17 +237,4 @@ public class GameService {
         }
     }
 
-
-    /* **** Participants Methods **** */
-    public List<Participant> getGameParticipants(int gameID) {
-        //TODO
-        //return participantRepository.getGameParticipants(gameID);
-        return null;
-    }
-
-    public int addParticipantToGame(int gameID, Participant p) {
-        //return participantRepository.addParticipantToGame(gameID, p);
-        //TODO
-        return 0;
-    }
 }

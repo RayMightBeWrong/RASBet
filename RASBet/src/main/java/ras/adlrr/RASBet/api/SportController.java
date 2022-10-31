@@ -1,7 +1,11 @@
 package ras.adlrr.RASBet.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import ras.adlrr.RASBet.dao.SportRepository;
 import ras.adlrr.RASBet.model.Sport;
 import ras.adlrr.RASBet.service.SportService;
 
@@ -18,8 +22,12 @@ public class SportController {
     }
 
     @PostMapping
-    public int addSport(@RequestBody Sport sport){
-        return sportService.addSport(sport);
+    public ResponseEntity<Sport> addSport(@RequestBody Sport sport){
+        sport = sportService.addSport(sport);
+        if(sport != null)
+            return new ResponseEntity<>(sport, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping(path = "{id}")
@@ -28,7 +36,7 @@ public class SportController {
     }
 
     @DeleteMapping(path = "{id}")
-    public int removeSport(@PathVariable int id) {
+    public Sport removeSport(@PathVariable int id) {
         return sportService.removeSport(id);
     }
 
