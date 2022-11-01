@@ -78,6 +78,17 @@ public class Game {
         this.gameChoices = gameChoices;
     }
 
+    public Game(String extID, LocalDateTime date, int state, String title,
+                int sport_id, Set<Participant> participants){
+        this.extID = extID;
+        this.date = date;
+        this.state = state;
+        this.title = title;
+        this.sport = new Sport();
+        sport.setId(sport_id);
+        this.participants = participants;
+    }
+
     @JsonIgnore
     public String getExtID(){
         return this.extID;
