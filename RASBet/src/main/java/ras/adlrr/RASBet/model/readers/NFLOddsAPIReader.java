@@ -100,7 +100,7 @@ public class NFLOddsAPIReader implements APIGameReader{
         for(int i = 0; i < response.length() && i < 10; i++){
             JSONObject obj = (JSONObject) response.get(i);
 
-            Game g = new Game(i, getGameExternalId(obj), getGameDate(obj), getGameState(obj), getSportID(), getGameParticipants(obj));
+            Game g = new Game(getGameExternalId(obj), getGameDate(obj), getGameState(obj), null, getSportID(), getGameParticipants(obj));
             //TODO - Ray
             //gameRepository.addGame(g);
         }

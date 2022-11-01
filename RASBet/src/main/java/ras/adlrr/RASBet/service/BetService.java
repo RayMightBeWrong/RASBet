@@ -57,10 +57,12 @@ public class BetService {
             throw new Exception("Null Bet!");
 
         List<GameChoice> gameChoices = bet.getGameChoices();
-        if(gameChoices == null || gameChoices.stream().noneMatch(Objects::nonNull))
+        if(gameChoices != null)
+            gameChoices = gameChoices.stream().filter(Objects::nonNull).toList();
+        if(gameChoices == null || gameChoices.size() == 0)
             throw new Exception("Bet requires at least 1 valid game choice!");
 
-        for(GameChoice gc : gameChoices.stream().filter(Objects::nonNull).toList()){
+        for(GameChoice gc : gameChoices){
             gc.setId(0); // Certifica q n dá erro por ter sido mencionado um id
 
             Game game = gc.getGame();

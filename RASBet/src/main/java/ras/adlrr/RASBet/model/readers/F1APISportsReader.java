@@ -72,7 +72,7 @@ public class F1APISportsReader implements APIGameReader{
     @Override
     public int loadGames() {
         //Game g = new Game(1, getRaceExternalId(), getGameDate(), getGameState(), getSportID(), getDrivers());
-        Game g = new Game(1, getRaceExternalId(), getGameDate(), getGameState(), getSportID(), null);
+        Game g = new Game(getRaceExternalId(), getGameDate(), getGameState(), null, getSportID(), null);
         // TODO - Ray
         //gameRepository.addGame(g);
         return 0;
