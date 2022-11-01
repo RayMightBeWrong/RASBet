@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.*;
 import ras.adlrr.RASBet.model.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,19 +13,19 @@ import java.util.Objects;
 public class BetService {
     private final TransactionService transactionService;
     private final WalletService walletService;
+    private final UserService userService;
+    private final GameService gameService;
     private final BetRepository betRepository;
-    private final GamblerRepository gamblerRepository;
-    private final ParticipantRepository participantRepository;
-    private final GameRepository gameRepository;
 
     @Autowired
-    public BetService(TransactionService transactionService, WalletService walletService, BetRepository betRepository, ParticipantRepository participantRepository, GamblerRepository gamblerRepository, GameRepository gameRepository) {
+    public BetService(TransactionService transactionService, WalletService walletService,
+                      BetRepository betRepository, UserService userService,
+                      GameService gameService) {
         this.transactionService = transactionService;
         this.walletService = walletService;
         this.betRepository = betRepository;
-        this.participantRepository = participantRepository;
-        this.gamblerRepository = gamblerRepository;
-        this.gameRepository = gameRepository;
+        this.userService = userService;
+        this.gameService = gameService;
     }
 
 
@@ -59,23 +60,8 @@ public class BetService {
         List<GameChoice> gameChoices = bet.getGameChoices();
         if(gameChoices != null)
             gameChoices = gameChoices.stream().filter(Objects::nonNull).toList();
-        if(gameChoices == null || gameChoices.size() == 0)
-            throw new Exception("Bet requires at least 1 valid game choice!");
-
-        for(GameChoice gc : gameChoices){
-            gc.setId(0); // Certifica q n dá erro por ter sido mencionado um id
-
-            Game game = gc.getGame();
-            if(!gameRepository.existsById(game.getId()))
-                throw new Exception("Trying to bet in a non existent game!");
-
-            if(gc.getOdd() < 1)
-                throw new Exception("Odds must be equal or higher to/than 1!");
-
-            Participant p = gc.getParticipant();
-            if(p == null || !participantRepository.existsById(p.getId()))
-                throw new Exception("One or more participants are invalid!");
-        }
+        
+        validateGameChoices(gameChoices);
 
         Transaction transaction = bet.getTransaction();
         if(transaction == null)
@@ -87,7 +73,7 @@ public class BetService {
             transaction.setWallet(wallet);
         }
 
-        transaction.setDescription("Bet");
+        transaction.setDescription("Bet expenses");
         transaction = transactionService.addTransaction(transaction);
         bet.setTransaction(transaction);
         bet.setId(transaction.getId());
@@ -102,8 +88,46 @@ public class BetService {
     }
 
     public List<Bet> getGamblerBets(int gambler_id) throws Exception {
-        if(!gamblerRepository.existsById(gambler_id))
+        if(!userService.gamblerExistsById(gambler_id))
             throw new Exception("Gambler does not exist!");
         return betRepository.findAllByGamblerId(gambler_id);
+    }
+
+    //Withdraw the winnings directly into a bank account, paypal, etc...
+    public void withdrawBetWinnings() throws Exception{
+        //TODO
+    }
+
+    public void withdrawBetWinnings(int bet_id, int wallet_id) throws Exception{
+        Bet bet = betRepository.findById(bet_id).orElse(null);
+        if(bet == null)
+            throw new Exception("Bet does not exist!");
+        bet.setState(Bet.STATE_CLOSED);
+
+        Wallet wallet = walletService.getWallet(wallet_id);
+
+        //TODO
+    }
+
+    // --------------- Auxiliar Methods ---------------
+    
+    private void validateGameChoices(Collection<GameChoice> gameChoices) throws Exception {
+        if(gameChoices == null || gameChoices.size() == 0)
+            throw new Exception("Bet requires at least 1 valid game choice!");
+
+        for(GameChoice gc : gameChoices){
+            gc.setId(0); // Certifica q n dá erro por ter sido mencionado um id
+
+            Game game = gc.getGame();
+            if(!gameService.gameExistsById(game.getId()))
+                throw new Exception("Trying to bet in a non existent game!");
+
+            if(gc.getOdd() < 1)
+                throw new Exception("Odds must be equal or higher to/than 1!");
+
+            Participant p = gc.getParticipant();
+            if(p == null || !gameService.participantExistsById(p.getId()))
+                throw new Exception("One or more participants are invalid!");
+        }
     }
 }

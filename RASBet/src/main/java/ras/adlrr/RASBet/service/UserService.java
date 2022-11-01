@@ -62,6 +62,9 @@ public class UserService {
         return gamblerRepository.findAll();
     }
 
+    public boolean gamblerExistsById(int gambler_id){
+        return gamblerRepository.existsById(gambler_id);
+    }
 
     // ------------ Admin Methods ------------
 
@@ -88,6 +91,9 @@ public class UserService {
         return adminRepository.findAll();
     }
 
+    public boolean adminExistsById(int admin_id){
+        return adminRepository.existsById(admin_id);
+    }
 
     // ------------ Expert Methods ------------
 
@@ -114,6 +120,9 @@ public class UserService {
         return expertRepository.findAll();
     }
 
+    public boolean expertExistsById(int expert_id){
+        return expertRepository.existsById(expert_id);
+    }
 
     // ------------ Shared Methods ------------
 

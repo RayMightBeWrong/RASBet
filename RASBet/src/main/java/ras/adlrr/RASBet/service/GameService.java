@@ -38,14 +38,14 @@ import ras.adlrr.RASBet.model.readers.UcrasAPIReader;
 public class GameService {
     private final GameRepository gr;
     private final ParticipantRepository pr;
-    private final SportRepository sr;
+    private final SportService sportService;
 
 
     @Autowired
-    public GameService(GameRepository gameRepository, ParticipantRepository participantRepository, SportRepository sportRepository){
+    public GameService(GameRepository gameRepository, ParticipantRepository participantRepository, SportService sportService){
         this.gr = gameRepository;
         this.pr = participantRepository;
-        this.sr = sportRepository;
+        this.sportService = sportService;
     }
 
     /* **** Game Methods **** */
@@ -80,7 +80,8 @@ public class GameService {
         if (game != null)
             throw new Exception("Game with the given external id already exists!");
 
-        if (!(sr.existsById(newGame.getSport().getId())))
+        Sport sport = newGame.getSport();
+        if (sport == null || !(sportService.sportExistsById(sport.getId())))
             throw new Exception("Cannot add a game to an invalid sport!");
 
         if (newGame.getState() != Game.CLOSED && newGame.getState() != Game.OPEN && newGame.getState() != Game.SUSPENDED)
@@ -117,6 +118,9 @@ public class GameService {
         gr.save(game);
     }
 
+    public boolean gameExistsById(int id) {
+        return gr.existsById(id);
+    }
     /* **** Participants Methods **** */
     private void validateParticipants(Collection<Participant> participants) throws Exception {
         if(participants == null || participants.stream().noneMatch(Objects::nonNull))
@@ -180,12 +184,15 @@ public class GameService {
             throw new Exception("Could not find participant!");
     }
 
+    public boolean participantExistsById(int id) {
+        return pr.existsById(id);
+    }
 
     /*  UPDATE DE JOGOS */
     
     // TODO: fazer uma função de jeito
     public void getGamesFromAPILocal() throws Exception{
-        Sport sport = sr.findByName("Futebol");
+        Sport sport = sportService.findSportByName("Futebol");
         if (sport != null){
             APIGameReader reader = new UcrasAPIReader(sport.getId());
             //APIGameReader reader = new NFLOddsAPIReader(response.getBody(), sport.getId());
@@ -216,7 +223,7 @@ public class GameService {
         while ((st = br1.readLine()) != null)
             sb1.append(st);
 
-        Sport sport = sr.findByName("NFL");
+        Sport sport = sportService.findSportByName("NFL");
         if (sport != null){
             //sb1.toString();
             //APIGameReader reader = new NFLOddsAPIReader(response.getBody(), sport.getId());
