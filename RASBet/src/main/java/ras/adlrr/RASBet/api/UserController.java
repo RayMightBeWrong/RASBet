@@ -159,4 +159,8 @@ public class UserController {
     public int logIn(String email,String password){
         return userService.logIn(email,password);
     }
+
+    public User getUserByEmail(String email){
+        return userService.getUserByEmail(email);
+    }
 }

@@ -117,7 +117,7 @@ public class UserService {
 
     // ------------ Shared Methods ------------
 
-    private User getUserByEmail(String email){
+    public User getUserByEmail(String email){
         User user;
         if((user = getGamblerByEmail(email)) == null)
             if((user = getAdminByEmail(email)) == null)
