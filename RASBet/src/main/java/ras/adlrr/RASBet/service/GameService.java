@@ -47,11 +47,24 @@ public class GameService {
 
     /* **** Game Methods **** */
 
-    //TODO - criar metodo q filtra os jogos q já terminaram
-    public List<Game> getGames() {
+    public void updateGames(){
         //updateGames();
         //updateGames2();
+    }
+
+    public List<Game> getGames() {
         return gr.findAll();
+    }
+
+    public List<Game> getOngoingGames(){
+        List<Game> games = gr.findAll();
+        List<Game> res = new ArrayList<>();
+
+        for(int i = 0; i < games.size(); i++)
+            if (games.get(i).getState() != Game.CLOSED)
+                res.add(games.get(i));
+
+        return res;
     }
 
     public Game getGame(int id){
@@ -64,7 +77,6 @@ public class GameService {
         if (game != null)
             throw new Exception("Game with the given external id already exists!");
 
-        System.out.println("SPORT: " + newGame.getSport().getId());
         if (!(sr.existsById(newGame.getSport().getId())))
             throw new Exception("Cannot add a game to an invalid sport!");
 
@@ -76,8 +88,12 @@ public class GameService {
             validateParticipants(participants);
 
         gr.save(newGame);
-
         return newGame;
+    }
+
+    public void addGames(List<Game> games) throws Exception{
+        for (int i = 0; i < games.size(); i++)
+            addGame(games.get(i));
     }
 
     public void removeGame(int id) throws Exception {
@@ -163,9 +179,9 @@ public class GameService {
 
 
     /*  UPDATE DE JOGOS */
-
+    
     // TODO: fazer uma função de jeito
-    public int updateGames(){
+    public int loadGames(){
         String json = readJSONfromHTTPRequest("http://ucras.di.uminho.pt/v1/games/");
 
         if (json == null){
@@ -221,7 +237,7 @@ public class GameService {
         return 1;
     }
 
-    public void updateGames2(){
+    public void loadGames2(){
 
         //HttpResponse<String> response = Unirest.get("https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/?regions=us&oddsFormat=american&apiKey=70d50d68d47a79f93f43e9d7353e16ed")
         //                                    .header("x-rapidapi-key", "b68a93e4291b512a0f3179eb9ee1bc2b")
@@ -231,8 +247,6 @@ public class GameService {
         //} catch (Exception e) {
         //    e.printStackTrace();
         //}
-
-
         try{
             BufferedReader br1 = new BufferedReader(new FileReader(new File("/home/ray/nfl.json")));
             StringBuilder sb1 = new StringBuilder();
@@ -241,8 +255,10 @@ public class GameService {
             while ((st = br1.readLine()) != null)
                 sb1.append(st);
 
-            //APIGameReader reader = new FootballAPISportsReader(sb1.toString(), gameRepository);
-            //reader.loadGames();
+            
+            APIGameReader reader = new FootballAPISportsReader(sb1.toString());
+            List<Game> gamesToUpload = reader.getAPIGames();
+            addGames(gamesToUpload);
         }
         catch (Exception e){
             e.printStackTrace();
