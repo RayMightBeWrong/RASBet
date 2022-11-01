@@ -125,15 +125,8 @@ public class FootballAPISportsReader implements APIGameReader{
             JSONObject league = (JSONObject) obj.get("league");
 
             if (league.get("round").equals("Regular Season - 10")){
-<<<<<<< HEAD
                 Game g = new Game(getGameExternalId(obj), getGameDate(obj), getGameState(obj), getName(obj), getSportID(), getGameParticipants(obj));
                 res.add(g);
-=======
-                Game g = new Game(getGameExternalId(obj), getGameDate(obj), getGameState(obj), null, getSportID(), getGameParticipants(obj));
-                // TODO - RAy
-                //gameRepository.addGame(g);
-                k++;
->>>>>>> 1c8c7ccc718bdd263f3748eaf1e391dcdf092978
             }
         }
         return res;
