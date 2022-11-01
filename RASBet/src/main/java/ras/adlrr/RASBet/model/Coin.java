@@ -23,4 +23,8 @@ public class Coin {
     private int id;
     private String name;
     private float ratio_EUR;
+
+    public String toString(){
+        return name + " | Ratio de euro: " + ratio_EUR;
+    }
 }
