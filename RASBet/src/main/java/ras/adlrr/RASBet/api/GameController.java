@@ -24,7 +24,9 @@ public class GameController {
 
     @PostMapping
     public ResponseEntity addGame(@RequestBody Game game){
-        try{ return ResponseEntity.ok().body(gameService.addGame(game)); }
+        try{ 
+            return ResponseEntity.ok().body(gameService.addGame(game)); 
+        }
         catch (Exception e){
             return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
         }
@@ -48,6 +50,16 @@ public class GameController {
     @GetMapping
     public ResponseEntity<List<Game>> getGames() {
         return ResponseEntity.ok().body(gameService.getGames());
+    }
+
+    @PutMapping(path = "/{id}/state/{state}")
+    public ResponseEntity changeGameState(@PathVariable("id") int id, @PathVariable("state") int state){
+        try {
+            gameService.changeGameState(id, state);
+            return new ResponseEntity(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /* **** Participants Methods **** */

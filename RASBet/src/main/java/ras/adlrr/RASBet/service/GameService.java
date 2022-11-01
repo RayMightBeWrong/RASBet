@@ -59,17 +59,20 @@ public class GameService {
     }
 
     public Game addGame(Game newGame) throws Exception {
-        Game game = gr.findByExtID(newGame.getExtID()).orElse(null);
+        Game game = gr.findByExtID(newGame._getExternalID()).orElse(null);
 
-        if(game != null)
+        if (game != null)
             throw new Exception("Game with the given external id already exists!");
+
+        System.out.println("SPORT: " + newGame.getSport().getId());
         if (!(sr.existsById(newGame.getSport().getId())))
             throw new Exception("Cannot add a game to an invalid sport!");
+
         if (newGame.getState() != Game.CLOSED && newGame.getState() != Game.OPEN && newGame.getState() != Game.SUSPENDED)
             throw new Exception("Game state not recognized!");
 
         Set<Participant> participants = newGame.getParticipants();
-        if(participants != null)
+        if (participants != null)
             validateParticipants(participants);
 
         gr.save(newGame);
@@ -83,8 +86,19 @@ public class GameService {
         gr.deleteById(id);
     }
 
-    /* **** Participants Methods **** */
+    public void changeGameState(int id, int state) throws Exception{
+        if (state != Game.CLOSED && state != Game.OPEN && state != Game.SUSPENDED)
+            throw new Exception("Game state to be inserted is not valid!");
+        
+        Game game = gr.findById(id).orElse(null);
+        if (game == null)
+            throw new Exception("Game doesn't exist!");
 
+        game.setState(state);
+        gr.save(game);
+    }
+
+    /* **** Participants Methods **** */
     private void validateParticipants(Collection<Participant> participants) throws Exception {
         if(participants == null || participants.stream().noneMatch(Objects::nonNull))
             throw new Exception("No participants were given!");
@@ -106,16 +120,16 @@ public class GameService {
     }
 
     public void addParticipantsToGame(int gameID, Collection<Participant> participants) throws Exception {
-            Game game = gr.loadGameById(gameID).orElse(null);
-            if(game == null)
-                throw new Exception("Cannot add participants to non existent game!");
+        Game game = gr.loadGameById(gameID).orElse(null);
+        if(game == null)
+            throw new Exception("Cannot add participants to non existent game!");
 
-            validateParticipants(participants);
+        validateParticipants(participants);
 
-            for(Participant p : participants)
-                game.addParticipantToGame(p);
+        for(Participant p : participants)
+            game.addParticipantToGame(p);
 
-            gr.save(game);
+        gr.save(game);
     }
 
     public void addParticipantToGame(int gameID, Participant p) throws Exception {
@@ -134,7 +148,7 @@ public class GameService {
         return pr.findById(participant_id).orElse(null);
     }
 
-    public int editOddInParticipant(int participant_id, float odd) throws Exception {
+    public void editOddInParticipant(int participant_id, float odd) throws Exception {
         if (odd <= 1)
             throw new Exception("Inserted odd is not valid!");
 
@@ -142,7 +156,6 @@ public class GameService {
         if (participant != null){
             participant.setOdd(odd);
             pr.save(participant);
-            return 1;
         }
         else
             throw new Exception("Could not find participant!");

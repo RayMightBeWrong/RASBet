@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -21,8 +22,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-@JsonIncludeProperties({"id", "state", "date", "sport", "participants"})
-@JsonPropertyOrder({"id", "state", "date", "sport", "participants"})
 public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +40,8 @@ public class Game {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "game", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<GameChoice> gameChoices;
+    
+    @Getter(AccessLevel.NONE)
     private String extID;
 
     private LocalDateTime date;
@@ -58,7 +59,8 @@ public class Game {
         this.extID = extID;
         this.date = date;
         this.state = state;
-        this.sport = new Sport(); sport.setId(sport_id);
+        this.sport = new Sport(); 
+        sport.setId(sport_id);
         this.participants = participants;
     }
 
@@ -72,6 +74,10 @@ public class Game {
         this.sport = new Sport(); sport.setId(sport_id);
         this.participants = participants;
         this.gameChoices = gameChoices;
+    }
+
+    public String _getExternalID(){
+        return this.extID;
     }
 
     // ------ Additional Methods ------
