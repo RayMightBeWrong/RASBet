@@ -1,62 +1,72 @@
 package ras.adlrr.RASBet.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ras.adlrr.RASBet.dao.GamblerRepository;
-import ras.adlrr.RASBet.dao.TransactionRepository;
-import ras.adlrr.RASBet.dao.WalletRepository;
-import ras.adlrr.RASBet.model.Gambler;
-import ras.adlrr.RASBet.model.Transaction;
-import ras.adlrr.RASBet.model.Wallet;
+import ras.adlrr.RASBet.dao.*;
+import ras.adlrr.RASBet.model.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class TransactionService {
-    private final TransactionRepository tr;
-    private final GamblerRepository gr;
-    private final WalletRepository wr;
+    private final TransactionRepository transactionRepository;
+    private final GamblerRepository gamblerRepository;
+    private final WalletRepository walletRepository;
     @Autowired
-    public TransactionService (TransactionRepository tr, GamblerRepository gr, WalletRepository wr){
-        this.tr = tr; this.gr = gr; this.wr = wr;
+    public TransactionService (TransactionRepository transactionRepository, GamblerRepository gamblerRepository, WalletRepository walletRepository){
+        this.transactionRepository = transactionRepository;
+        this.gamblerRepository = gamblerRepository;
+        this.walletRepository = walletRepository;
     }
 
     public Transaction getTransaction(int id) {
-        return tr.findById(id).orElse(null);
+        return transactionRepository.findById(id).orElse(null);
     }
 
-    public Transaction addTransaction(Transaction t) {
-        try {
-            Gambler g = gr.findById(t.getGambler().getID()).orElse(null);
-            assert g != null;
-            t.setGambler(g);
-            g.addTransaction(t);
-            t = tr.save(t);
+    public Transaction addTransaction(Transaction t) throws Exception {
 
-            Integer wallet_id = t.getWallet_id();
-            if(wallet_id != null) {
-                Wallet w = wr.findById(wallet_id).orElse(null);
-                assert w != null;
-                w.addTransaction(t);
-                wr.save(w);
-            }
+        if(t == null)
+            throw new Exception("Null Transaction!");
 
-            return t;
-        }catch (Exception e) { return null; }
+        Gambler gambler = t.getGambler();
+        if(gambler != null && !gamblerRepository.existsById(gambler.getId()))
+            throw new Exception("Cannot register a transaction to a non existent gambler!");
+
+        if (t.getValue() < 0)
+            throw new Exception("Cannot perform a transaction with a negative value!");
+
+        Wallet wallet = t.getWallet();
+        if(wallet != null) {
+            if(!walletRepository.existsById(wallet.getId()))
+                throw new Exception("Invalid wallet!");
+
+            Float balance_after_mov = t.getBalance_after_mov();
+            if(balance_after_mov != null && balance_after_mov < 0)
+                throw new Exception("Balance cannot be negative!");
+        }
+
+        //Set date
+        t.setDate(LocalDateTime.now());
+
+        return transactionRepository.save(t);
     }
 
-    public List<Transaction> getUserTransactions(int userID) {
-        Gambler gambler = new Gambler(); gambler.setID(userID);
-        return tr.findAllByGambler(gambler);
+    public List<Transaction> getGamblerTransactions(int gambler_id) throws Exception {
+        Gambler gambler = gamblerRepository.findById(gambler_id).orElse(null);
+        if(gambler == null)
+            throw new Exception("Gambler does not exist!");
+        return transactionRepository.findAllByGambler(gambler);
     }
 
-    public int removeTransaction(int id) {
-        try {
-            tr.deleteById(id);
-            return 1;
-        }catch (Exception e) { return 0; }
+    public void removeTransaction(int id) throws Exception {
+        if(!transactionRepository.existsById(id))
+            throw new Exception("Transaction needs to exist, to be removed!");
+        transactionRepository.deleteById(id);
     }
 
     public List<Transaction> getTransactions() {
-        return tr.findAll();
+        return transactionRepository.findAll();
     }
 }

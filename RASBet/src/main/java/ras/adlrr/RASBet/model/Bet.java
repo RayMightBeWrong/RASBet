@@ -1,70 +1,60 @@
 package ras.adlrr.RASBet.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "bets")
-public class Bet implements Serializable {
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class Bet {
     @Id
     @Column(name = "id")
+    @JsonProperty("id")
     private int id;
 
     @OneToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "id", updatable = false)
     @MapsId
+    @JsonIncludeProperties("id")
     private Transaction transaction;
 
-    /*
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "bet_id", nullable = false)
     private List<GameChoice> gameChoices;
-*/
+
     private int state;
 
-    public Bet(){}
+    public Bet(@JsonProperty("gambler_id") int gambler_id, @JsonProperty("wallet_id") Integer wallet_id,
+               @JsonProperty("value") float value, @JsonProperty("state") int state,
+               @JsonProperty("game_choices") List<GameChoice> gameChoices){
+        transaction = new Transaction();
 
-    public Bet(@JsonProperty("id") int id, @JsonProperty("state") int state, @JsonProperty("transaction") Transaction transaction, @JsonProperty("game_choices") List<GameChoice> gameChoices) {
-        this.id = id;
+        Gambler gambler = new Gambler();
+        gambler.setId(gambler_id);
+        transaction.setGambler(gambler);
+
+        if(wallet_id != null) {
+            Wallet wallet = new Wallet();
+            wallet.setId(wallet_id);
+            transaction.setWallet(wallet);
+        }
+
+        transaction.setValue(value);
+
         this.state = state;
-        this.transaction = transaction;
-        //this.gameChoices = gameChoices;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Transaction getTransaction() {
-        return transaction;
-    }
-
-    public void setTransaction(Transaction transaction) {
-        this.transaction = transaction;
-    }
-
-    /*
-    public List<GameChoice> getGameChoices() {
-        return gameChoices;
-    }
-
-    public void setGameChoices(List<GameChoice> gameChoices) {
         this.gameChoices = gameChoices;
-    }*/
-
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
     }
 }

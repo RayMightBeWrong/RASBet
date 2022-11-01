@@ -1,45 +1,43 @@
 package ras.adlrr.RASBet.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "game_choices")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class GameChoice {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    private int odd;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "game_id")
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "game_id", nullable = false, updatable = false)
+    @JsonIncludeProperties("id")
     private Game game;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "participant_id")
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "participant_id", nullable = false, updatable = false)
+    @JsonIgnoreProperties({"odd"})
     private Participant participant;
 
-    //TODO - ver todas as funcoes
+    private float odd;
 
-    public GameChoice() {
-    }
-
-    public GameChoice(@JsonProperty("game_id") int game_id, @JsonProperty("participant") Participant participant) {
-        this.game = new Game(); game.setId(game_id);
-        this.participant = participant;
-    }
-
-    public GameChoice(GameChoice g){
-        //this.game_id = g.game_id;
-        //this.participant = g.participant;
-    }
-
-    public int getGame_id() {
-        return 0;
-    }
-
-    public String getParticipant() {
-        return null;
+    public GameChoice(@JsonProperty("game_id") int game_id, @JsonProperty("participant_id") int participant_id, @JsonProperty("odd") float odd){
+        game = new Game(); game.setId(game_id);
+        participant = new Participant(); participant.setId(participant_id);
+        this.odd = odd;
     }
 }

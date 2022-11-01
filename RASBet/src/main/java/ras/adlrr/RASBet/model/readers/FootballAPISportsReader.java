@@ -3,22 +3,28 @@ package ras.adlrr.RASBet.model.readers;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
+import ras.adlrr.RASBet.dao.GameRepository;
 import ras.adlrr.RASBet.model.APIGameReader;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 
 // TODO: criar ID para o jogo, tratar de erros na loadGames e getID de futebol
 public class FootballAPISportsReader implements APIGameReader{
+    private int footballID;
     private JSONArray games;
+    private GameRepository gameRepository;
 
-    public FootballAPISportsReader(String games){
+    public FootballAPISportsReader(String games, GameRepository gameRepository){
         this.games = (JSONArray) (new JSONObject(games).get("response"));
+        this.gameRepository = gameRepository;
     }
 
     public int getGameId(JSONObject game) {
@@ -69,7 +75,7 @@ public class FootballAPISportsReader implements APIGameReader{
         return res;
     }
 
-    public List<Participant> getGameParticipants(JSONObject game) {
+    public Set<Participant> getGameParticipants(JSONObject game) {
         JSONObject teams = (JSONObject) game.get("teams");
         JSONObject home = (JSONObject) teams.get("home");
         JSONObject away = (JSONObject) teams.get("away");
@@ -77,7 +83,7 @@ public class FootballAPISportsReader implements APIGameReader{
         String awayTeam = (String) away.get("name");
 
 
-        List<Participant> ps = new ArrayList<>();
+        Set<Participant> ps = new HashSet<>();
         //List<Float> odds = getOdds(game);
         //Participant homeP = new Participant(homeTeam, odds.get(0), 0);
         //Participant drawP = new Participant("draw", odds.get(1), 0);
@@ -116,9 +122,9 @@ public class FootballAPISportsReader implements APIGameReader{
             JSONObject obj = (JSONObject) games.get(i);
             JSONObject league = (JSONObject) obj.get("league");
 
-            if (league.get("round").equals("Regular Season - 10")){       
-                //Game g = new Game(k, getGameExternalId(obj), getGameDate(obj), getGameParticipants(obj), getSportID(), getGameState(obj));
-                // TODO - Ray
+            if (league.get("round").equals("Regular Season - 10")){
+                Game g = new Game(k, getGameExternalId(obj), getGameDate(obj), getGameState(obj), getSportID(), getGameParticipants(obj));
+                // TODO - RAy
                 //gameRepository.addGame(g);
                 k++;
             }

@@ -1,15 +1,14 @@
 package ras.adlrr.RASBet.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ras.adlrr.RASBet.model.Expert;
+import ras.adlrr.RASBet.model.Gambler;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ExpertRepository extends JpaRepository<Expert,Integer> {
-    @Query("SELECT r.id FROM Expert r where r.email = :email")
-    List<Integer> findIdByEmail(@Param("email") String email);
+    Optional<Expert> findByEmail(String email);
+    boolean existsByEmail(String email);
 }

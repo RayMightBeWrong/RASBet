@@ -1,22 +1,22 @@
 package ras.adlrr.RASBet.api;
 
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import ras.adlrr.RASBet.model.Coin;
 import ras.adlrr.RASBet.model.Wallet;
 import ras.adlrr.RASBet.service.WalletService;
 
-@RequestMapping("/api/wallets/")
+@RequestMapping("/api/wallets")
 @RestController
 public class WalletController {
     private final WalletService walletService;
@@ -26,47 +26,84 @@ public class WalletController {
         this.walletService = walletService;
     }
 
+    // ---------- Wallet Methods ----------
+
     @PostMapping("/wallet")
-    public int addWallet(@RequestBody HashMap<String,String> map){
-        var balance = map.get("balance");
-        var coinID = map.get("coin_id");
-        Wallet wallet = new Wallet();
-        wallet.setBalance(Float.parseFloat(balance));
-        return walletService.addWallet(Integer.parseInt(coinID),wallet);
+    public ResponseEntity createWallet(@RequestBody Wallet wallet){
+        try {
+            return new ResponseEntity<>(walletService.createWallet(wallet),HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(path = "/wallet/{id}")
-    public Wallet getWallet(@PathVariable("id") int id){
-        return walletService.getWallet(id);
+    public ResponseEntity<Wallet> getWallet(@PathVariable("id") int id){
+        return ResponseEntity.ok().body(walletService.getWallet(id));
     }
 
     @DeleteMapping(path = "/wallet/{id}")
-    public int removeWallet(@PathVariable int id){
-        return walletService.removeWallet(id);
+    public ResponseEntity removeWallet(@PathVariable int id){
+        try {
+            walletService.removeWallet(id);
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/wallet")
-    public List<Wallet> getListOfWallets(){
-        return walletService.getListOfWallets();
+    public ResponseEntity<List<Wallet>> getListOfWallets(){
+        return ResponseEntity.ok().body(walletService.getListOfWallets());
     }
 
+    @PutMapping("/wallet/deposit")
+    public ResponseEntity deposit(@RequestParam int wallet_id, @RequestParam float value){
+        try {
+            return ResponseEntity.ok().body(walletService.deposit(wallet_id, value));
+        }catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/wallet/withdraw")
+    public ResponseEntity withdraw(@RequestParam int wallet_id, @RequestParam float value){
+        try {
+            return ResponseEntity.ok().body(walletService.withdraw(wallet_id, value));
+        }catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // ---------- Coin Methods ----------
+
     @PostMapping("/coin")
-    public int addCoin(@RequestBody Coin coin){
-        return walletService.addCoin(coin);
+    public ResponseEntity addCoin(@RequestBody Coin coin){
+        try{ return ResponseEntity.ok().body(walletService.addCoin(coin)); }
+        catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(path = "/coin/{id}")
-    public Coin getCoin(@PathVariable("id") int id){
-        return walletService.getCoin(id);
+    public ResponseEntity<Coin> getCoin(@PathVariable("id") int id){
+        return ResponseEntity.ok().body(walletService.getCoin(id));
     }
 
     @DeleteMapping(path = "/coin/{id}")
-    public int removeCoin(@PathVariable int id){
-        return walletService.removeCoin(id);
+    public ResponseEntity removeCoin(@PathVariable int id){
+        try {
+            walletService.removeCoin(id);
+            return new ResponseEntity(HttpStatus.OK); }
+        catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/coin")
-    public List<Coin> getListOfCoins(){
-        return walletService.getListOfCoins();
+    public ResponseEntity<List<Coin>> getListOfCoins(){
+        return ResponseEntity.ok().body(walletService.getListOfCoins());
     }
 }

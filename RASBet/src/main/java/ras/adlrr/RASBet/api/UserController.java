@@ -1,24 +1,21 @@
 package ras.adlrr.RASBet.api;
 
+import java.sql.Date;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.AbstractMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import ras.adlrr.RASBet.model.Admin;
-import ras.adlrr.RASBet.model.Expert;
-import ras.adlrr.RASBet.model.Gambler;
-import ras.adlrr.RASBet.model.User;
+import ras.adlrr.RASBet.model.*;
 import ras.adlrr.RASBet.service.UserService;
 
 
 
-@RequestMapping("/api/users/")
+@RequestMapping("/api/users")
 @RestController
 public class UserController {
     private final UserService userService;
@@ -28,92 +25,131 @@ public class UserController {
         this.userService = userService;
     }
 
-    /**
-     * Save a admin to table
-     *
-     * @param  user    the admin that you want to add
-     * @return         0 case added, 1 case emailExists
-     */
-    @PostMapping("/admins/")
-    public int registerAdmin(@RequestBody Admin user){
-        return userService.addAdmin(user);
+
+    // ------------ Gambler Methods ------------
+
+    @PostMapping("/gambler")
+    public ResponseEntity addGambler(@RequestBody Gambler gambler){
+        try{ return ResponseEntity.ok().body(userService.addGambler(gambler)); }
+        catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    /**
-     * Save a expert to table
-     *
-     * @param  user    the expert that you want to add
-     * @return         0 case added, 1 case emailExists
-     */
-    @PostMapping("/experts/")
-    public int registerExpert(@RequestBody Expert user){
-        return userService.addExpert(user);
+    @GetMapping(path = "/gambler")
+    public ResponseEntity getGambler(@RequestParam(value = "id", required = false) Integer id, @RequestParam(value = "email", required = false) String email){
+        if(id == null && email == null)
+            return ResponseEntity.badRequest().body(new AbstractMap.SimpleEntry<>("error","An email or id is required!"));
+
+        Gambler gambler = null;
+        if(id != null)
+            gambler = userService.getGamblerById(id);
+
+        if(gambler == null && email != null)
+            gambler = userService.getGamblerByEmail(email);
+
+        return ResponseEntity.ok().body(gambler);
     }
 
-    /**
-     * Save a gambler to table
-     *
-     * @param  user    the gambler that you want to add
-     * @return         0 case added, 1 case emailExists
-     */
-    @PostMapping("/gamblers/")
-    public int registerGambler(@RequestBody Gambler user){
-        return userService.addGambler(user);
+    @DeleteMapping(path = "/gambler/{id}")
+    public ResponseEntity removeGambler(@PathVariable int id){
+        try {
+            userService.removeGambler(id);
+            return new ResponseEntity(HttpStatus.OK); }
+        catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @GetMapping(path = "/admins/{id}")
-    public Admin getAdmin(@PathVariable("id") int id){
-        return userService.getAdmin(id);
+    @GetMapping("/gambler/all")
+    public ResponseEntity<List<Gambler>> getListOfGamblers(){
+        return ResponseEntity.ok().body(userService.getListOfGamblers());
     }
 
-    @GetMapping(path = "/experts/{id}")
-    public Expert getExpert(@PathVariable("id") int id){
-        return userService.getExpert(id);
+    // ------------ Admin Methods ------------
+
+    @PostMapping("/admin")
+    public ResponseEntity addAdmin(@RequestBody Admin admin){
+        try{ return ResponseEntity.ok().body(userService.addAdmin(admin)); }
+        catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @GetMapping(path = "/gamblers/{id}")
-    public Gambler getGambler(@PathVariable("id") int id){
-        return userService.getGambler(id);
+    @GetMapping(path = "/admin")
+    public ResponseEntity getAdmin(@RequestParam(value = "id", required = false) Integer id, @RequestParam(value = "email", required = false) String email){
+        if(id == null && email == null)
+            return ResponseEntity.badRequest().body(new AbstractMap.SimpleEntry<>("error","An email or id is required!"));
+
+        Admin admin = null;
+        if(id != null)
+            admin = userService.getAdminById(id);
+
+        if(admin == null && email != null)
+            admin = userService.getAdminByEmail(email);
+
+        return ResponseEntity.ok().body(admin);
     }
 
-    @DeleteMapping(path = "/admins/{id}")
-    public int removeAdmin(@PathVariable int id) {
-        return userService.removeAdmin(id);
+    @DeleteMapping(path = "/admin/{id}")
+    public ResponseEntity removeAdmin(@PathVariable int id){
+        try {
+            userService.removeAdmin(id);
+            return new ResponseEntity(HttpStatus.OK); }
+        catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/admin/all")
+    public ResponseEntity<List<Admin>> getListOfAdmins(){
+        return ResponseEntity.ok().body(userService.getListOfAdmins());
+    }
+
+    // ------------ Expert Methods ------------
+
+    @PostMapping("/expert")
+    public ResponseEntity addExpert(@RequestBody Expert expert){
+        try{ return ResponseEntity.ok().body(userService.addExpert(expert)); }
+        catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(path = "/expert")
+    public ResponseEntity getExpert(@RequestParam(value = "id", required = false) Integer id, @RequestParam(value = "email", required = false) String email){
+        if(id == null && email == null)
+            return ResponseEntity.badRequest().body(new AbstractMap.SimpleEntry<>("error","An email or id is required!"));
+
+        Expert expert = null;
+        if(id != null)
+            expert = userService.getExpertById(id);
+
+        if(expert == null && email != null)
+            expert = userService.getExpertByEmail(email);
+
+        return ResponseEntity.ok().body(expert);
     }
 
     @DeleteMapping(path = "/expert/{id}")
-    public int removeExpert(@PathVariable int id) {
-        return userService.removeExpert(id);
+    public ResponseEntity removeExpert(@PathVariable int id){
+        try {
+            userService.removeExpert(id);
+            return new ResponseEntity(HttpStatus.OK); }
+        catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @DeleteMapping(path = "/gamblers/{id}")
-    public int removeGambler(@PathVariable int id) {
-        return userService.removeGambler(id);
+    @GetMapping("/expert/all")
+    public ResponseEntity<List<Expert>> getListOfExperts(){
+        return ResponseEntity.ok().body(userService.getListOfExperts());
     }
 
-    @GetMapping("/admins/*")
-    public List<Admin> getListOfAdmins() {
-        return userService.getListOfAdmins();
-    }
-
-    @GetMapping("/experts/*")
-    public List<Expert> getListOfExperts() {
-        return userService.getListOfExperts();
-    }
-
-    @GetMapping("/gamblers/*")
-    public List<Gambler> getListOfGamblers() {
-        return userService.getListOfGamblers();
-    }
-
-    //todo add mapping
-    public User getUserByEmail(String email) {
-        return userService.getUserByEmail(email);
-    }
-
+    // ------------ Shared Methods ------------
 
     /**
-     * Save a expert to table
+     * Save an expert to table
      *
      * @param  email      email of the account
      * @param  password   password that corresponds to the email account

@@ -9,9 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,13 +30,15 @@ import ras.adlrr.RASBet.model.readers.F1APISportsReader;
 import ras.adlrr.RASBet.model.readers.FootballAPISportsReader;
 import ras.adlrr.RASBet.model.readers.NFLOddsAPIReader;
 
+import javax.servlet.http.Part;
+
 @Service
 public class GameService {
     private final GameRepository gr;
     private final ParticipantRepository pr;
     private final SportRepository sr;
 
-    /* **** Game Methods **** */
+
     @Autowired
     public GameService(GameRepository gameRepository, ParticipantRepository participantRepository, SportRepository sportRepository){
         this.gr = gameRepository;
@@ -46,6 +46,9 @@ public class GameService {
         this.sr = sportRepository;
     }
 
+    /* **** Game Methods **** */
+
+    //TODO - criar metodo q filtra os jogos q já terminaram
     public List<Game> getGames() {
         //updateGames();
         //updateGames2();
@@ -56,61 +59,77 @@ public class GameService {
         return gr.findById(id).orElse(null);
     }
 
-    public Game addGame(Game g) {
-        try {
-            // TODO: validate method
-            List<Game> res = gr.findAllByExtID(g.getExtID());
-            if (res.size() == 0){
-                Sport s = sr.findById(g.getSport().getId()).orElse(null);
-                assert s != null;
+    public Game addGame(Game newGame) throws Exception {
+        Game game = gr.findByExtID(newGame.getExtID()).orElse(null);
 
-                if (g.getState() != Game.CLOSED || g.getState() != Game.OPEN || g.getState() != Game.SUSPENDED)
-                    throw new Exception("Estado de jogo não reconhecido!");
-                    
-                g.setSport(s);
-                s.addGame(g);
-                gr.save(g);
-                sr.save(s);
-            }
-            return g;
-        }
-        catch (Exception e) { return null; }
+        if(game != null)
+            throw new Exception("Game with the given external id already exists!");
+        if (!(sr.existsById(newGame.getSport().getId())))
+            throw new Exception("Cannot add a game to an invalid sport!");
+        if (newGame.getState() != Game.CLOSED && newGame.getState() != Game.OPEN && newGame.getState() != Game.SUSPENDED)
+            throw new Exception("Game state not recognized!");
+
+        Set<Participant> participants = newGame.getParticipants();
+        if(participants != null)
+            validateParticipants(participants);
+
+        gr.save(newGame);
+
+        return newGame;
     }
 
-    public Game removeGame(int id) {
-        Game game = gr.findById(id).orElse(null);
-        if (game != null)
-            gr.deleteById(id);
-        return game;
+    public void removeGame(int id) throws Exception {
+        if (!gr.existsById(id))
+            throw new Exception("Game needs to exist to be removed!");
+        gr.deleteById(id);
     }
 
     /* **** Participants Methods **** */
-    public List<Participant> getGameParticipants(int gameID) {
-        Game game = getGame(gameID);
-        return pr.findAllByGame(game);
-    }
 
-    public Participant addParticipantToGame(int gameID, Participant p) {
-        try {
-            // TODO: validate method
-            Game game = gr.findById(gameID).orElse(null);
-            assert game != null;
+    private void validateParticipants(Collection<Participant> participants) throws Exception {
+        if(participants == null || participants.stream().noneMatch(Objects::nonNull))
+            throw new Exception("No participants were given!");
 
-            p.setGame(game);
-            game.addParticipantToGame(p);
-            pr.save(p);
-            gr.save(game);
-
-            return p;
+        for(Participant p : participants){
+            if(p == null)
+                throw new Exception("Participant cannot be null!");
+            p.setId(0); // Certifica q n dá erro por ter sido mencionado um id
+            if(p.getOdd() < 1)
+                throw new Exception("Odds must be equal or higher to/than 1!");
         }
-        catch (Exception e) { return null; }
     }
 
-    public Participant removeParticipantFromGame(int gameID, int participant_id){
+    public Set<Participant> getGameParticipants(int gameID) throws Exception {
+        Game game = gr.loadGameById(gameID).orElse(null);
+        if(game == null)
+            throw new Exception("Cannot get participants from an invalid game!");
+        return game.getParticipants();
+    }
+
+    public void addParticipantsToGame(int gameID, Collection<Participant> participants) throws Exception {
+            Game game = gr.loadGameById(gameID).orElse(null);
+            if(game == null)
+                throw new Exception("Cannot add participants to non existent game!");
+
+            validateParticipants(participants);
+
+            for(Participant p : participants)
+                game.addParticipantToGame(p);
+
+            gr.save(game);
+    }
+
+    public void addParticipantToGame(int gameID, Participant p) throws Exception {
+        addParticipantsToGame(gameID, List.of(p));
+    }
+
+    //TODO - fazer verificacao com o id do jogo
+    public void removeParticipantFromGame(int gameID, int participant_id) throws Exception {
         Participant participant = pr.findById(participant_id).orElse(null);
         if (participant != null)
             pr.deleteById(participant_id);
-        return participant;
+        else
+            throw new Exception("Cannot remove participant that does not exist!");
     }
 
     public Participant getParticipantFromGame(int participant_id){
@@ -121,10 +140,10 @@ public class GameService {
 
     /*  UPDATE DE JOGOS */
 
-     // TODO: fazer uma função de jeito
+    // TODO: fazer uma função de jeito
     public int updateGames(){
         String json = readJSONfromHTTPRequest("http://ucras.di.uminho.pt/v1/games/");
-        
+
         if (json == null){
             return 0;
         }
@@ -132,21 +151,21 @@ public class GameService {
         JSONArray ja = new JSONArray(json);
         for(int i = 0; i < ja.length(); i++){
             JSONObject jo = (JSONObject) ja.get(i);
-            
+
             String iso8601 = (String) jo.get("commenceTime");
             ZonedDateTime zdt = ZonedDateTime.parse(iso8601);
             LocalDateTime ldt = zdt.toLocalDateTime();
 
             String homeTeam = (String) jo.get("homeTeam");
             String awayTeam = (String) jo.get("awayTeam");
-            
+
 
             JSONArray bookmakers = (JSONArray) jo.get("bookmakers");
             JSONObject fst = (JSONObject) bookmakers.get(0);
             JSONArray markets = (JSONArray) fst.get("markets");
             JSONObject markets2 = (JSONObject) markets.get(0);
             JSONArray outcomes = (JSONArray) markets2.get("outcomes");
-            
+
             float drawOdd = 0, homeOdd = 0, awayOdd = 0;
             for (int j = 0; j < outcomes.length(); j++){
                 JSONObject obj = (JSONObject) outcomes.get(j);
@@ -174,26 +193,26 @@ public class GameService {
             //TODO
             //gameRepository.addGame(g);
         }
-        
+
         return 1;
     }
 
     public void updateGames2(){
-        /* 
-        HttpResponse<String> response = Unirest.get("https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/?regions=us&oddsFormat=american&apiKey=70d50d68d47a79f93f43e9d7353e16ed")
-                                            .header("x-rapidapi-key", "b68a93e4291b512a0f3179eb9ee1bc2b")
-                                            .header("x-rapidapi-host", "v3.football.api-sports.io").asString();
-        try {
-            Files.write( Paths.get("/home/ray/nfl.json"), response.getBody().getBytes());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        */
+
+        //HttpResponse<String> response = Unirest.get("https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/?regions=us&oddsFormat=american&apiKey=70d50d68d47a79f93f43e9d7353e16ed")
+        //                                    .header("x-rapidapi-key", "b68a93e4291b512a0f3179eb9ee1bc2b")
+        //                                    .header("x-rapidapi-host", "v3.football.api-sports.io").asString();
+        //try {
+        //    Files.write( Paths.get("/home/ray/nfl.json"), response.getBody().getBytes());
+        //} catch (Exception e) {
+        //    e.printStackTrace();
+        //}
+
 
         try{
             BufferedReader br1 = new BufferedReader(new FileReader(new File("/home/ray/nfl.json")));
             StringBuilder sb1 = new StringBuilder();
-            
+
             String st;
             while ((st = br1.readLine()) != null)
                 sb1.append(st);
@@ -216,11 +235,11 @@ public class GameService {
             if (rCode != 200){
                 throw new RuntimeException("HTTP Response Code: " + rCode);
             }
-            
+
             StringBuilder sb = new StringBuilder();
             Scanner scanner = new Scanner(url.openStream());
             while (scanner.hasNext()){
-                sb.append(scanner.nextLine());        
+                sb.append(scanner.nextLine());
             }
 
             scanner.close();

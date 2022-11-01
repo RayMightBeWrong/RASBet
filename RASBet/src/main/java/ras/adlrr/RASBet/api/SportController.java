@@ -5,13 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import ras.adlrr.RASBet.dao.SportRepository;
 import ras.adlrr.RASBet.model.Sport;
 import ras.adlrr.RASBet.service.SportService;
 
+import java.util.AbstractMap;
 import java.util.List;
 
-@RequestMapping("/api/sports/")
+@RequestMapping("/api/sports")
 @RestController
 public class SportController {
     private final SportService sportService;
@@ -22,26 +22,41 @@ public class SportController {
     }
 
     @PostMapping
-    public ResponseEntity<Sport> addSport(@RequestBody Sport sport){
-        sport = sportService.addSport(sport);
-        if(sport != null)
-            return new ResponseEntity<>(sport, HttpStatus.OK);
-        else
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    public ResponseEntity addSport(@RequestBody Sport sport){
+        try{ return ResponseEntity.ok().body(sportService.addSport(sport)); }
+        catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @GetMapping(path = "{id}")
-    public Sport getSport(@PathVariable("id") int id){
-        return sportService.getSport(id);
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<Sport> getSport(@PathVariable("id") int id){
+        return new ResponseEntity<>(sportService.getSport(id), HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "{id}")
-    public Sport removeSport(@PathVariable int id) {
-        return sportService.removeSport(id);
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity removeSport(@PathVariable int id) {
+
+        try {
+            sportService.removeSport(id);
+            return new ResponseEntity(HttpStatus.OK); }
+        catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping
-    public List<Sport> getListOfSports() {
-        return sportService.getListOfSports();
+    public ResponseEntity<List<Sport>> getListOfSports() {
+        return new ResponseEntity<>(sportService.getListOfSports(),HttpStatus.OK);
     }
+
+    @GetMapping("/{sport_name}/games")
+    public ResponseEntity getGamesFromSport(@PathVariable("sport_name") String sport_name) {
+        try{
+            return ResponseEntity.ok().body(sportService.getGamesFromSport(sport_name));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(new AbstractMap.SimpleEntry<>("error",e.getMessage()));
+        }
+    }
+
 }

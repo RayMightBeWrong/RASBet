@@ -1,23 +1,17 @@
 package ras.adlrr.RASBet.service;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.List;
-
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.AdminRepository;
 import ras.adlrr.RASBet.dao.ExpertRepository;
 import ras.adlrr.RASBet.dao.GamblerRepository;
-import ras.adlrr.RASBet.dao.UserRepository;
 import ras.adlrr.RASBet.model.Admin;
 import ras.adlrr.RASBet.model.Expert;
 import ras.adlrr.RASBet.model.Gambler;
 import ras.adlrr.RASBet.model.User;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -32,139 +26,124 @@ public class UserService {
         this.expertRepository = expertRepository;
     }
 
-    public Gambler getGambler(int id){
+
+    // ------------ Gambler Methods ------------
+
+    public Gambler getGamblerById(int id){
         return gamblerRepository.findById(id).orElse(null);
     }
 
-    public Admin getAdmin(int id){
-        return adminRepository.findById(id).orElse(null);
+    public Gambler getGamblerByEmail(String email) {
+        return gamblerRepository.findByEmail(email).orElse(null);
     }
 
-    public Expert getExpert(int id){
-        return expertRepository.findById(id).orElse(null);
+    public Gambler addGambler(Gambler gambler) throws Exception {
+        gambler.setId(0);
+        if(existsUserWithEmail(gambler.getEmail()))
+            throw new Exception("Email already used by another user!");
+        if(gambler.getCc() == null)
+            throw new Exception("CC is required!");
+        if(gambler.getNif() == null)
+            throw new Exception("NIF is required!");
+        if(gambler.getDate_of_birth() == null)
+            throw new Exception("Date of birth is required!");
+        else if(gambler.getDate_of_birth().isAfter(LocalDate.now().minusYears(18)))
+            throw new Exception("Minimum age of 18 is required!");
+        return gamblerRepository.save(gambler);
     }
 
-
-    /**
-     * Save a gambler to table
-     *
-     * @param  user    the gambler that you want to add
-     * @return         0 case added, 1 case emailExists
-     */
-    public int addGambler(Gambler user){
-        int returnValue = 1;
-        if(emailIsAvailable (user.getEmail())){
-            gamblerRepository.save(user);
-            returnValue = 0;
-        }
-        return returnValue;
-    }
-
-    /**
-     * Save a admin to table
-     *
-     * @param  user    the admin that you want to add
-     * @return         0 case added, 1 case emailExists
-     */
-    public int addAdmin(Admin user){
-        int returnValue = 1;
-        if(emailIsAvailable (user.getEmail())){
-            adminRepository.save(user);
-            returnValue = 0;
-        }
-        return returnValue;
-    }
-
-    /**
-     * Save a expert to table
-     *
-     * @param  user    the expert that you want to add
-     * @return         0 case added, 1 case emailExists
-     */
-    public int addExpert(Expert user){
-        int returnValue = 1;
-        if(emailIsAvailable (user.getEmail())){
-            expertRepository.save(user);
-            returnValue = 0;
-        }
-        return returnValue;
-    }
-
-
-
-
-    public int removeGambler(int id){
+    public void removeGambler(int id) throws Exception {
+        if(!gamblerRepository.existsById(id))
+            throw new Exception("Gambler needs to exist to be removed!");
         gamblerRepository.deleteById(id);
-        return 1;
-    }
-    public int removeAdmin(int id){
-        adminRepository.deleteById(id);
-        return 1;
-    }
-
-    public int removeExpert(int id){
-        expertRepository.deleteById(id);
-        return 1;
     }
 
     public List<Gambler> getListOfGamblers(){
         return gamblerRepository.findAll();
     }
 
+
+    // ------------ Admin Methods ------------
+
+    public Admin getAdminById(int id){
+        return adminRepository.findById(id).orElse(null);
+    }
+
+    public Admin getAdminByEmail(String email) {
+        return adminRepository.findByEmail(email).orElse(null);
+    }
+
+    public Admin addAdmin(Admin admin) throws Exception {
+        admin.setId(0);
+        if(existsUserWithEmail(admin.getEmail()))
+            throw new Exception("Email already used by another user!");
+        return adminRepository.save(admin);
+    }
+
+    public void removeAdmin(int id){
+        adminRepository.deleteById(id);
+    }
+
     public List<Admin> getListOfAdmins(){
         return adminRepository.findAll();
+    }
+
+
+    // ------------ Expert Methods ------------
+
+    public Expert getExpertById(int id){
+        return expertRepository.findById(id).orElse(null);
+    }
+
+    public Expert getExpertByEmail(String email) {
+        return expertRepository.findByEmail(email).orElse(null);
+    }
+
+    public Expert addExpert(Expert expert) throws Exception {
+        expert.setId(0);
+        if(existsUserWithEmail(expert.getEmail()))
+            throw new Exception("Email already used by another user!");
+        return expertRepository.save(expert);
+    }
+
+    public void removeExpert(int id){
+        expertRepository.deleteById(id);
     }
 
     public List<Expert> getListOfExperts(){
         return expertRepository.findAll();
     }
 
-    public User getUserByEmail(String email){
-        User user = null;
 
-        List<Integer> ids = adminRepository.findIdByEmail(email);
+    // ------------ Shared Methods ------------
 
-        if(ids.isEmpty()){
-            ids = gamblerRepository.findIdByEmail(email);
-
-            if(ids.isEmpty()){
-                ids = expertRepository.findIdByEmail(email);
-
-                if(!ids.isEmpty()) //Caso encontre expert
-                    user = this.getExpert(ids.get(0));
-
-            } else { //Caso encontre gambler
-                user = this.getGambler(ids.get(0));
-            }
-
-        } else { //Caso encontre admin
-            user = this.getAdmin(ids.get(0));
-        }
+    private User getUserByEmail(String email){
+        User user;
+        if((user = getGamblerByEmail(email)) == null)
+            if((user = getAdminByEmail(email)) == null)
+                user = getExpertByEmail(email);
         return user;
     }
 
-    public Boolean emailIsAvailable (String email){
-        return this.getUserByEmail(email)==null;
-    }
-
-    /**
-     * Save a expert to table
-     *
-     * @param  email      email of the account
-     * @param  password   password that corresponds to the email account
-     * @return            -1 unsuccessful logIn, 0 Gambler, 1 Admin, 2 Expert
-     */
     public int logIn(String email,String password){
         int retValue = -1;
         User user = this.getUserByEmail(email);
         if(user!=null && user.getPassword().equals(password)){
             if (user instanceof Gambler)
                 retValue = 0;
-            else if (user instanceof  Admin)
+            else if (user instanceof Admin)
                 retValue = 1;
             else if (user instanceof Expert)
                 retValue = 2;
         }
         return retValue;
+    }
+
+    private boolean existsUserWithEmail(String email){
+        boolean exists;
+        if(!(exists = gamblerRepository.existsByEmail(email)))
+            if(!(exists = adminRepository.existsByEmail(email)))
+                exists = expertRepository.existsByEmail(email);
+        return exists;
     }
 }

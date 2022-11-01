@@ -1,128 +1,79 @@
 package ras.adlrr.RASBet.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-public class Game{
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class Game {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
-    @Column(updatable = false)
-    private String extID;
-
-    @Column(updatable = false)
-    private LocalDateTime date;
-
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
-    @JsonIgnore
-    private List<Participant> participants;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sport_id")
-    @JsonIgnore
-    private Sport sport;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "game")
-    @JsonIgnore
-    private List<GameChoice> gameChoice;
-    
-    @Column(updatable = false)
-    private int state;
+    private Set<Participant> participants;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(updatable = false, nullable = false)
+    @JsonIncludeProperties({"id"})
+    private Sport sport;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "game", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<GameChoice> gameChoices;
+
+    private String extID;
+    private LocalDateTime date;
+    private int state;
     public static final int SUSPENDED = 1;
     public static final int CLOSED = 2;
     public static final int OPEN = 3;
 
-    public Game(@JsonProperty("id") int id, @JsonProperty("extID") String extID, @JsonProperty("date") LocalDateTime date, @JsonProperty("participants") List<Participant> participants, @JsonProperty("sportID") int sportID, @JsonProperty("state") int state) {
+    public Game(@JsonProperty("id") int id, @JsonProperty("extID") String extID, @JsonProperty("date") LocalDateTime date,
+                @JsonProperty("state") int state, @JsonProperty("sport_id") int sport_id,
+                @JsonProperty("participants") Set<Participant> participants){
         this.id = id;
         this.extID = extID;
         this.date = date;
-        this.sport = new Sport();
-        this.sport.setId(sportID);
-        this.participants = participants != null ? participants : new ArrayList<>();
         this.state = state;
-    }
-
-    public Game() {}
-
-    public Game() {
-
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getExtID() {
-        return extID;
-    }
-
-    public void setExtID(String extID) {
-        this.extID = extID;
-    }
-
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
-    public List<Participant> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(List<Participant> participants) {
+        this.sport = new Sport(); sport.setId(sport_id);
         this.participants = participants;
     }
 
-    public Sport getSport() {
-        return sport;
-    }
-
-    public void setSport(Sport sport) {
-        this.sport = sport;
-    }
-
-    public List<GameChoice> getGameChoice() {
-        return gameChoice;
-    }
-
-    public void setGameChoice(List<GameChoice> gameChoice) {
-        this.gameChoice = gameChoice;
-    }
-
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
+    public Game(int id, String extID, LocalDateTime date,
+                int state, int sport_id, Set<Participant> participants,
+                List<GameChoice> gameChoices){
+        this.id = id;
+        this.extID = extID;
+        this.date = date;
         this.state = state;
+        this.sport = new Sport(); sport.setId(sport_id);
+        this.participants = participants;
+        this.gameChoices = gameChoices;
     }
 
-    public int addParticipantToGame(Participant p){
-        try{
-            this.participants.add(p);
-            return 1;
-        }
-        catch(Exception e){
-            return 0;
-        }
+    // ------ Additional Methods ------
+
+    public void addParticipantToGame(Participant p){
+        if(participants == null)
+            participants = new HashSet<>();
+        this.participants.add(p);
     }
 }

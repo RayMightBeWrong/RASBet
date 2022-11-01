@@ -1,14 +1,17 @@
 package ras.adlrr.RASBet.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 import ras.adlrr.RASBet.service.GameService;
 
+import java.util.AbstractMap;
 import java.util.List;
 
-@RequestMapping("/api/games/")
+@RequestMapping("/api/games")
 @RestController
 public class GameController {
     private final GameService gameService;
@@ -20,43 +23,65 @@ public class GameController {
     }
 
     @PostMapping
-    public Game addGame(@RequestBody Game g) {
-        return gameService.addGame(g);
+    public ResponseEntity addGame(@RequestBody Game game){
+        try{ return ResponseEntity.ok().body(gameService.addGame(game)); }
+        catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @GetMapping(path = "{id}")
-    public Game getGame(@PathVariable("id") int id){
-        return gameService.getGame(id);
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<Game> getGame(@PathVariable("id") int id){
+        return ResponseEntity.ok().body(gameService.getGame(id));
     }
 
-    @DeleteMapping(path = "{id}")
-    public Game deleteGame(@PathVariable("id") int id) {
-        return gameService.removeGame(id);
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity deleteGame(@PathVariable("id") int id) {
+        try {
+            gameService.removeGame(id);
+            return new ResponseEntity(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping
-    public List<Game> getGames() {
-        return gameService.getGames();
+    public ResponseEntity<List<Game>> getGames() {
+        return ResponseEntity.ok().body(gameService.getGames());
     }
 
     /* **** Participants Methods **** */
-    @GetMapping("/{game_id}/participants/")
-    public List<Participant> getGameParticipants(@PathVariable("game_id") int gameID) {
-        return gameService.getGameParticipants(gameID);
+    @GetMapping("/{game_id}/participants")
+    public ResponseEntity getGameParticipants(@PathVariable("game_id") int gameID) {
+        try{
+            return ResponseEntity.ok().body(gameService.getGameParticipants(gameID));
+        } catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @PutMapping("/{game_id}/participants/")
-    public Participant addParticipantToGame(@PathVariable("game_id") int gameID, @RequestBody Participant p){
-        return gameService.addParticipantToGame(gameID, p);
+    @PutMapping("/{game_id}/participants")
+    public ResponseEntity addParticipantToGame(@PathVariable("game_id") int gameID, @RequestBody Participant p){
+        try{
+            gameService.addParticipantToGame(gameID, p);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/{game_id}/participants/{pid}")
-    public Participant deleteParticipantFromGame(@PathVariable("game_id") int gameID, @PathVariable("pid") int participant_id){
-        return gameService.removeParticipantFromGame(gameID, participant_id);
+    public ResponseEntity deleteParticipantFromGame(@PathVariable("game_id") int gameID, @PathVariable("pid") int participant_id){
+        try{
+            gameService.removeParticipantFromGame(gameID, participant_id);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{game_id}/participants/{pid}")
-    public Participant getParticipantFromGame(@PathVariable("game_id") int gameID, @PathVariable("pid") int participant_id){
-        return gameService.getParticipantFromGame(participant_id);
+    public ResponseEntity<Participant> getParticipantFromGame(@PathVariable("game_id") int gameID, @PathVariable("pid") int participant_id){
+        return ResponseEntity.ok().body(gameService.getParticipantFromGame(participant_id));
     }
 }

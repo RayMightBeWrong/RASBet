@@ -3,20 +3,25 @@ package ras.adlrr.RASBet.model.readers;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
-import ras.adlrr.RASBet.model.APIGameReader;
+import ras.adlrr.RASBet.dao.GameRepository;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
+import ras.adlrr.RASBet.model.APIGameReader;
 
 // TODO: criar ID para o jogo, tratar de erros na loadGames e getID de NFL
 public class NFLOddsAPIReader implements APIGameReader{
     private JSONArray response;
+    private GameRepository gameRepository;
     
-    public NFLOddsAPIReader(String response){
+    public NFLOddsAPIReader(String response, GameRepository gameRepository){
         this.response = new JSONArray(response);
+        this.gameRepository = gameRepository;
     }
 
     public String getGameExternalId(JSONObject game){
@@ -68,8 +73,8 @@ public class NFLOddsAPIReader implements APIGameReader{
         return odd;
     }
 
-    public List<Participant> getGameParticipants(JSONObject game){
-        List<Participant> res = new ArrayList<>();
+    public Set<Participant> getGameParticipants(JSONObject game){
+        Set<Participant> res = new HashSet<>();
         String homeTeam = (String) game.get("home_team");
         String awayTeam = (String) game.get("away_team");
 
@@ -80,10 +85,12 @@ public class NFLOddsAPIReader implements APIGameReader{
         return res;
     }
 
+    //TODO
     public int getGameState(JSONObject game){
         return Game.OPEN;
     }
 
+    //TODO
     public int getSportID(){
         return 2;
     }
@@ -93,7 +100,7 @@ public class NFLOddsAPIReader implements APIGameReader{
         for(int i = 0; i < response.length() && i < 10; i++){
             JSONObject obj = (JSONObject) response.get(i);
 
-            //Game g = new Game(i, getGameExternalId(obj), getGameDate(obj), getGameParticipants(obj), getSportID(), getGameState(obj));
+            Game g = new Game(i, getGameExternalId(obj), getGameDate(obj), getGameState(obj), getSportID(), getGameParticipants(obj));
             //TODO - Ray
             //gameRepository.addGame(g);
         }
