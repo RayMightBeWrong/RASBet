@@ -3,6 +3,7 @@ package ras.adlrr.RASBet.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@JsonPropertyOrder({"id","state","game_choices","transaction"})
 public class Bet {
     @Id
     @Column(name = "id")
@@ -35,10 +37,15 @@ public class Bet {
     @JoinColumn(name = "bet_id", nullable = false)
     private List<GameChoice> gameChoices;
 
-    private int state;
+    @JsonProperty("state")
+    private int state = STATE_OPEN;
+
+    public static int STATE_OPEN = 1;
+    public static int STATE_CLOSED = 1;
+    public static int STATE_CANCELED = 3;
 
     public Bet(@JsonProperty("gambler_id") int gambler_id, @JsonProperty("wallet_id") Integer wallet_id,
-               @JsonProperty("value") float value, @JsonProperty("state") int state,
+               @JsonProperty("value") float value,
                @JsonProperty("game_choices") List<GameChoice> gameChoices){
         transaction = new Transaction();
 
@@ -54,7 +61,6 @@ public class Bet {
 
         transaction.setValue(value);
 
-        this.state = state;
         this.gameChoices = gameChoices;
     }
 }

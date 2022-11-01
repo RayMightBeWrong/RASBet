@@ -3,6 +3,7 @@ package ras.adlrr.RASBet.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
+@JsonIncludeProperties({"id", "state", "date", "sport", "participants"})
+@JsonPropertyOrder({"id", "state", "date", "sport", "participants"})
 public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +41,6 @@ public class Game {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "game", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<GameChoice> gameChoices;
-
     private String extID;
     private LocalDateTime date;
     private int state;
