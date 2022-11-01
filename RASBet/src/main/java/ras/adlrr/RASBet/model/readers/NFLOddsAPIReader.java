@@ -9,19 +9,18 @@ import java.util.Set;
 
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
-import ras.adlrr.RASBet.dao.GameRepository;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 import ras.adlrr.RASBet.model.APIGameReader;
 
-// TODO: criar ID para o jogo, tratar de erros na loadGames e getID de NFL
+// TODO: tratar de erros na loadGame
 public class NFLOddsAPIReader implements APIGameReader{
     private JSONArray response;
-    private GameRepository gameRepository;
+    private int sport_id;
     
-    public NFLOddsAPIReader(String response, GameRepository gameRepository){
+    public NFLOddsAPIReader(String response, int sport_id){
         this.response = new JSONArray(response);
-        this.gameRepository = gameRepository;
+        this.sport_id = sport_id;
     }
 
     public String getGameExternalId(JSONObject game){
@@ -85,26 +84,33 @@ public class NFLOddsAPIReader implements APIGameReader{
         return res;
     }
 
-    //TODO
     public int getGameState(JSONObject game){
         return Game.OPEN;
     }
 
-    //TODO
     public int getSportID(){
-        return 2;
+        return this.sport_id;
+    }
+
+    public String makeName(JSONObject game){
+        String homeTeam = (String) game.get("home_team");
+        String awayTeam = (String) game.get("away_team");
+
+        return awayTeam + " @ " + homeTeam;
     }
 
     @Override
-    public int loadGames() {
+    public List<Game> getAPIGames() {
+        List<Game> res = new ArrayList<>();
+
         for(int i = 0; i < response.length() && i < 10; i++){
             JSONObject obj = (JSONObject) response.get(i);
 
-            Game g = new Game(i, getGameExternalId(obj), getGameDate(obj), getGameState(obj), getSportID(), getGameParticipants(obj));
-            //TODO - Ray
-            //gameRepository.addGame(g);
+            Game g = new Game(getGameExternalId(obj), getGameDate(obj), getGameState(obj), makeName(obj), getSportID(), getGameParticipants(obj));
+            res.add(g);
         }
-        return 0;
+
+        return res;
     }
     
 }

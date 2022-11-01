@@ -10,7 +10,6 @@ import ras.adlrr.RASBet.model.Sport;
 
 import java.util.List;
 
-//TODO
 @Service
 public class SportService {
     private final SportRepository sportRepository;

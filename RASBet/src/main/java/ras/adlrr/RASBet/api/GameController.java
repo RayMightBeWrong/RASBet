@@ -33,6 +33,17 @@ public class GameController {
         }
     }
 
+    @PostMapping(path = "/update")
+    public ResponseEntity updateGames(){
+        try{ 
+            gameService.updateGames();
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntityBadRequest<Game>().createBadRequest(e.getMessage());
+        }
+    }
+
     @GetMapping(path = "/{id}")
     public ResponseEntity<Game> getGame(@PathVariable("id") int id){
         return ResponseEntity.ok().body(gameService.getGame(id));

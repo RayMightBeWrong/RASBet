@@ -62,5 +62,4 @@ public class SportController {
             return new ResponseEntityBadRequest<List<Game>>().createBadRequest(e.getMessage());
         }
     }
-
 }

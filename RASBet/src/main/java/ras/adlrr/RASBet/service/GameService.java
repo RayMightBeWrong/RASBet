@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -29,6 +31,7 @@ import ras.adlrr.RASBet.model.Sport;
 import ras.adlrr.RASBet.model.readers.F1APISportsReader;
 import ras.adlrr.RASBet.model.readers.FootballAPISportsReader;
 import ras.adlrr.RASBet.model.readers.NFLOddsAPIReader;
+import ras.adlrr.RASBet.model.readers.UcrasAPIReader;
 
 
 @Service
@@ -47,11 +50,24 @@ public class GameService {
 
     /* **** Game Methods **** */
 
-    //TODO - criar metodo q filtra os jogos q já terminaram
     public List<Game> getGames() {
-        //updateGames();
-        //updateGames2();
         return gr.findAll();
+    }
+
+    public List<Game> getOngoingGames(){
+        List<Game> games = getGames();
+        List<Game> res = new ArrayList<>();
+
+        for(int i = 0; i < games.size(); i++)
+            if (games.get(i).getState() != Game.CLOSED)
+                res.add(games.get(i));
+
+        return res;
+    }
+
+    public void updateGames() throws Exception{
+        //getGamesFromAPILocal();
+        getGamesFromAPI();
     }
 
     public Game getGame(int id){
@@ -78,6 +94,11 @@ public class GameService {
         gr.save(newGame);
 
         return newGame;
+    }
+
+    public void addGames(List<Game> games) throws Exception{
+        for (int i = 0; i < games.size(); i++)
+            addGame(games.get(i));
     }
 
     public void removeGame(int id) throws Exception {
@@ -165,119 +186,44 @@ public class GameService {
     /*  UPDATE DE JOGOS */
 
     // TODO: fazer uma função de jeito
-    public int updateGames(){
-        String json = readJSONfromHTTPRequest("http://ucras.di.uminho.pt/v1/games/");
+    public void getGamesFromAPILocal() throws Exception{
+        Sport sport = sr.findByName("Futebol");
+        if (sport != null){
+            APIGameReader reader = new UcrasAPIReader(sport.getId());
+            //APIGameReader reader = new NFLOddsAPIReader(response.getBody(), sport.getId());
 
-        if (json == null){
-            return 0;
+            List<Game> games = reader.getAPIGames();
+            if (games == null)
+                throw new Exception("Error occurred while reading request from external API");
+            
+            addGames(games);
         }
-
-        JSONArray ja = new JSONArray(json);
-        for(int i = 0; i < ja.length(); i++){
-            JSONObject jo = (JSONObject) ja.get(i);
-
-            String iso8601 = (String) jo.get("commenceTime");
-            ZonedDateTime zdt = ZonedDateTime.parse(iso8601);
-            LocalDateTime ldt = zdt.toLocalDateTime();
-
-            String homeTeam = (String) jo.get("homeTeam");
-            String awayTeam = (String) jo.get("awayTeam");
-
-
-            JSONArray bookmakers = (JSONArray) jo.get("bookmakers");
-            JSONObject fst = (JSONObject) bookmakers.get(0);
-            JSONArray markets = (JSONArray) fst.get("markets");
-            JSONObject markets2 = (JSONObject) markets.get(0);
-            JSONArray outcomes = (JSONArray) markets2.get("outcomes");
-
-            float drawOdd = 0, homeOdd = 0, awayOdd = 0;
-            for (int j = 0; j < outcomes.length(); j++){
-                JSONObject obj = (JSONObject) outcomes.get(j);
-                Number odd = (Number) obj.get("price");
-                if (homeTeam.equals(obj.get("name"))){
-                    homeOdd = odd.floatValue();
-                }
-                else if (awayTeam.equals(obj.get("name"))){
-                    awayOdd = odd.floatValue();
-                }
-                else if (obj.get("name").equals("Draw")){
-                    drawOdd = odd.floatValue();
-                }
-            }
-            System.out.println();
-            Participant home = new Participant(homeTeam, homeOdd, 0);
-            Participant away = new Participant(awayTeam, awayOdd, 0);
-            Participant draw = new Participant("draw", drawOdd, 0);
-            List<Participant> ps = new ArrayList<>();
-            ps.add(home); ps.add(away); ps.add(draw);
-
-            // TODO: mudar para diferentes desportos e mudar o resultado
-            // TODO: get ID do desporto
-            //Game g = new Game(5, (String) jo.get("id"), ldt, ps, 1, Game.CLOSED);
-            //TODO
-            //gameRepository.addGame(g);
-        }
-
-        return 1;
     }
 
-    public void updateGames2(){
-
-        //HttpResponse<String> response = Unirest.get("https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/?regions=us&oddsFormat=american&apiKey=70d50d68d47a79f93f43e9d7353e16ed")
-        //                                    .header("x-rapidapi-key", "b68a93e4291b512a0f3179eb9ee1bc2b")
-        //                                    .header("x-rapidapi-host", "v3.football.api-sports.io").asString();
-        //try {
-        //    Files.write( Paths.get("/home/ray/nfl.json"), response.getBody().getBytes());
-        //} catch (Exception e) {
-        //    e.printStackTrace();
-        //}
-
-
-        try{
-            BufferedReader br1 = new BufferedReader(new FileReader(new File("/home/ray/nfl.json")));
-            StringBuilder sb1 = new StringBuilder();
-
-            String st;
-            while ((st = br1.readLine()) != null)
-                sb1.append(st);
-
-            //APIGameReader reader = new FootballAPISportsReader(sb1.toString(), gameRepository);
-            //reader.loadGames();
-        }
-        catch (Exception e){
+    public void getGamesFromAPI() throws Exception{
+        /*
+        HttpResponse<String> response = Unirest.get("https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/?regions=us&oddsFormat=american&apiKey=70d50d68d47a79f93f43e9d7353e16ed")
+                                            .header("x-rapidapi-key", "b68a93e4291b512a0f3179eb9ee1bc2b")
+                                            .header("x-rapidapi-host", "v3.football.api-sports.io").asString();
+        try {
+            Files.write( Paths.get("/home/ray/nfl.json"), response.getBody().getBytes());
+        } catch (Exception e) {
             e.printStackTrace();
+        }*/
+
+        BufferedReader br1 = new BufferedReader(new FileReader(new File("/home/ray/nfl.json")));
+        StringBuilder sb1 = new StringBuilder();
+        String st;
+
+        while ((st = br1.readLine()) != null)
+            sb1.append(st);
+
+        Sport sport = sr.findByName("NFL");
+        if (sport != null){
+            //sb1.toString();
+            //APIGameReader reader = new NFLOddsAPIReader(response.getBody(), sport.getId());
+            //List<Game> games = reader.getAPIGames();
+            //addGames(games);
         }
     }
-
-    public String readJSONfromHTTPRequest(String urlString){
-        try{
-            URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
-
-            int rCode = connection.getResponseCode();
-            if (rCode != 200){
-                throw new RuntimeException("HTTP Response Code: " + rCode);
-            }
-
-            StringBuilder sb = new StringBuilder();
-            Scanner scanner = new Scanner(url.openStream());
-            while (scanner.hasNext()){
-                sb.append(scanner.nextLine());
-            }
-
-            scanner.close();
-            return sb.toString();
-        }
-        catch (MalformedURLException e){
-            return null;
-        }
-        catch (IOException e){
-            return null;
-        }
-        catch (RuntimeException e){
-            return null;
-        }
-    }
-
 }

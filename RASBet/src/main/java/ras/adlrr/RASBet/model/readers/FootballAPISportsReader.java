@@ -11,24 +11,16 @@ import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
-import ras.adlrr.RASBet.dao.GameRepository;
 import ras.adlrr.RASBet.model.APIGameReader;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 
-// TODO: criar ID para o jogo, tratar de erros na loadGames e getID de futebol
 public class FootballAPISportsReader implements APIGameReader{
-    private int footballID;
+    private int sport_id;
     private JSONArray games;
-    private GameRepository gameRepository;
 
-    public FootballAPISportsReader(String games, GameRepository gameRepository){
+    public FootballAPISportsReader(String games, int sport_id){
         this.games = (JSONArray) (new JSONObject(games).get("response"));
-        this.gameRepository = gameRepository;
-    }
-
-    public int getGameId(JSONObject game) {
-        return 0;
     }
 
     public String getGameExternalId(JSONObject game) {
@@ -99,7 +91,7 @@ public class FootballAPISportsReader implements APIGameReader{
     }
 
     public int getSportID() {
-        return 1;
+        return this.sport_id;
     }
 
     public int getGameState(JSONObject game) {
@@ -114,22 +106,30 @@ public class FootballAPISportsReader implements APIGameReader{
             return Game.CLOSED;
     }
 
+    public String getName(JSONObject game){
+        JSONObject teams = (JSONObject) game.get("teams");
+        JSONObject home = (JSONObject) teams.get("home");
+        JSONObject away = (JSONObject) teams.get("away");
+        String homeTeam = (String) home.get("name");
+        String awayTeam = (String) away.get("name");
+
+        return homeTeam + " vs " + awayTeam;
+    }
+
     @Override
-    public int loadGames() {
-        int k = 1;
+    public List<Game> getAPIGames() {
+        List<Game> res = new ArrayList<>();
 
         for(int i = 0; i < games.length(); i++){
             JSONObject obj = (JSONObject) games.get(i);
             JSONObject league = (JSONObject) obj.get("league");
 
             if (league.get("round").equals("Regular Season - 10")){
-                Game g = new Game(k, getGameExternalId(obj), getGameDate(obj), getGameState(obj), getSportID(), getGameParticipants(obj));
-                // TODO - RAy
-                //gameRepository.addGame(g);
-                k++;
+                Game g = new Game(getGameExternalId(obj), getGameDate(obj), getGameState(obj), getName(obj), getSportID(), getGameParticipants(obj));
+                res.add(g);
             }
         }
-        return 0;
+        return res;
     }
     
 }
