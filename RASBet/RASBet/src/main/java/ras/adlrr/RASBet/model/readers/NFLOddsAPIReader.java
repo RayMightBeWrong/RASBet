@@ -13,6 +13,7 @@ import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 import ras.adlrr.RASBet.model.APIGameReader;
 
+// TODO: tratar de erros na loadGame
 public class NFLOddsAPIReader implements APIGameReader{
     private JSONArray response;
     private int sport_id;
@@ -91,13 +92,6 @@ public class NFLOddsAPIReader implements APIGameReader{
         return this.sport_id;
     }
 
-    public String makeName(JSONObject game){
-        String homeTeam = (String) game.get("home_team");
-        String awayTeam = (String) game.get("away_team");
-
-        return awayTeam + " @ " + homeTeam;
-    }
-
     @Override
     public List<Game> getAPIGames() {
         List<Game> res = new ArrayList<>();
@@ -105,7 +99,7 @@ public class NFLOddsAPIReader implements APIGameReader{
         for(int i = 0; i < response.length() && i < 10; i++){
             JSONObject obj = (JSONObject) response.get(i);
 
-            Game g = new Game(getGameExternalId(obj), getGameDate(obj), getGameState(obj), makeName(obj), getSportID(), getGameParticipants(obj));
+            Game g = new Game(getGameExternalId(obj), getGameDate(obj), getGameState(obj), "NFL", getSportID(), getGameParticipants(obj));
             res.add(g);
         }
 

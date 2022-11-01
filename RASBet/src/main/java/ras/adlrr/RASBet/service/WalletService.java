@@ -98,7 +98,7 @@ public class WalletService {
     }
 
     public Wallet performBilling(int wallet_id, float valueToBill) throws Exception {
-        return changeBalance(wallet_id,valueToBill);
+        return changeBalance(wallet_id, -valueToBill);
     }
 
     private Wallet changeBalance(int wallet_id, float value) throws Exception {

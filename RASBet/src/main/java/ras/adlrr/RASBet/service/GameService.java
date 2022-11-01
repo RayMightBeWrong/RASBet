@@ -49,7 +49,7 @@ public class GameService {
     }
 
     /* **** Game Methods **** */
-
+    
     public List<Game> getGames() {
         return gr.findAll();
     }
@@ -80,7 +80,6 @@ public class GameService {
         if (game != null)
             throw new Exception("Game with the given external id already exists!");
 
-        System.out.println("SPORT: " + newGame.getSport().getId());
         if (!(sr.existsById(newGame.getSport().getId())))
             throw new Exception("Cannot add a game to an invalid sport!");
 
@@ -92,7 +91,6 @@ public class GameService {
             validateParticipants(participants);
 
         gr.save(newGame);
-
         return newGame;
     }
 
@@ -184,7 +182,7 @@ public class GameService {
 
 
     /*  UPDATE DE JOGOS */
-
+    
     // TODO: fazer uma função de jeito
     public void getGamesFromAPILocal() throws Exception{
         Sport sport = sr.findByName("Futebol");

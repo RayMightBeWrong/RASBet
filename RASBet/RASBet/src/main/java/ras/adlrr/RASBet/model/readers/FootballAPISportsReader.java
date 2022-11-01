@@ -15,6 +15,7 @@ import ras.adlrr.RASBet.model.APIGameReader;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 
+// TODO: tratar de erros na loadGames
 public class FootballAPISportsReader implements APIGameReader{
     private int sport_id;
     private JSONArray games;
@@ -106,16 +107,6 @@ public class FootballAPISportsReader implements APIGameReader{
             return Game.CLOSED;
     }
 
-    public String getName(JSONObject game){
-        JSONObject teams = (JSONObject) game.get("teams");
-        JSONObject home = (JSONObject) teams.get("home");
-        JSONObject away = (JSONObject) teams.get("away");
-        String homeTeam = (String) home.get("name");
-        String awayTeam = (String) away.get("name");
-
-        return homeTeam + " vs " + awayTeam;
-    }
-
     @Override
     public List<Game> getAPIGames() {
         List<Game> res = new ArrayList<>();
@@ -125,15 +116,8 @@ public class FootballAPISportsReader implements APIGameReader{
             JSONObject league = (JSONObject) obj.get("league");
 
             if (league.get("round").equals("Regular Season - 10")){
-<<<<<<< HEAD
-                Game g = new Game(getGameExternalId(obj), getGameDate(obj), getGameState(obj), getName(obj), getSportID(), getGameParticipants(obj));
+                Game g = new Game(getGameExternalId(obj), getGameDate(obj), getGameState(obj), "Futebol", getSportID(), getGameParticipants(obj));
                 res.add(g);
-=======
-                Game g = new Game(getGameExternalId(obj), getGameDate(obj), getGameState(obj), null, getSportID(), getGameParticipants(obj));
-                // TODO - RAy
-                //gameRepository.addGame(g);
-                k++;
->>>>>>> 1c8c7ccc718bdd263f3748eaf1e391dcdf092978
             }
         }
         return res;

@@ -39,7 +39,7 @@ public class Game {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "game", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<GameChoice> gameChoices;
-    
+
     @Getter(AccessLevel.NONE)
     private String extID;
 
@@ -60,7 +60,7 @@ public class Game {
         this.date = date;
         this.state = state;
         this.title = title;
-        this.sport = new Sport(); 
+        this.sport = new Sport();
         sport.setId(sport_id);
         this.participants = participants;
     }
