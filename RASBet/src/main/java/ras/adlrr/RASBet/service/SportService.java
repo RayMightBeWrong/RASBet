@@ -25,8 +25,10 @@ public class SportService {
     public Sport addSport(Sport sport) throws Exception {
         if(sportRepository.existsByName(sport.getName()))
             throw new Exception("Sport already exists!");
+
         sport.setId(0);
         sportRepository.save(sport);
+        
         return sport;
     }
 
@@ -37,6 +39,7 @@ public class SportService {
     public void removeSport(int id) throws Exception {
         if(!sportRepository.existsById(id))
             throw new Exception("Sport needs to exist to be removed!");
+
         sportRepository.deleteById(id);
     }
 
@@ -46,9 +49,9 @@ public class SportService {
 
     public List<Game> getGamesFromSport(String sport) throws Exception {
         Sport s = sportRepository.findByName(sport);
-        //Sport s = sportRepository.findById(sport_id).orElse(null);
         if(s == null)
             throw new Exception("Sport not found!");
+
         return gameRepository.findAllBySportId(s.getId());
     }
 

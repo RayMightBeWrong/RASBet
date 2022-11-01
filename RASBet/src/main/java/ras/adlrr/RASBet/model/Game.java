@@ -40,8 +40,11 @@ public class Game {
     private List<GameChoice> gameChoices;
 
     private String extID;
+
     private LocalDateTime date;
+
     private int state;
+
     public static final int SUSPENDED = 1;
     public static final int CLOSED = 2;
     public static final int OPEN = 3;

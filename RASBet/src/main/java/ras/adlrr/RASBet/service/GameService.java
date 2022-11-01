@@ -30,7 +30,6 @@ import ras.adlrr.RASBet.model.readers.F1APISportsReader;
 import ras.adlrr.RASBet.model.readers.FootballAPISportsReader;
 import ras.adlrr.RASBet.model.readers.NFLOddsAPIReader;
 
-import javax.servlet.http.Part;
 
 @Service
 public class GameService {
@@ -123,8 +122,7 @@ public class GameService {
         addParticipantsToGame(gameID, List.of(p));
     }
 
-    //TODO - fazer verificacao com o id do jogo
-    public void removeParticipantFromGame(int gameID, int participant_id) throws Exception {
+    public void removeParticipant(int participant_id) throws Exception {
         Participant participant = pr.findById(participant_id).orElse(null);
         if (participant != null)
             pr.deleteById(participant_id);
@@ -132,10 +130,23 @@ public class GameService {
             throw new Exception("Cannot remove participant that does not exist!");
     }
 
-    public Participant getParticipantFromGame(int participant_id){
+    public Participant getParticipant(int participant_id){
         return pr.findById(participant_id).orElse(null);
     }
 
+    public int editOddInParticipant(int participant_id, float odd) throws Exception {
+        if (odd <= 1)
+            throw new Exception("Inserted odd is not valid!");
+
+        Participant participant = pr.findById(participant_id).orElse(null);
+        if (participant != null){
+            participant.setOdd(odd);
+            pr.save(participant);
+            return 1;
+        }
+        else
+            throw new Exception("Could not find participant!");
+    }
 
 
     /*  UPDATE DE JOGOS */

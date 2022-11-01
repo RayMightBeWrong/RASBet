@@ -23,7 +23,9 @@ public class SportController {
 
     @PostMapping
     public ResponseEntity addSport(@RequestBody Sport sport){
-        try{ return ResponseEntity.ok().body(sportService.addSport(sport)); }
+        try{ 
+            return ResponseEntity.ok().body(sportService.addSport(sport));
+        }
         catch (Exception e){
             return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
         }
@@ -36,10 +38,10 @@ public class SportController {
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity removeSport(@PathVariable int id) {
-
         try {
             sportService.removeSport(id);
-            return new ResponseEntity(HttpStatus.OK); }
+            return new ResponseEntity(HttpStatus.OK);
+        }
         catch (Exception e){
             return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
         }
@@ -54,7 +56,8 @@ public class SportController {
     public ResponseEntity getGamesFromSport(@PathVariable("sport_name") String sport_name) {
         try{
             return ResponseEntity.ok().body(sportService.getGamesFromSport(sport_name));
-        }catch (Exception e){
+        }
+        catch (Exception e){
             return ResponseEntity.badRequest().body(new AbstractMap.SimpleEntry<>("error",e.getMessage()));
         }
     }

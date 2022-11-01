@@ -70,18 +70,28 @@ public class GameController {
         }
     }
 
-    @DeleteMapping("/{game_id}/participants/{pid}")
-    public ResponseEntity deleteParticipantFromGame(@PathVariable("game_id") int gameID, @PathVariable("pid") int participant_id){
+    @DeleteMapping("/participants/{pid}")
+    public ResponseEntity deleteParticipant(@PathVariable("pid") int participant_id){
         try{
-            gameService.removeParticipantFromGame(gameID, participant_id);
+            gameService.removeParticipant(participant_id);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping("/{game_id}/participants/{pid}")
-    public ResponseEntity<Participant> getParticipantFromGame(@PathVariable("game_id") int gameID, @PathVariable("pid") int participant_id){
-        return ResponseEntity.ok().body(gameService.getParticipantFromGame(participant_id));
+    @GetMapping("/participants/{pid}")
+    public ResponseEntity<Participant> getParticipant(@PathVariable("pid") int participant_id){
+        return ResponseEntity.ok().body(gameService.getParticipant(participant_id));
+    }
+
+    @PutMapping("/participants/{pid}/odd/{odd}")
+    public ResponseEntity editOddInParticipant(@PathVariable("pid") int participant_id, @PathVariable("odd") float odd){
+        try{
+            gameService.editOddInParticipant(participant_id, odd);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 }
