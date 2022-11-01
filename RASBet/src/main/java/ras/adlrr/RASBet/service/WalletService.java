@@ -14,16 +14,16 @@ import ras.adlrr.RASBet.model.Wallet;
 @Service
 public class WalletService {
     private final TransactionService transactionService;
+    private final UserService userService;
     private final WalletRepository walletRepository;
     private final CoinRepository coinRepository;
-    private final GamblerRepository gamblerRepository;
 
     @Autowired
-    public WalletService(TransactionService transactionService, WalletRepository walletRepository, CoinRepository coinRepository, GamblerRepository gamblerRepository){
+    public WalletService(TransactionService transactionService, WalletRepository walletRepository, CoinRepository coinRepository, UserService userService){
         this.transactionService = transactionService;
         this.walletRepository = walletRepository;
         this.coinRepository = coinRepository;
-        this.gamblerRepository = gamblerRepository;
+        this.userService = userService;
     }
 
 
@@ -36,17 +36,19 @@ public class WalletService {
     public Wallet createWallet(Wallet wallet) throws Exception {
         wallet.setId(0);
 
-        boolean coinExists = coinRepository.existsById(wallet.getCoin().getId());
-        if(!coinExists) throw new Exception("Cannot create wallet for an invalid coin!");
+        Coin coin = wallet.getCoin();
+        if(coin == null || !coinExistsById(coin.getId()))
+            throw new Exception("Cannot create wallet for an invalid coin!");
 
-        boolean gamblerExists = gamblerRepository.existsById(wallet.getGambler().getId());
-        if(!gamblerExists) throw new Exception("Cannot create wallet for an invalid gambler!");
+        Gambler gambler = wallet.getGambler();
+        if(gambler == null || !userService.gamblerExistsById(gambler.getId()))
+            throw new Exception("Cannot create wallet for an invalid gambler!");
 
         return walletRepository.save(wallet);
     }
 
     public void removeWallet(int id) throws Exception {
-        if(!walletRepository.existsById(id))
+        if(!walletExistsById(id))
             throw new Exception("Wallet needs to exist to be removed!");
         walletRepository.deleteById(id);
     }
@@ -111,6 +113,10 @@ public class WalletService {
         return walletRepository.save(wallet);
     }
 
+    public boolean walletExistsById(int id) {
+        return walletRepository.existsById(id);
+    }
+
     // ---------- Coin Methods ----------
 
     public Coin getCoin(int id){
@@ -130,5 +136,9 @@ public class WalletService {
 
     public List<Coin> getListOfCoins(){
         return coinRepository.findAll();
+    }
+
+    public boolean coinExistsById(int id) {
+        return coinRepository.existsById(id);
     }
 }
