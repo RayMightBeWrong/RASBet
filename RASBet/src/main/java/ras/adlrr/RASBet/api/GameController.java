@@ -4,12 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ras.adlrr.RASBet.api.auxiliar.AuxiliarMethods;
+import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 import ras.adlrr.RASBet.service.GameService;
 
-import java.util.AbstractMap;
 import java.util.List;
 import java.util.Set;
 
@@ -30,7 +29,7 @@ public class GameController {
             return ResponseEntity.ok().body(gameService.addGame(game)); 
         }
         catch (Exception e){
-            return AuxiliarMethods.createClassBadRequest(e.getMessage(), Game.class);
+            return new ResponseEntityBadRequest<Game>().createBadRequest(e.getMessage());
         }
     }
 
@@ -45,7 +44,7 @@ public class GameController {
             gameService.removeGame(id);
             return new ResponseEntity(HttpStatus.OK);
         }catch (Exception e){
-            return AuxiliarMethods.createBadRequest(e.getMessage());
+            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
         }
     }
 
@@ -60,7 +59,7 @@ public class GameController {
             gameService.changeGameState(id, state);
             return new ResponseEntity(HttpStatus.OK);
         }catch (Exception e){
-            return AuxiliarMethods.createBadRequest(e.getMessage());
+            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
         }
     }
 
@@ -70,7 +69,7 @@ public class GameController {
         try{
             return ResponseEntity.ok().body(gameService.getGameParticipants(gameID));
         } catch (Exception e){
-            return AuxiliarMethods.createSetBadRequest(e.getMessage(), Participant.class);
+            return new ResponseEntityBadRequest<Set<Participant>>().createBadRequest(e.getMessage());
         }
     }
 
@@ -80,7 +79,7 @@ public class GameController {
             gameService.addParticipantToGame(gameID, p);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e){
-            return AuxiliarMethods.createClassBadRequest(e.getMessage(), Participant.class);
+            return new ResponseEntityBadRequest<Participant>().createBadRequest(e.getMessage());
         }
     }
 
@@ -90,7 +89,7 @@ public class GameController {
             gameService.removeParticipant(participant_id);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e){
-            return AuxiliarMethods.createBadRequest(e.getMessage());
+            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
         }
     }
 
@@ -105,7 +104,7 @@ public class GameController {
             gameService.editOddInParticipant(participant_id, odd);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e){
-            return AuxiliarMethods.createBadRequest(e.getMessage());
+            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
         }
     }
 }

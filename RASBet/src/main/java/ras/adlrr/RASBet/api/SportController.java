@@ -5,12 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import ras.adlrr.RASBet.api.auxiliar.AuxiliarMethods;
+import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Sport;
 import ras.adlrr.RASBet.service.SportService;
 
-import java.util.AbstractMap;
 import java.util.List;
 
 @RequestMapping("/api/sports")
@@ -29,7 +28,7 @@ public class SportController {
             return ResponseEntity.ok().body(sportService.addSport(sport));
         }
         catch (Exception e){
-            return AuxiliarMethods.createClassBadRequest(e.getMessage(),Sport.class);
+            return new ResponseEntityBadRequest<Sport>().createBadRequest(e.getMessage());
         }
     }
 
@@ -45,7 +44,7 @@ public class SportController {
             return new ResponseEntity(HttpStatus.OK);
         }
         catch (Exception e){
-            return AuxiliarMethods.createBadRequest(e.getMessage());
+            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
         }
     }
 
@@ -60,7 +59,7 @@ public class SportController {
             return ResponseEntity.ok().body(sportService.getGamesFromSport(sport_name));
         }
         catch (Exception e){
-            return AuxiliarMethods.createListBadRequest(e.getMessage(), Game.class);
+            return new ResponseEntityBadRequest<List<Game>>().createBadRequest(e.getMessage());
         }
     }
 

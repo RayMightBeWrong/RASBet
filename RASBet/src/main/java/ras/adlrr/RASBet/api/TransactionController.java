@@ -4,11 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ras.adlrr.RASBet.api.auxiliar.AuxiliarMethods;
+import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Transaction;
 import ras.adlrr.RASBet.service.TransactionService;
 
-import java.util.AbstractMap;
 import java.util.List;
 
 @RequestMapping("/api/transactions")
@@ -31,7 +30,7 @@ public class TransactionController {
         try {
             return ResponseEntity.ok().body(transactionService.addTransaction(t));
         }catch (Exception e){
-            return AuxiliarMethods.createClassBadRequest(e.getMessage(), Transaction.class);
+            return new ResponseEntityBadRequest<Transaction>().createBadRequest(e.getMessage());
         }
     }
 
@@ -40,7 +39,7 @@ public class TransactionController {
         try {
             return ResponseEntity.ok().body(transactionService.getGamblerTransactions(gambler_id));
         }catch (Exception e){
-            return AuxiliarMethods.createListBadRequest(e.getMessage(), Transaction.class);
+            return new ResponseEntityBadRequest<List<Transaction>>().createBadRequest(e.getMessage());
         }
     }
 
@@ -55,7 +54,7 @@ public class TransactionController {
             transactionService.removeTransaction(id);
             return new ResponseEntity(HttpStatus.OK);
         }catch (Exception e){
-            return AuxiliarMethods.createBadRequest(e.getMessage());
+            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
         }
     }
 }

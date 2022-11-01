@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Bet;
 import ras.adlrr.RASBet.service.BetService;
-import ras.adlrr.RASBet.api.auxiliar.AuxiliarMethods;
 
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class BetController {
     public ResponseEntity<Bet> addBet(@RequestBody Bet bet) {
         try{ return ResponseEntity.ok().body(betService.addBet(bet)); }
         catch (Exception e){
-            return AuxiliarMethods.createClassBadRequest(e.getMessage(), Bet.class);
+            return new ResponseEntityBadRequest<Bet>().createBadRequest(e.getMessage());
         }
     }
 
@@ -38,7 +37,7 @@ public class BetController {
     public ResponseEntity<List<Bet>> getGamblerBets(@PathVariable("id") int userID) {
         try{ return ResponseEntity.ok().body(betService.getGamblerBets(userID)); }
         catch (Exception e){
-            return AuxiliarMethods.createListBadRequest(e.getMessage(), Bet.class);
+            return new ResponseEntityBadRequest<List<Bet>>().createBadRequest(e.getMessage());
         }
     }
 
@@ -48,7 +47,7 @@ public class BetController {
             betService.removeBet(betID);
             return new ResponseEntity(HttpStatus.OK); }
         catch (Exception e){
-            return AuxiliarMethods.createBadRequest(e.getMessage());
+            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
         }
     }
 }

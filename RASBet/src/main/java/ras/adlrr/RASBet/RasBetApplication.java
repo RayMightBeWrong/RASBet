@@ -13,7 +13,7 @@ public class RasBetApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RasBetApplication.class, args);
 	}
-/*
+
 	@Bean
 	public CommandLineRunner demo(BetController betController, GameController gameController,
 								  SportController sportController, TransactionController transactionController,
@@ -23,5 +23,5 @@ public class RasBetApplication {
 			UIController uiController = new UIController(betController,gameController,sportController,transactionController,userController,walletController);
 			uiController.run();
 		});
-	}*/
+	}
 }

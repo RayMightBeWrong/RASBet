@@ -1,13 +1,12 @@
 package ras.adlrr.RASBet.api;
 
-import java.util.AbstractMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import ras.adlrr.RASBet.api.auxiliar.AuxiliarMethods;
+import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.*;
 import ras.adlrr.RASBet.service.UserService;
 
@@ -30,14 +29,14 @@ public class UserController {
     public ResponseEntity<Gambler> addGambler(@RequestBody Gambler gambler){
         try{ return ResponseEntity.ok().body(userService.addGambler(gambler)); }
         catch (Exception e){
-            return AuxiliarMethods.createClassBadRequest(e.getMessage(), Gambler.class);
+            return new ResponseEntityBadRequest<Gambler>().createBadRequest(e.getMessage());
         }
     }
 
     @GetMapping(path = "/gambler")
     public ResponseEntity<Gambler> getGambler(@RequestParam(value = "id", required = false) Integer id, @RequestParam(value = "email", required = false) String email){
         if(id == null && email == null)
-            return AuxiliarMethods.createClassBadRequest("An email or id is required!", Gambler.class);
+            return new ResponseEntityBadRequest<Gambler>().createBadRequest("An email or id is required!");
 
         Gambler gambler = null;
         if(id != null)
@@ -55,7 +54,7 @@ public class UserController {
             userService.removeGambler(id);
             return new ResponseEntity(HttpStatus.OK); }
         catch (Exception e){
-            return AuxiliarMethods.createBadRequest(e.getMessage());
+            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
         }
     }
 
@@ -70,14 +69,14 @@ public class UserController {
     public ResponseEntity<Admin> addAdmin(@RequestBody Admin admin){
         try{ return ResponseEntity.ok().body(userService.addAdmin(admin)); }
         catch (Exception e){
-            return AuxiliarMethods.createClassBadRequest(e.getMessage(), Admin.class);
+            return new ResponseEntityBadRequest<Admin>().createBadRequest(e.getMessage());
         }
     }
 
     @GetMapping(path = "/admin")
     public ResponseEntity<Admin> getAdmin(@RequestParam(value = "id", required = false) Integer id, @RequestParam(value = "email", required = false) String email){
         if(id == null && email == null)
-            return AuxiliarMethods.createClassBadRequest("An email or id is required!", Admin.class);
+            return new ResponseEntityBadRequest<Admin>().createBadRequest("An email or id is required!");
 
         Admin admin = null;
         if(id != null)
@@ -95,7 +94,7 @@ public class UserController {
             userService.removeAdmin(id);
             return new ResponseEntity(HttpStatus.OK); }
         catch (Exception e){
-            return AuxiliarMethods.createBadRequest(e.getMessage());
+            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
         }
     }
 
@@ -110,14 +109,14 @@ public class UserController {
     public ResponseEntity<Expert> addExpert(@RequestBody Expert expert){
         try{ return ResponseEntity.ok().body(userService.addExpert(expert)); }
         catch (Exception e){
-            return AuxiliarMethods.createClassBadRequest(e.getMessage(), Expert.class);
+            return new ResponseEntityBadRequest<Expert>().createBadRequest(e.getMessage());
         }
     }
 
     @GetMapping(path = "/expert")
     public ResponseEntity<Expert> getExpert(@RequestParam(value = "id", required = false) Integer id, @RequestParam(value = "email", required = false) String email){
         if(id == null && email == null)
-            return AuxiliarMethods.createClassBadRequest("An email or id is required!", Expert.class);
+            return new ResponseEntityBadRequest<Expert>().createBadRequest("An email or id is required!");
 
         Expert expert = null;
         if(id != null)
@@ -135,7 +134,7 @@ public class UserController {
             userService.removeExpert(id);
             return new ResponseEntity(HttpStatus.OK); }
         catch (Exception e){
-            return AuxiliarMethods.createBadRequest(e.getMessage());
+            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
         }
     }
 
