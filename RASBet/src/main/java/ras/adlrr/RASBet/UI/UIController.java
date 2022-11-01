@@ -14,6 +14,11 @@ import java.time.format.DateTimeFormatter;
 
 public class UIController implements Runnable
 {
+    @Override
+    public void run() {
+
+    }
+    /*
     //@Autowired
     private BetController betController;
     private GameController gameController;
@@ -65,41 +70,41 @@ public class UIController implements Runnable
         menuAutenticao.setHandler(3, () -> registarExpertHandler());
         menuAutenticao.setHandler(4, () -> autenticarHandler());
 
-        /*
-        //Menu de cliente
-        Menu menuCliente = new Menu("Cliente", new String[]{"Reservar Viagem", "Cancelar Reserva de Viagem", "Listar Voos", "Listar Viagens", "Listar Viagens a partir de uma Origem ate um Destino","Listar reservas", "Receber resposta de pedidos"});
-        menuCliente.setHandlerSaida(() -> flag.setValue(Flag.NOT_AUTHENTICATED));
-        menuCliente.setHandler(1, () -> reservarViagemHandler(nrPedido, cliente));
-        menuCliente.setHandler(2, () -> cancelarReservaHandler(nrPedido, cliente));
-        menuCliente.setHandler(3, () -> listarVoosHandler(nrPedido, cliente));
-        menuCliente.setHandler(4, () -> listarViagensHandler(nrPedido, cliente));
-        menuCliente.setHandler(5, () -> listarViagensRestritasHandler(nrPedido, cliente));
-        menuCliente.setHandler(6, () -> listarReservasHandler(nrPedido,cliente));
-        menuCliente.setHandler(7, () -> {});
-        menuCliente.setLock(printsLock);
 
-        //Menu de administrador
-        Menu menuAdmin = new Menu("Administrador", new String[]{"Executar Operacoes de Cliente", "Inserir Novo Voo", "Encerrar um Dia","Fechar servidor"});
-        menuAdmin.setHandlerSaida(() -> flag.setValue(Flag.NOT_AUTHENTICATED));
-        menuAdmin.setHandler(1, menuCliente::run);
-        menuAdmin.setHandler(2, () -> inserirNovoVooHandler(nrPedido, cliente));
-        menuAdmin.setHandler(3, () -> encerrarDiaHandler(nrPedido,cliente));
-        menuAdmin.setHandler(4, () -> fecharServidorHandler(nrPedido, cliente));
-        menuAdmin.setLock(printsLock);
-        */
+        //Menu de cliente
+        //Menu menuCliente = new Menu("Cliente", new String[]{"Reservar Viagem", "Cancelar Reserva de Viagem", "Listar Voos", "Listar Viagens", "Listar Viagens a partir de uma Origem ate um Destino","Listar reservas", "Receber resposta de pedidos"});
+        //menuCliente.setHandlerSaida(() -> flag.setValue(Flag.NOT_AUTHENTICATED));
+        //menuCliente.setHandler(1, () -> reservarViagemHandler(nrPedido, cliente));
+        //menuCliente.setHandler(2, () -> cancelarReservaHandler(nrPedido, cliente));
+        //menuCliente.setHandler(3, () -> listarVoosHandler(nrPedido, cliente));
+        //menuCliente.setHandler(4, () -> listarViagensHandler(nrPedido, cliente));
+        //menuCliente.setHandler(5, () -> listarViagensRestritasHandler(nrPedido, cliente));
+        //menuCliente.setHandler(6, () -> listarReservasHandler(nrPedido,cliente));
+        //menuCliente.setHandler(7, () -> {});
+        //menuCliente.setLock(printsLock);
+//
+        ////Menu de administrador
+        //Menu menuAdmin = new Menu("Administrador", new String[]{"Executar Operacoes de Cliente", "Inserir Novo Voo", "Encerrar um Dia","Fechar servidor"});
+        //menuAdmin.setHandlerSaida(() -> flag.setValue(Flag.NOT_AUTHENTICATED));
+        //menuAdmin.setHandler(1, menuCliente::run);
+        //menuAdmin.setHandler(2, () -> inserirNovoVooHandler(nrPedido, cliente));
+        //menuAdmin.setHandler(3, () -> encerrarDiaHandler(nrPedido,cliente));
+        //menuAdmin.setHandler(4, () -> fecharServidorHandler(nrPedido, cliente));
+        //menuAdmin.setLock(printsLock);
+
         while (!flag.getValue().equals(Flag.CLOSE_CLIENT)) {
 
             //Executa menu de autenticacao
             while (flag.getValue().equals(Flag.NOT_AUTHENTICATED))
                 menuAutenticao.runOneTime();
 
-            /*
-            if (flag.getValue().equals(Flag.CLIENT_LOGGED_IN))
-                menuCliente.run();
 
-            else if (flag.getValue().equals(Flag.ADMIN_LOGGED_IN))
-                menuAdmin.run();
-            */
+            //if (flag.getValue().equals(Flag.CLIENT_LOGGED_IN))
+            //    menuCliente.run();
+//
+            //else if (flag.getValue().equals(Flag.ADMIN_LOGGED_IN))
+            //    menuAdmin.run();
+
             if(flag.getValue().equals(Flag.SERVER_CLOSED)) {
                 flag.setValue(Flag.NOT_AUTHENTICATED);
                 System.out.println("O Servidor encontra-se fechado. Tente novamente mais tarde!");
@@ -197,4 +202,5 @@ public class UIController implements Runnable
             flag.setValue(Flag.EXPERT_LOGGED_IN);
         }
     }
+    */
 }

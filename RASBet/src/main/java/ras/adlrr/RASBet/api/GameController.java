@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ras.adlrr.RASBet.api.auxiliar.AuxiliarMethods;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 import ras.adlrr.RASBet.service.GameService;
 
 import java.util.AbstractMap;
 import java.util.List;
+import java.util.Set;
 
 @RequestMapping("/api/games")
 @RestController
@@ -23,12 +25,12 @@ public class GameController {
     }
 
     @PostMapping
-    public ResponseEntity addGame(@RequestBody Game game){
+    public ResponseEntity<Game> addGame(@RequestBody Game game){
         try{ 
             return ResponseEntity.ok().body(gameService.addGame(game)); 
         }
         catch (Exception e){
-            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+            return AuxiliarMethods.createClassBadRequest(e.getMessage(), Game.class);
         }
     }
 
@@ -43,7 +45,7 @@ public class GameController {
             gameService.removeGame(id);
             return new ResponseEntity(HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+            return AuxiliarMethods.createBadRequest(e.getMessage());
         }
     }
 
@@ -58,27 +60,27 @@ public class GameController {
             gameService.changeGameState(id, state);
             return new ResponseEntity(HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+            return AuxiliarMethods.createBadRequest(e.getMessage());
         }
     }
 
     /* **** Participants Methods **** */
     @GetMapping("/{game_id}/participants")
-    public ResponseEntity getGameParticipants(@PathVariable("game_id") int gameID) {
+    public ResponseEntity<Set<Participant>> getGameParticipants(@PathVariable("game_id") int gameID) {
         try{
             return ResponseEntity.ok().body(gameService.getGameParticipants(gameID));
         } catch (Exception e){
-            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+            return AuxiliarMethods.createSetBadRequest(e.getMessage(), Participant.class);
         }
     }
 
     @PutMapping("/{game_id}/participants")
-    public ResponseEntity addParticipantToGame(@PathVariable("game_id") int gameID, @RequestBody Participant p){
+    public ResponseEntity<Participant> addParticipantToGame(@PathVariable("game_id") int gameID, @RequestBody Participant p){
         try{
             gameService.addParticipantToGame(gameID, p);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e){
-            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+            return AuxiliarMethods.createClassBadRequest(e.getMessage(), Participant.class);
         }
     }
 
@@ -88,7 +90,7 @@ public class GameController {
             gameService.removeParticipant(participant_id);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e){
-            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+            return AuxiliarMethods.createBadRequest(e.getMessage());
         }
     }
 
@@ -103,7 +105,7 @@ public class GameController {
             gameService.editOddInParticipant(participant_id, odd);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e){
-            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+            return AuxiliarMethods.createBadRequest(e.getMessage());
         }
     }
 }

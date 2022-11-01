@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import ras.adlrr.RASBet.api.auxiliar.AuxiliarMethods;
+import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Sport;
 import ras.adlrr.RASBet.service.SportService;
 
@@ -22,12 +24,12 @@ public class SportController {
     }
 
     @PostMapping
-    public ResponseEntity addSport(@RequestBody Sport sport){
+    public ResponseEntity<Sport> addSport(@RequestBody Sport sport){
         try{ 
             return ResponseEntity.ok().body(sportService.addSport(sport));
         }
         catch (Exception e){
-            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+            return AuxiliarMethods.createClassBadRequest(e.getMessage(),Sport.class);
         }
     }
 
@@ -43,7 +45,7 @@ public class SportController {
             return new ResponseEntity(HttpStatus.OK);
         }
         catch (Exception e){
-            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+            return AuxiliarMethods.createBadRequest(e.getMessage());
         }
     }
 
@@ -53,12 +55,12 @@ public class SportController {
     }
 
     @GetMapping("/{sport_name}/games")
-    public ResponseEntity getGamesFromSport(@PathVariable("sport_name") String sport_name) {
+    public ResponseEntity<List<Game>> getGamesFromSport(@PathVariable("sport_name") String sport_name) {
         try{
             return ResponseEntity.ok().body(sportService.getGamesFromSport(sport_name));
         }
         catch (Exception e){
-            return ResponseEntity.badRequest().body(new AbstractMap.SimpleEntry<>("error",e.getMessage()));
+            return AuxiliarMethods.createListBadRequest(e.getMessage(), Game.class);
         }
     }
 

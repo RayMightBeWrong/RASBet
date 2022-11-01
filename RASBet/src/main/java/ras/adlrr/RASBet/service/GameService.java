@@ -59,7 +59,7 @@ public class GameService {
     }
 
     public Game addGame(Game newGame) throws Exception {
-        Game game = gr.findByExtID(newGame._getExternalID()).orElse(null);
+        Game game = gr.findByExtID(newGame.getExtID()).orElse(null);
 
         if (game != null)
             throw new Exception("Game with the given external id already exists!");

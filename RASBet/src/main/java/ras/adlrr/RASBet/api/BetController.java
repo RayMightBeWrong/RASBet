@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Bet;
 import ras.adlrr.RASBet.service.BetService;
+import ras.adlrr.RASBet.api.auxiliar.AuxiliarMethods;
 
-import java.util.AbstractMap;
+import java.util.List;
 
 @RequestMapping("/api/bets")
 @RestController
@@ -25,18 +27,18 @@ public class BetController {
     }
 
     @PostMapping
-    public ResponseEntity addBet(@RequestBody Bet bet) {
+    public ResponseEntity<Bet> addBet(@RequestBody Bet bet) {
         try{ return ResponseEntity.ok().body(betService.addBet(bet)); }
         catch (Exception e){
-            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+            return AuxiliarMethods.createClassBadRequest(e.getMessage(), Bet.class);
         }
     }
 
     @GetMapping(path = "/gambler/{id}")
-    public ResponseEntity getGamblerBets(@PathVariable("id") int userID) {
+    public ResponseEntity<List<Bet>> getGamblerBets(@PathVariable("id") int userID) {
         try{ return ResponseEntity.ok().body(betService.getGamblerBets(userID)); }
         catch (Exception e){
-            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+            return AuxiliarMethods.createListBadRequest(e.getMessage(), Bet.class);
         }
     }
 
@@ -46,7 +48,7 @@ public class BetController {
             betService.removeBet(betID);
             return new ResponseEntity(HttpStatus.OK); }
         catch (Exception e){
-            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+            return AuxiliarMethods.createBadRequest(e.getMessage());
         }
     }
 }

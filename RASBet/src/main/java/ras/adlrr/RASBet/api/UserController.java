@@ -1,8 +1,5 @@
 package ras.adlrr.RASBet.api;
 
-import java.sql.Date;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.AbstractMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import ras.adlrr.RASBet.api.auxiliar.AuxiliarMethods;
 import ras.adlrr.RASBet.model.*;
 import ras.adlrr.RASBet.service.UserService;
 
@@ -29,17 +27,17 @@ public class UserController {
     // ------------ Gambler Methods ------------
 
     @PostMapping("/gambler")
-    public ResponseEntity addGambler(@RequestBody Gambler gambler){
+    public ResponseEntity<Gambler> addGambler(@RequestBody Gambler gambler){
         try{ return ResponseEntity.ok().body(userService.addGambler(gambler)); }
         catch (Exception e){
-            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+            return AuxiliarMethods.createClassBadRequest(e.getMessage(), Gambler.class);
         }
     }
 
     @GetMapping(path = "/gambler")
-    public ResponseEntity getGambler(@RequestParam(value = "id", required = false) Integer id, @RequestParam(value = "email", required = false) String email){
+    public ResponseEntity<Gambler> getGambler(@RequestParam(value = "id", required = false) Integer id, @RequestParam(value = "email", required = false) String email){
         if(id == null && email == null)
-            return ResponseEntity.badRequest().body(new AbstractMap.SimpleEntry<>("error","An email or id is required!"));
+            return AuxiliarMethods.createClassBadRequest("An email or id is required!", Gambler.class);
 
         Gambler gambler = null;
         if(id != null)
@@ -57,7 +55,7 @@ public class UserController {
             userService.removeGambler(id);
             return new ResponseEntity(HttpStatus.OK); }
         catch (Exception e){
-            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+            return AuxiliarMethods.createBadRequest(e.getMessage());
         }
     }
 
@@ -69,17 +67,17 @@ public class UserController {
     // ------------ Admin Methods ------------
 
     @PostMapping("/admin")
-    public ResponseEntity addAdmin(@RequestBody Admin admin){
+    public ResponseEntity<Admin> addAdmin(@RequestBody Admin admin){
         try{ return ResponseEntity.ok().body(userService.addAdmin(admin)); }
         catch (Exception e){
-            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+            return AuxiliarMethods.createClassBadRequest(e.getMessage(), Admin.class);
         }
     }
 
     @GetMapping(path = "/admin")
-    public ResponseEntity getAdmin(@RequestParam(value = "id", required = false) Integer id, @RequestParam(value = "email", required = false) String email){
+    public ResponseEntity<Admin> getAdmin(@RequestParam(value = "id", required = false) Integer id, @RequestParam(value = "email", required = false) String email){
         if(id == null && email == null)
-            return ResponseEntity.badRequest().body(new AbstractMap.SimpleEntry<>("error","An email or id is required!"));
+            return AuxiliarMethods.createClassBadRequest("An email or id is required!", Admin.class);
 
         Admin admin = null;
         if(id != null)
@@ -97,7 +95,7 @@ public class UserController {
             userService.removeAdmin(id);
             return new ResponseEntity(HttpStatus.OK); }
         catch (Exception e){
-            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+            return AuxiliarMethods.createBadRequest(e.getMessage());
         }
     }
 
@@ -109,17 +107,17 @@ public class UserController {
     // ------------ Expert Methods ------------
 
     @PostMapping("/expert")
-    public ResponseEntity addExpert(@RequestBody Expert expert){
+    public ResponseEntity<Expert> addExpert(@RequestBody Expert expert){
         try{ return ResponseEntity.ok().body(userService.addExpert(expert)); }
         catch (Exception e){
-            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+            return AuxiliarMethods.createClassBadRequest(e.getMessage(), Expert.class);
         }
     }
 
     @GetMapping(path = "/expert")
-    public ResponseEntity getExpert(@RequestParam(value = "id", required = false) Integer id, @RequestParam(value = "email", required = false) String email){
+    public ResponseEntity<Expert> getExpert(@RequestParam(value = "id", required = false) Integer id, @RequestParam(value = "email", required = false) String email){
         if(id == null && email == null)
-            return ResponseEntity.badRequest().body(new AbstractMap.SimpleEntry<>("error","An email or id is required!"));
+            return AuxiliarMethods.createClassBadRequest("An email or id is required!", Expert.class);
 
         Expert expert = null;
         if(id != null)
@@ -137,7 +135,7 @@ public class UserController {
             userService.removeExpert(id);
             return new ResponseEntity(HttpStatus.OK); }
         catch (Exception e){
-            return new ResponseEntity(new AbstractMap.SimpleEntry<>("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+            return AuxiliarMethods.createBadRequest(e.getMessage());
         }
     }
 
