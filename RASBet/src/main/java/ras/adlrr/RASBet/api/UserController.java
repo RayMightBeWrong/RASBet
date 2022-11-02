@@ -33,7 +33,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/gambler")
+    @PutMapping("/gambler/update")
     public ResponseEntity<Gambler> updateGambler(@RequestParam(value = "gambler_id") int gambler_id,
                                                  @RequestParam(value = "name", required = false) String name,
                                                  @RequestParam(value = "email", required = false) String email,
