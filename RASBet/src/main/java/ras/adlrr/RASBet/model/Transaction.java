@@ -23,29 +23,33 @@ public class Transaction {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "gambler_id", updatable = false, nullable = false)
     @JsonIncludeProperties("id")
-    private Gambler gambler;
+    private Gambler gambler = null;
 
     @OneToOne(mappedBy = "transaction", cascade = CascadeType.ALL)
     @JoinColumn(insertable = false, updatable = false)
     @JsonIncludeProperties("id")
     @JsonIgnore
-    private Bet bet;
+    private Bet bet = null;
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "wallet_id", updatable = false, nullable = true)
     @JsonIncludeProperties("id")
     private Wallet wallet = null;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "coin_id", updatable = false, nullable = false)
+    private Coin coin = null;
+    private float value;
     private Float balance_after_mov;
     private String description;
-    private float value;
     private LocalDateTime date;
 
     public Transaction(@JsonProperty("gambler_id") int gambler_id, @JsonProperty("wallet_id") Integer wallet_id,
                        @JsonProperty("balance_after_mov") Float balance_after_mov, @JsonProperty("description") String description,
-                       @JsonProperty("value") float value, @JsonProperty("date") LocalDateTime date){
+                       @JsonProperty("value") float value, @JsonProperty("coin_id") String coin_id, @JsonProperty("date") LocalDateTime date){
         this.gambler = new Gambler(); gambler.setId(gambler_id);
-        if(wallet_id != null) { this.wallet = new Wallet(); this.wallet.setId(wallet_id);}
+        if(coin_id != null) { this.coin = new Coin(); coin.setId(coin_id); }
+        if(wallet_id != null) { this.wallet = new Wallet(); this.wallet.setId(wallet_id); }
         this.balance_after_mov = balance_after_mov;
         this.description = description;
         this.value = value;

@@ -18,13 +18,7 @@ import java.util.List;
 @Table(name = "sport")
 public class Sport {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id; //Unique identifier of the sport
-
-    @Column(name = "name", unique = true)
-    private String name;
-
+    private String id;
     private int type; //Type of sport (E.g.: Collective and without draw / Non collective and with draw ...)
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sport", fetch = FetchType.LAZY)
@@ -35,9 +29,8 @@ public class Sport {
     public static final int WITHOUT_DRAW = 2;
     public static final int RACE = 3;
 
-    public Sport(@JsonProperty("id") int id, @JsonProperty("name") String name, @JsonProperty("type") int type){
+    public Sport(@JsonProperty("id") String id, @JsonProperty("type") int type){
         this.id = id;
-        this.name = name;
         this.type = type;
     }
 }

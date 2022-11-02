@@ -41,7 +41,7 @@ public class Wallet {
 
     private float balance;
 
-    public Wallet(@JsonProperty("coin_id") int coin_id, @JsonProperty("gambler_id") int gambler_id) {
+    public Wallet(@JsonProperty("coin_id") String coin_id, @JsonProperty("gambler_id") int gambler_id) {
         coin = new Coin(); coin.setId(coin_id);
         gambler = new Gambler(); gambler.setId(gambler_id);
         balance = 0;

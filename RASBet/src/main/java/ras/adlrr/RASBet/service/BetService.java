@@ -40,12 +40,13 @@ public class BetService {
         List<GameChoice> gameChoices = bet.getGameChoices();
         if(gameChoices != null)
             gameChoices = gameChoices.stream().filter(Objects::nonNull).toList();
-
         validateGameChoices(gameChoices);
 
         Transaction transaction = bet.getTransaction();
         if(transaction == null)
             throw new Exception("Null Transaction!");
+        if(transaction.getCoin() == null || !walletService.coinExistsById(transaction.getCoin().getId()))
+            throw new Exception("A Coin is required!");
 
         Wallet wallet = transaction.getWallet();
         if(wallet != null) {
@@ -97,6 +98,9 @@ public class BetService {
             throw new Exception("Withdraw cannot be performed into a wallet that " +
                     "does not belong to the gambler that placed the bet!");
 
+        if(!bet_transaction.getCoin().getId().equals(wallet_withdraw.getCoin().getId()))
+            throw new Exception("Wallet does not use the same coin has the one used to place the bet!");
+
         float winnings = calculateBetWinnings(bet_transaction.getValue(), bet.getGameChoices());
         if(winnings == 0) {
             betRepository.save(bet);
@@ -105,7 +109,7 @@ public class BetService {
 
         wallet_withdraw = walletService.addToBalance(wallet_id, winnings);
         Transaction newTransaction = new Transaction(wallet_withdraw.getGambler().getId(), wallet_id, wallet_withdraw.getBalance(),
-                "Bet Winnings", winnings, LocalDateTime.now());
+                "Bet Winnings", winnings, wallet_withdraw.getCoin().getId(), LocalDateTime.now());
 
         betRepository.save(bet);
         return transactionService.addTransaction(newTransaction);
@@ -146,6 +150,9 @@ public class BetService {
             Game game = gc.getGame();
             if(!gameService.gameExistsById(game.getId()))
                 throw new Exception("Trying to bet in a non existent game!");
+
+            if(game.getState() != Game.OPEN)
+                throw new Exception("Game with id " + game.getId() + " is not open for bets");
 
             if(gc.getOdd() < 1)
                 throw new Exception("Odds must be equal or higher to/than 1!");

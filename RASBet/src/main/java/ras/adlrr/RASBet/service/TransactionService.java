@@ -42,8 +42,12 @@ public class TransactionService {
             throw new Exception("Null Transaction!");
 
         Gambler gambler = t.getGambler();
-        if(gambler != null && !userService.gamblerExistsById(gambler.getId()))
+        if(gambler == null || !userService.gamblerExistsById(gambler.getId()))
             throw new Exception("Cannot register a transaction to a non existent gambler!");
+
+        Coin coin = t.getCoin();
+        if(coin == null || !walletService.coinExistsById(coin.getId()))
+            throw new Exception("Cannot register a transaction with a non existent coin!");
 
         if (t.getValue() < 0)
             throw new Exception("Cannot perform a transaction with a negative value!");
@@ -65,37 +69,30 @@ public class TransactionService {
     }
 
     public Transaction deposit(int wallet_id, float valueToDeposit) throws Exception {
-        Integer gambler_id = walletService.findGamblerIdByWalletId(wallet_id);
-        if(gambler_id == null)
-            throw new Exception("A gambler does not exist for the given wallet! This should not be happening...");
         Wallet wallet = walletService.addToBalance(wallet_id, valueToDeposit);
 
         Transaction transaction = new Transaction();
+        Coin coin = wallet.getCoin();
+        transaction.setCoin(coin);
         transaction.setWallet(wallet);
         transaction.setValue(valueToDeposit);
         transaction.setDescription("Deposit");
         transaction.setBalance_after_mov(wallet.getBalance());
-        Gambler gambler = new Gambler();
-        gambler.setId(gambler_id);
-        transaction.setGambler(gambler);
+        transaction.setGambler(wallet.getGambler());
 
         return addTransaction(transaction);
     }
 
     public Transaction withdraw(int wallet_id, float valueToWithdraw) throws Exception {
-        Integer gambler_id = walletService.findGamblerIdByWalletId(wallet_id);
-        if(gambler_id == null)
-            throw new Exception("A gambler does not exist for the given wallet! This should not be happening...");
         Wallet wallet = walletService.removeFromBalance(wallet_id, valueToWithdraw);
 
         Transaction transaction = new Transaction();
+        transaction.setCoin(wallet.getCoin());
         transaction.setWallet(wallet);
         transaction.setValue(valueToWithdraw);
         transaction.setDescription("Withdraw");
         transaction.setBalance_after_mov(wallet.getBalance());
-        Gambler gambler = new Gambler();
-        gambler.setId(gambler_id);
-        transaction.setGambler(gambler);
+        transaction.setGambler(wallet.getGambler());
 
         return addTransaction(transaction);
     }

@@ -14,7 +14,7 @@ import ras.adlrr.RASBet.model.Sport;
 public interface GameRepository extends JpaRepository<Game, Integer> {
     Optional<Game> findByExtID(String extID);
     @Query("SELECT g FROM Game g WHERE g.sport.id = :sport_id")
-    List<Game> findAllBySportId(@Param("sport_id") int sport_id);
+    List<Game> findAllBySportId(@Param("sport_id") String sport_id);
 
     //Get game with participants
     @Query("SELECT g FROM Game g LEFT JOIN FETCH g.participants WHERE g.id = :game_id")

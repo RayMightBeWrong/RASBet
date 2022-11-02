@@ -18,13 +18,10 @@ import java.util.List;
 @Setter
 public class Coin {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
-    private String name;
+    private String id;
     private float ratio_EUR;
 
     public String toString(){
-        return name + " | Ratio de euro: " + ratio_EUR;
+        return id + " | Ratio de euro: " + ratio_EUR;
     }
 }

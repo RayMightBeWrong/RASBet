@@ -33,12 +33,12 @@ public class SportController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Sport> getSport(@PathVariable("id") int id){
+    public ResponseEntity<Sport> getSport(@PathVariable("id") String id){
         return new ResponseEntity<>(sportService.getSport(id), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity removeSport(@PathVariable int id) {
+    public ResponseEntity removeSport(@PathVariable String id) {
         try {
             sportService.removeSport(id);
             return new ResponseEntity(HttpStatus.OK);
@@ -53,10 +53,10 @@ public class SportController {
         return new ResponseEntity<>(sportService.getListOfSports(),HttpStatus.OK);
     }
 
-    @GetMapping("/{sport_name}/games")
-    public ResponseEntity<List<Game>> getGamesFromSport(@PathVariable("sport_name") String sport_name) {
+    @GetMapping("/{id}/games")
+    public ResponseEntity<List<Game>> getGamesFromSport(@PathVariable("id") String id) {
         try{
-            return ResponseEntity.ok().body(sportService.getGamesFromSport(sport_name));
+            return ResponseEntity.ok().body(sportService.getGamesFromSport(id));
         }
         catch (Exception e){
             return new ResponseEntityBadRequest<List<Game>>().createBadRequest(e.getMessage());

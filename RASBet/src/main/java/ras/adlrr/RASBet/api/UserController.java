@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @PutMapping("/gambler/update")
-    public ResponseEntity<Gambler> updateGambler(@RequestParam(value = "gambler_id") int gambler_id,
+    public ResponseEntity<Gambler> updateGambler(@RequestParam(value = "id") int gambler_id,
                                                  @RequestParam(value = "name", required = false) String name,
                                                  @RequestParam(value = "email", required = false) String email,
                                                  @RequestParam(value = "password", required = false) String password,
@@ -169,8 +169,8 @@ public class UserController {
      * @param  password   password that corresponds to the email account
      * @return            -1 unsuccessful logIn, 0 Gambler, 1 Admin, 2 Expert
      */
-    //todo add mapping
-    public int logIn(String email,String password){
+    @GetMapping
+    public int logIn(@RequestParam("email") String email, @RequestParam("password") String password){
         return userService.logIn(email,password);
     }
 

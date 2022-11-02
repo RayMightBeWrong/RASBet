@@ -12,6 +12,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -45,13 +46,19 @@ public class Bet {
     public static final int STATE_CANCELED = 3;
 
     public Bet(@JsonProperty("gambler_id") int gambler_id, @JsonProperty("wallet_id") Integer wallet_id,
-               @JsonProperty("value") float value,
+               @JsonProperty("value") float value, @JsonProperty("coin_id") String coin_id,
                @JsonProperty("game_choices") List<GameChoice> gameChoices){
         transaction = new Transaction();
 
         Gambler gambler = new Gambler();
         gambler.setId(gambler_id);
         transaction.setGambler(gambler);
+
+        if(coin_id != null){
+            Coin coin = new Coin();
+            coin.setId(coin_id);
+            transaction.setCoin(coin);
+        }
 
         if(wallet_id != null) {
             Wallet wallet = new Wallet();
@@ -62,5 +69,11 @@ public class Bet {
         transaction.setValue(value);
 
         this.gameChoices = gameChoices;
+    }
+
+    public void addGameChoice(GameChoice gc){
+        if(gameChoices == null)
+            gameChoices = new ArrayList<>();
+        gameChoices.add(gc);
     }
 }

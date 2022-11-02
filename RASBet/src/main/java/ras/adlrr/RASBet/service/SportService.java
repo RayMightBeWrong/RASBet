@@ -22,20 +22,19 @@ public class SportService {
     }
 
     public Sport addSport(Sport sport) throws Exception {
-        if(sportRepository.existsByName(sport.getName()))
+        if(sportRepository.existsById(sport.getId()))
             throw new Exception("Sport already exists!");
 
-        sport.setId(0);
         sportRepository.save(sport);
         
         return sport;
     }
 
-    public Sport getSport(int id){
+    public Sport getSport(String id){
         return sportRepository.findById(id).orElse(null);
     }
 
-    public void removeSport(int id) throws Exception {
+    public void removeSport(String id) throws Exception {
         if(!sportRepository.existsById(id))
             throw new Exception("Sport needs to exist to be removed!");
 
@@ -47,18 +46,18 @@ public class SportService {
     }
 
     public List<Game> getGamesFromSport(String sport) throws Exception {
-        Sport s = sportRepository.findByName(sport);
+        Sport s = sportRepository.findById(sport).orElse(null);
         if(s == null)
             throw new Exception("Sport not found!");
 
         return gameRepository.findAllBySportId(s.getId());
     }
 
-    public boolean sportExistsById(int id) {
+    public boolean sportExistsById(String id) {
         return sportRepository.existsById(id);
     }
 
-    public Sport findSportByName(String name) {
-        return sportRepository.findByName(name);
+    public Sport findSportById(String id) {
+        return sportRepository.findById(id).orElse(null);
     }
 }

@@ -21,9 +21,9 @@ import ras.adlrr.RASBet.model.Participant;
 import ras.adlrr.RASBet.model.APIGameReader;
 
 public class NFLOddsAPIReader implements APIGameReader{
-    private int sport_id;
+    private String sport_id;
     
-    public NFLOddsAPIReader(int sport_id){
+    public NFLOddsAPIReader(String sport_id){
         this.sport_id = sport_id;
     }
 
@@ -108,7 +108,7 @@ public class NFLOddsAPIReader implements APIGameReader{
         return Game.OPEN;
     }
 
-    public int getSportID(){
+    public String getSportID(){
         return this.sport_id;
     }
 

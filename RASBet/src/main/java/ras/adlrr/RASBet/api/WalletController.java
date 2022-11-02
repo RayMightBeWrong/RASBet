@@ -22,6 +22,37 @@ public class WalletController {
         this.walletService = walletService;
     }
 
+    // ---------- Coin Methods ----------
+
+    @PostMapping("/coin")
+    public ResponseEntity<Coin> addCoin(@RequestBody Coin coin){
+        try{ return ResponseEntity.ok().body(walletService.addCoin(coin)); }
+        catch (Exception e) {
+            return new ResponseEntityBadRequest<Coin>().createBadRequest(e.getMessage());
+        }
+    }
+
+    @GetMapping(path = "/coin/{id}")
+    public ResponseEntity<Coin> getCoin(@PathVariable("id") String id){
+        return ResponseEntity.ok().body(walletService.getCoin(id));
+    }
+
+    @DeleteMapping(path = "/coin/{id}")
+    //TODO - So se consegue eliminar coins que n estejam relacionadas a outras entidades
+    public ResponseEntity removeCoin(@PathVariable String id){
+        try {
+            walletService.removeCoin(id);
+            return new ResponseEntity(HttpStatus.OK); }
+        catch (Exception e){
+            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
+        }
+    }
+
+    @GetMapping("/coin")
+    public ResponseEntity<List<Coin>> getListOfCoins(){
+        return ResponseEntity.ok().body(walletService.getListOfCoins());
+    }
+
     // ---------- Wallet Methods ----------
 
     @GetMapping(path = "/wallet/{id}")
@@ -58,35 +89,5 @@ public class WalletController {
         catch (Exception e){
             return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
         }
-    }
-
-    // ---------- Coin Methods ----------
-
-    @PostMapping("/coin")
-    public ResponseEntity<Coin> addCoin(@RequestBody Coin coin){
-        try{ return ResponseEntity.ok().body(walletService.addCoin(coin)); }
-        catch (Exception e) {
-            return new ResponseEntityBadRequest<Coin>().createBadRequest(e.getMessage());
-        }
-    }
-
-    @GetMapping(path = "/coin/{id}")
-    public ResponseEntity<Coin> getCoin(@PathVariable("id") int id){
-        return ResponseEntity.ok().body(walletService.getCoin(id));
-    }
-
-    @DeleteMapping(path = "/coin/{id}")
-    public ResponseEntity removeCoin(@PathVariable int id){
-        try {
-            walletService.removeCoin(id);
-            return new ResponseEntity(HttpStatus.OK); }
-        catch (Exception e){
-            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
-        }
-    }
-
-    @GetMapping("/coin")
-    public ResponseEntity<List<Coin>> getListOfCoins(){
-        return ResponseEntity.ok().body(walletService.getListOfCoins());
     }
 }

@@ -21,10 +21,10 @@ import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 
 public class FootballAPISportsReader implements APIGameReader{
-    private int sport_id;
+    private String sport_id;
     private String currentRound;
 
-    public FootballAPISportsReader(int sport_id){
+    public FootballAPISportsReader(String sport_id){
         this.sport_id = sport_id;
     }
 
@@ -125,7 +125,7 @@ public class FootballAPISportsReader implements APIGameReader{
         return ps;
     }
 
-    public int getSportID() {
+    public String getSportID() {
         return this.sport_id;
     }
 

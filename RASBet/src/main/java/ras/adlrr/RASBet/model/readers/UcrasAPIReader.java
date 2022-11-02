@@ -17,9 +17,9 @@ import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 
 public class UcrasAPIReader implements APIGameReader{
-    private int sport_id;
+    private String sport_id;
 
-    public UcrasAPIReader(int sport_id){
+    public UcrasAPIReader(String sport_id){
         this.sport_id = sport_id;
     }
 
@@ -92,7 +92,7 @@ public class UcrasAPIReader implements APIGameReader{
         return Game.OPEN;
     }
 
-    public int getSportID(){
+    public String getSportID(){
         return this.sport_id;
     }
 

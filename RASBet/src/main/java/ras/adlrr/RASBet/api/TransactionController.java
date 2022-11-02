@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Transaction;
-import ras.adlrr.RASBet.model.Wallet;
 import ras.adlrr.RASBet.service.TransactionService;
 
 import java.util.List;

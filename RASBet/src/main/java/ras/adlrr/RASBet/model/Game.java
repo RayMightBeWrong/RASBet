@@ -47,12 +47,12 @@ public class Game {
     private LocalDateTime date;
     private int state;
 
-    public static final int SUSPENDED = 1;
+    public static final int OPEN = 1;
     public static final int CLOSED = 2;
-    public static final int OPEN = 3;
+    public static final int SUSPENDED = 3;
 
     public Game(@JsonProperty("id") int id, @JsonProperty("extID") String extID, @JsonProperty("date") LocalDateTime date,
-                @JsonProperty("state") int state, @JsonProperty("title") String title, @JsonProperty("sport_id") int sport_id,
+                @JsonProperty("state") int state, @JsonProperty("title") String title, @JsonProperty("sport_id") String sport_id,
                 @JsonProperty("participants") Set<Participant> participants){
         this.id = id;
         this.extID = extID;
@@ -65,7 +65,7 @@ public class Game {
     }
 
     public Game(int id, String extID, LocalDateTime date,
-                int state, int sport_id, String title, Set<Participant> participants,
+                int state, String sport_id, String title, Set<Participant> participants,
                 List<GameChoice> gameChoices){
         this.id = id;
         this.extID = extID;
@@ -78,7 +78,7 @@ public class Game {
     }
 
     public Game(String extID, LocalDateTime date, int state, String title,
-                int sport_id, Set<Participant> participants){
+                String sport_id, Set<Participant> participants){
         this.extID = extID;
         this.date = date;
         this.state = state;

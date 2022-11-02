@@ -2,6 +2,7 @@ package ras.adlrr.RASBet.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.dao.AdminRepository;
 import ras.adlrr.RASBet.dao.ExpertRepository;
 import ras.adlrr.RASBet.dao.GamblerRepository;
@@ -40,8 +41,6 @@ public class UserService {
 
     public Gambler addGambler(Gambler gambler) throws Exception {
         gambler.setId(0);
-        if(existsUserWithEmail(gambler.getEmail()))
-            throw new Exception("Email already used by another user!");
         if(gambler.getCc() == null)
             throw new Exception("CC is required!");
         if(gambler.getNif() == null)
@@ -55,8 +54,8 @@ public class UserService {
     }
 
     public void removeGambler(int id) throws Exception {
-        if(!gamblerRepository.existsById(id))
-            throw new Exception("Gambler needs to exist to be removed!");
+        if(!gamblerExistsById(id))
+            throw new Exception("Gambler does not exist!");
         gamblerRepository.deleteById(id);
     }
 
@@ -145,7 +144,9 @@ public class UserService {
         return adminRepository.save(admin);
     }
 
-    public void removeAdmin(int id){
+    public void removeAdmin(int id) throws Exception {
+        if(!adminExistsById(id))
+            throw new Exception("Admin does not exist!");
         adminRepository.deleteById(id);
     }
 
@@ -179,7 +180,9 @@ public class UserService {
         return expertRepository.save(expert);
     }
 
-    public void removeExpert(int id){
+    public void removeExpert(int id) throws Exception {
+        if(!expertExistsById(id))
+            throw new Exception("Admin does not exist!");
         expertRepository.deleteById(id);
     }
 
@@ -200,6 +203,8 @@ public class UserService {
 
     /** @return "null" if all attributes are valid or string mentioning error **/
     private String validateUserAttributes(User user){
+        if(existsUserWithEmail(user.getEmail()))
+            return "Email already used by another user!";
         if(!Pattern.matches("^\\w[\\w ]*$", user.getName()))
             return "A name can only contain alphanumeric characters and spaces. Must also start with an alphanumeric.";
         if(!Pattern.matches("^\\w[\\w.]*@\\w+(?:\\.\\w+)+$", user.getEmail()))

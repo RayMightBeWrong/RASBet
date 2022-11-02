@@ -24,6 +24,29 @@ public class WalletService {
         this.userService = userService;
     }
 
+    // ---------- Coin Methods ----------
+
+    public Coin getCoin(String id){
+        return coinRepository.findById(id).orElse(null);
+    }
+
+    public Coin addCoin(Coin coin){
+        return coinRepository.save(coin);
+    }
+
+    public void removeCoin(String id) throws Exception {
+        if(!coinRepository.existsById(id))
+            throw new Exception("Coin does not exist!");
+        coinRepository.deleteById(id);
+    }
+
+    public List<Coin> getListOfCoins(){
+        return coinRepository.findAll();
+    }
+
+    public boolean coinExistsById(String id) {
+        return coinRepository.existsById(id);
+    }
 
     // ---------- Wallet Methods ----------
 
@@ -84,30 +107,5 @@ public class WalletService {
 
     public Integer findGamblerIdByWalletId(int wallet_id){
         return walletRepository.findGamblerIdByWalletId(wallet_id).orElse(null);
-    }
-
-    // ---------- Coin Methods ----------
-
-    public Coin getCoin(int id){
-        return coinRepository.findById(id).orElse(null);
-    }
-
-    public Coin addCoin(Coin coin){
-        coin.setId(0);
-        return coinRepository.save(coin);
-    }
-
-    public void removeCoin(int id) throws Exception {
-        if(!coinRepository.existsById(id))
-            throw new Exception("A coin needs to exist to be removed!");
-        coinRepository.deleteById(id);
-    }
-
-    public List<Coin> getListOfCoins(){
-        return coinRepository.findAll();
-    }
-
-    public boolean coinExistsById(int id) {
-        return coinRepository.existsById(id);
     }
 }

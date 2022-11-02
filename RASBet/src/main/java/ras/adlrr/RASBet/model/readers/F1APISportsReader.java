@@ -21,11 +21,11 @@ import ras.adlrr.RASBet.model.Participant;
 import ras.adlrr.RASBet.model.APIGameReader;
 
 public class F1APISportsReader implements APIGameReader{
-    private int sport_id;
+    private String sport_id;
     private String season = "2022";
 
     
-    public F1APISportsReader(int sport_id){
+    public F1APISportsReader(String sport_id){
         this.sport_id = sport_id;
     }
 
@@ -102,7 +102,7 @@ public class F1APISportsReader implements APIGameReader{
         return res;
     }
 
-    public int getSportID() {
+    public String getSportID() {
         return this.sport_id;
     }
 

@@ -180,7 +180,7 @@ public class GameService {
     /*  UPDATE DE JOGOS */
     
     public void getGamesFromAPIVPN() throws Exception{
-        Sport sport = sportService.findSportByName("Futebol");
+        Sport sport = sportService.findSportById("Futebol");
         if (sport != null){
             APIGameReader reader = new UcrasAPIReader(sport.getId());
             
@@ -193,21 +193,21 @@ public class GameService {
     }
 
     public void getGamesFromAPI() throws Exception{
-        Sport sport = sportService.findSportByName("NFL");
+        Sport sport = sportService.findSportById("NFL");
         if (sport != null){
             APIGameReader reader = new NFLOddsAPIReader(sport.getId());
             List<Game> games = reader.getAPIGames();
             addGames(games);
         }
 
-        sport = sportService.findSportByName("F1");
+        sport = sportService.findSportById("F1");
         if (sport != null){
             APIGameReader reader = new F1APISportsReader(sport.getId());
             List<Game> games = reader.getAPIGames();
             addGames(games);
         }
 
-        sport = sportService.findSportByName("Football");
+        sport = sportService.findSportById("Football");
         if (sport != null){
             APIGameReader reader = new FootballAPISportsReader(sport.getId());
             List<Game> games = reader.getAPIGames();
