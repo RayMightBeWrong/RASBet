@@ -16,6 +16,12 @@
 	<properties>
 		<java.version>19</java.version>
 	</properties>
+	<repositories>
+		<repository>
+			<id>lib</id>
+			<url>file://${project.basedir}/lib</url>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
