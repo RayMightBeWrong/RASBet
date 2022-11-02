@@ -24,6 +24,21 @@ public class WalletController {
 
     // ---------- Wallet Methods ----------
 
+    @GetMapping(path = "/wallet/{id}")
+    public ResponseEntity<Wallet> getWallet(@PathVariable("id") int id){
+        return ResponseEntity.ok().body(walletService.getWallet(id));
+    }
+
+    @GetMapping("/gambler/{gambler_id}")
+    public ResponseEntity<List<Wallet>> getGamblerWallets(@PathVariable("gambler_id") int gambler_id){
+        return ResponseEntity.ok().body(walletService.getGamblerWallets(gambler_id));
+    }
+
+    @GetMapping("/wallet")
+    public ResponseEntity<List<Wallet>> getListOfWallets(){
+        return ResponseEntity.ok().body(walletService.getListOfWallets());
+    }
+
     @PostMapping("/wallet")
     public ResponseEntity<Wallet> createWallet(@RequestBody Wallet wallet){
         try {
@@ -34,11 +49,6 @@ public class WalletController {
         }
     }
 
-    @GetMapping(path = "/wallet/{id}")
-    public ResponseEntity<Wallet> getWallet(@PathVariable("id") int id){
-        return ResponseEntity.ok().body(walletService.getWallet(id));
-    }
-
     @DeleteMapping(path = "/wallet/{id}")
     public ResponseEntity removeWallet(@PathVariable int id){
         try {
@@ -47,29 +57,6 @@ public class WalletController {
         }
         catch (Exception e){
             return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
-        }
-    }
-
-    @GetMapping("/wallet")
-    public ResponseEntity<List<Wallet>> getListOfWallets(){
-        return ResponseEntity.ok().body(walletService.getListOfWallets());
-    }
-
-    @PutMapping("/wallet/deposit")
-    public ResponseEntity<Wallet> deposit(@RequestParam int wallet_id, @RequestParam float value){
-        try {
-            return ResponseEntity.ok().body(walletService.deposit(wallet_id, value));
-        }catch (Exception e){
-            return new ResponseEntityBadRequest<Wallet>().createBadRequest(e.getMessage());
-        }
-    }
-
-    @PutMapping("/wallet/withdraw")
-    public ResponseEntity<Wallet> withdraw(@RequestParam int wallet_id, @RequestParam float value){
-        try {
-            return ResponseEntity.ok().body(walletService.withdraw(wallet_id, value));
-        }catch (Exception e){
-            return new ResponseEntityBadRequest<Wallet>().createBadRequest(e.getMessage());
         }
     }
 

@@ -21,7 +21,6 @@ import ras.adlrr.RASBet.model.Participant;
 import ras.adlrr.RASBet.model.APIGameReader;
 
 public class NFLOddsAPIReader implements APIGameReader{
-<<<<<<< HEAD
     private int sport_id;
     
     public NFLOddsAPIReader(int sport_id){
@@ -42,14 +41,6 @@ public class NFLOddsAPIReader implements APIGameReader{
         }
 
         return res;
-=======
-    private JSONArray response;
-    private int sport_id;
-    
-    public NFLOddsAPIReader(String response, int sport_id){
-        this.response = new JSONArray(response);
-        this.sport_id = sport_id;
->>>>>>> a14d69bd746ac6a3556ecb31baad3dc33fb60630
     }
 
     public String getGameExternalId(JSONObject game){
@@ -119,7 +110,6 @@ public class NFLOddsAPIReader implements APIGameReader{
 
     public int getSportID(){
         return this.sport_id;
-<<<<<<< HEAD
     }
 
     public String makeName(JSONObject game){
@@ -158,28 +148,5 @@ public class NFLOddsAPIReader implements APIGameReader{
         }
 
         return sb.toString();
-=======
-    }
-
-    public String makeName(JSONObject game){
-        String homeTeam = (String) game.get("home_team");
-        String awayTeam = (String) game.get("away_team");
-
-        return awayTeam + " @ " + homeTeam;
-    }
-
-    @Override
-    public List<Game> getAPIGames() {
-        List<Game> res = new ArrayList<>();
-
-        for(int i = 0; i < response.length() && i < 10; i++){
-            JSONObject obj = (JSONObject) response.get(i);
-
-            Game g = new Game(getGameExternalId(obj), getGameDate(obj), getGameState(obj), makeName(obj), getSportID(), getGameParticipants(obj));
-            res.add(g);
-        }
-
-        return res;
->>>>>>> a14d69bd746ac6a3556ecb31baad3dc33fb60630
     }
 }

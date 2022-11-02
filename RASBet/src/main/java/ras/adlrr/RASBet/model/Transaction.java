@@ -1,20 +1,12 @@
 package ras.adlrr.RASBet.model;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import lombok.*;
 
 import javax.persistence.*;
-import java.lang.annotation.Native;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "transactions")
@@ -49,10 +41,9 @@ public class Transaction {
     private float value;
     private LocalDateTime date;
 
-    public Transaction(@JsonProperty("id") int id, @JsonProperty("gambler_id") int gambler_id, @JsonProperty("wallet_id") Integer wallet_id,
+    public Transaction(@JsonProperty("gambler_id") int gambler_id, @JsonProperty("wallet_id") Integer wallet_id,
                        @JsonProperty("balance_after_mov") Float balance_after_mov, @JsonProperty("description") String description,
                        @JsonProperty("value") float value, @JsonProperty("date") LocalDateTime date){
-        this.id = id;
         this.gambler = new Gambler(); gambler.setId(gambler_id);
         if(wallet_id != null) { this.wallet = new Wallet(); this.wallet.setId(wallet_id);}
         this.balance_after_mov = balance_after_mov;

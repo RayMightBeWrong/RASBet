@@ -29,11 +29,7 @@ public class Game {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
-<<<<<<< HEAD
     private Set<Participant> participants = null;
-=======
-    private Set<Participant> participants;
->>>>>>> a14d69bd746ac6a3556ecb31baad3dc33fb60630
 
     @ManyToOne(optional = false)
     @JoinColumn(updatable = false, nullable = false)
@@ -46,16 +42,9 @@ public class Game {
 
     @Getter(AccessLevel.NONE)
     private String extID;
-<<<<<<< HEAD
-
-    private String title;
-    private LocalDateTime date;
-
-=======
     private Integer winner_id;
     private String title;
     private LocalDateTime date;
->>>>>>> a14d69bd746ac6a3556ecb31baad3dc33fb60630
     private int state;
 
     public static final int SUSPENDED = 1;

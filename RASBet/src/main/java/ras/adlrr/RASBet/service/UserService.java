@@ -62,6 +62,47 @@ public class UserService {
         return gamblerRepository.findAll();
     }
 
+    public boolean gamblerExistsById(int gambler_id){
+        return gamblerRepository.existsById(gambler_id);
+    }
+
+    public Gambler updateGambler(int gambler_id, String name, String email, String password, Integer phoneNumber,
+                                 String nationality, String city, String address, String postal_code, String occupation) throws Exception {
+        Gambler gambler = getGamblerById(gambler_id);
+        if(gambler == null)
+            throw new Exception("Gambler does not exist!");
+
+        if(name != null)
+            gambler.setName(name);
+        if(email != null)
+            gambler.setEmail(email);
+        if(password != null)
+            gambler.setPassword(password);
+        if(phoneNumber != null)
+            gambler.setPhoneNumber(phoneNumber);
+        if(nationality != null)
+            gambler.setNationality(nationality);
+        if(city != null)
+            gambler.setCity(city);
+        if(address != null)
+            gambler.setAddress(address);
+        if(postal_code != null)
+            gambler.setPostal_code(postal_code);
+        if(occupation != null)
+            gambler.setOccupation(occupation);
+
+        String error = validateGamblerAttributes(gambler);
+        if(error != null)
+            throw new Exception(error);
+
+        return gamblerRepository.save(gambler);
+    }
+
+    //TODO - necessario criar metodo que faca a verificacao de todos os campos
+    /** @return "null" if all attributes are valid or string mentioning error **/
+    private String validateGamblerAttributes(Gambler gambler){
+        return null;
+    }
 
     // ------------ Admin Methods ------------
 
@@ -88,6 +129,15 @@ public class UserService {
         return adminRepository.findAll();
     }
 
+    public boolean adminExistsById(int admin_id){
+        return adminRepository.existsById(admin_id);
+    }
+
+    /** @return "null" if all attributes are valid or string mentioning error **/
+    //TODO
+    private String validateAdminAttributes(Admin admin){
+        return null;
+    }
 
     // ------------ Expert Methods ------------
 
@@ -114,8 +164,23 @@ public class UserService {
         return expertRepository.findAll();
     }
 
+    public boolean expertExistsById(int expert_id){
+        return expertRepository.existsById(expert_id);
+    }
+
+    /** @return "null" if all attributes are valid or string mentioning error **/
+    //TODO
+    private String validateExpertAttributes(Expert expert){
+        return null;
+    }
 
     // ------------ Shared Methods ------------
+
+    /** @return "null" if all attributes are valid or string mentioning error **/
+    //TODO
+    private String validateUserAttributes(User user){
+        return null;
+    }
 
     public User getUserByEmail(String email){
         User user;
