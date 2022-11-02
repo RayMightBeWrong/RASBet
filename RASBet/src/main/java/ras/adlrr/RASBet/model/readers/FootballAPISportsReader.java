@@ -22,6 +22,7 @@ import ras.adlrr.RASBet.model.Participant;
 
 public class FootballAPISportsReader implements APIGameReader{
     private int sport_id;
+<<<<<<< HEAD
     private String currentRound;
 
     public FootballAPISportsReader(int sport_id){
@@ -55,6 +56,12 @@ public class FootballAPISportsReader implements APIGameReader{
             }
         }
         return res;
+=======
+    private JSONArray games;
+
+    public FootballAPISportsReader(String games, int sport_id){
+        this.games = (JSONArray) (new JSONObject(games).get("response"));
+>>>>>>> a14d69bd746ac6a3556ecb31baad3dc33fb60630
     }
 
     public String getGameExternalId(JSONObject game) {
@@ -147,10 +154,21 @@ public class FootballAPISportsReader implements APIGameReader{
         JSONObject away = (JSONObject) teams.get("away");
         String homeTeam = (String) home.get("name");
         String awayTeam = (String) away.get("name");
+<<<<<<< HEAD
+=======
 
         return homeTeam + " vs " + awayTeam;
     }
 
+    @Override
+    public List<Game> getAPIGames() {
+        List<Game> res = new ArrayList<>();
+>>>>>>> a14d69bd746ac6a3556ecb31baad3dc33fb60630
+
+        return homeTeam + " vs " + awayTeam;
+    }
+
+<<<<<<< HEAD
     public String readJSONfromHTTPRequest(String url, String path){
         HttpResponse<String> response = Unirest.get(url)
                                             .header("x-rapidapi-key", "b68a93e4291b512a0f3179eb9ee1bc2b")
@@ -174,11 +192,20 @@ public class FootballAPISportsReader implements APIGameReader{
             String st;
             while ((st = br.readLine()) != null)
                 sb.append(st);
+=======
+            if (league.get("round").equals("Regular Season - 10")){
+                Game g = new Game(getGameExternalId(obj), getGameDate(obj), getGameState(obj), getName(obj), getSportID(), getGameParticipants(obj));
+                res.add(g);
+>>>>>>> a14d69bd746ac6a3556ecb31baad3dc33fb60630
             }
         catch (Exception e){
             return "";
         }
+<<<<<<< HEAD
 
         return sb.toString();
+=======
+        return res;
+>>>>>>> a14d69bd746ac6a3556ecb31baad3dc33fb60630
     }
 }

@@ -23,6 +23,7 @@ public class UcrasAPIReader implements APIGameReader{
         this.sport_id = sport_id;
     }
 
+<<<<<<< HEAD
     public List<Game> getAPIGames(){
         String json = readJSONfromHTTPRequest("http://ucras.di.uminho.pt/v1/games/");
 
@@ -41,6 +42,8 @@ public class UcrasAPIReader implements APIGameReader{
         return res;
     }
 
+=======
+>>>>>>> a14d69bd746ac6a3556ecb31baad3dc33fb60630
     public String getGameExternalId(JSONObject jo){
         return (String) jo.get("id");
     }
@@ -103,6 +106,24 @@ public class UcrasAPIReader implements APIGameReader{
         return homeTeam + " vs " + awayTeam;
     }
 
+<<<<<<< HEAD
+=======
+    public List<Game> getAPIGames(){
+        String json = readJSONfromHTTPRequest("http://ucras.di.uminho.pt/v1/games/");
+
+        List<Game> res = new ArrayList<>();
+
+        JSONArray ja = new JSONArray(json);
+        for(int i = 0; i < ja.length(); i++){
+            JSONObject jo = (JSONObject) ja.get(i);
+            Game g = new Game(getGameExternalId(jo), getGameDate(jo), getGameState(), makeName(jo), getSportID(), getGameParticipants(jo));
+            res.add(g);
+        }
+
+        return res;
+    }
+
+>>>>>>> a14d69bd746ac6a3556ecb31baad3dc33fb60630
     public String readJSONfromHTTPRequest(String urlString){
         try{
             URL url = new URL(urlString);
