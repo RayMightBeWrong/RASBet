@@ -21,7 +21,6 @@ import ras.adlrr.RASBet.model.Participant;
 import ras.adlrr.RASBet.model.APIGameReader;
 
 public class F1APISportsReader implements APIGameReader{
-<<<<<<< HEAD
     private int sport_id;
     private String season = "2022";
 
@@ -43,16 +42,6 @@ public class F1APISportsReader implements APIGameReader{
         res.add(g);
 
         return res;
-=======
-    private JSONArray response;
-    private JSONObject nextRace;
-    private int sport_id;
-    
-    public F1APISportsReader(String response, int sport_id){
-        this.response = (JSONArray) (new JSONObject(response).get("response"));
-        this.nextRace = (JSONObject) this.response.get(0);
-        this.sport_id = sport_id;
->>>>>>> a14d69bd746ac6a3556ecb31baad3dc33fb60630
     }
     
     public String getRaceExternalId(JSONObject nextRace){
@@ -121,7 +110,6 @@ public class F1APISportsReader implements APIGameReader{
         return Game.OPEN;
     }
 
-<<<<<<< HEAD
     public String getName(JSONObject nextRace){
         JSONObject competition = (JSONObject) nextRace.getJSONObject("competition");
         return (String) competition.getString("name");
@@ -155,16 +143,5 @@ public class F1APISportsReader implements APIGameReader{
         }
 
         return sb.toString();
-=======
-    @Override
-    public List<Game> getAPIGames() {
-        List<Game> res = new ArrayList<>();
-
-        //Game g = new Game(getRaceExternalId(), getGameDate(), getGameState(), "F1", getSportID(), getDrivers());
-        Game g = new Game(getRaceExternalId(), getGameDate(), getGameState(), "F1", getSportID(), null);
-        res.add(g);
-
-        return res;
->>>>>>> a14d69bd746ac6a3556ecb31baad3dc33fb60630
     }
 }
