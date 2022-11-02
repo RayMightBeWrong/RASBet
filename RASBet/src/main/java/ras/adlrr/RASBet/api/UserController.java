@@ -33,6 +33,23 @@ public class UserController {
         }
     }
 
+    @PostMapping("/gambler")
+    public ResponseEntity<Gambler> updateGambler(@RequestParam(value = "gambler_id") int gambler_id,
+                                                 @RequestParam(value = "name", required = false) String name,
+                                                 @RequestParam(value = "email", required = false) String email,
+                                                 @RequestParam(value = "password", required = false) String password,
+                                                 @RequestParam(value = "phone_number", required = false) Integer phoneNumber,
+                                                 @RequestParam(value = "nationality", required = false) String nationality,
+                                                 @RequestParam(value = "city", required = false) String city,
+                                                 @RequestParam(value = "address", required = false) String address,
+                                                 @RequestParam(value = "postal_code", required = false) String postal_code,
+                                                 @RequestParam(value = "occupation", required = false) String occupation){
+        try{ return ResponseEntity.ok().body(userService.updateGambler(gambler_id, name, email, password, phoneNumber,nationality, city, address, postal_code, occupation)); }
+        catch (Exception e){
+            return new ResponseEntityBadRequest<Gambler>().createBadRequest(e.getMessage());
+        }
+    }
+
     @GetMapping(path = "/gambler")
     public ResponseEntity<Gambler> getGambler(@RequestParam(value = "id", required = false) Integer id, @RequestParam(value = "email", required = false) String email){
         if(id == null && email == null)
