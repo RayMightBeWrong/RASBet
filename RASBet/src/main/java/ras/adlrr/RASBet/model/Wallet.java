@@ -19,6 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 public class Wallet {
+    //TODO - Logica precisa de verificar os campos obrigatorios
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

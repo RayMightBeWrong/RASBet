@@ -20,7 +20,6 @@ import javax.persistence.*;
 @Getter
 @Setter
 public class Gambler extends User{
-    //TODO - Logica precisa de verificar os campos obrigatorios
     @Column(name = "cc", nullable = false)
     private String cc; // cartão de cidadão;
     @Column(name = "nif", nullable = false)

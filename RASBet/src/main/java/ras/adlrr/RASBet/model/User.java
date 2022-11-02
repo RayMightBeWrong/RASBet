@@ -26,6 +26,6 @@ public class User {
     private String name;
     @Column(nullable = false)
     private String password;
-    @Column(nullable = false, unique = true) //TODO - definir formato
+    @Column(nullable = false, unique = true)
     private String email;
 }

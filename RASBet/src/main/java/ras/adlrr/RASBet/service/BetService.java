@@ -29,25 +29,6 @@ public class BetService {
         this.gameService = gameService;
     }
 
-
-    // VER SE DA PARA APROVEITAR PARA A PARTE DAS BETS
-        /*
-        Bet bet = t.getBet();
-        if (bet != null) {
-            Game game = gameRepository.findById(bet.getGame().getId()).orElse(null);
-            assert game != null;
-            bet.setGame(game);
-            List<GameChoice> gameChoices = bet.getGameChoices().stream().map(gc -> {
-                Participant participant = participantRepository.findById(gc.getParticipant().getId()).orElse(null);
-                assert participant != null;
-                gc.setParticipant(participant);
-                return gc;
-            }).toList();
-            bet.setGameChoices(gameChoices);
-            bet.setTransaction(t);
-        }
-*/
-
     public Bet getBet(int id) {
         return betRepository.findById(id).orElse(null);
     }
@@ -59,7 +40,7 @@ public class BetService {
         List<GameChoice> gameChoices = bet.getGameChoices();
         if(gameChoices != null)
             gameChoices = gameChoices.stream().filter(Objects::nonNull).toList();
-        
+
         validateGameChoices(gameChoices);
 
         Transaction transaction = bet.getTransaction();
@@ -93,10 +74,10 @@ public class BetService {
         return betRepository.findAllByGamblerId(gambler_id);
     }
 
-    //Withdraw the winnings directly into a bank account, paypal, etc...
-    public void withdrawBetWinnings() throws Exception{
-        //TODO
-    }
+    //TODO - Withdraw the winnings directly into a bank account, paypal, etc...
+    //public void withdrawBetWinnings() throws Exception{
+    //
+    //}
 
     public Transaction withdrawBetWinnings(int bet_id, int wallet_id) throws Exception{
         Bet bet = getBet(bet_id);

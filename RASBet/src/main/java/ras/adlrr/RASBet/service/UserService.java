@@ -9,6 +9,7 @@ import ras.adlrr.RASBet.model.Admin;
 import ras.adlrr.RASBet.model.Expert;
 import ras.adlrr.RASBet.model.Gambler;
 import ras.adlrr.RASBet.model.User;
+import java.util.regex.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -47,8 +48,9 @@ public class UserService {
             throw new Exception("NIF is required!");
         if(gambler.getDate_of_birth() == null)
             throw new Exception("Date of birth is required!");
-        else if(gambler.getDate_of_birth().isAfter(LocalDate.now().minusYears(18)))
-            throw new Exception("Minimum age of 18 is required!");
+        String attributesError = validateGamblerAttributes(gambler);
+        if(attributesError != null)
+            throw new Exception(attributesError);
         return gamblerRepository.save(gambler);
     }
 
@@ -101,6 +103,28 @@ public class UserService {
     //TODO - necessario criar metodo que faca a verificacao de todos os campos
     /** @return "null" if all attributes are valid or string mentioning error **/
     private String validateGamblerAttributes(Gambler gambler){
+        String errorUserAttributes = validateUserAttributes(gambler);
+        if(errorUserAttributes != null)
+            return errorUserAttributes;
+        if(!Pattern.matches("^\\d{9}$", gambler.getPhoneNumber().toString()))
+            return "A valid portuguese phone number contains 9 numbers.";
+        if(!Pattern.matches("^[A-Z\\-][a-z]*(?: [A-Za-z \\-]+)*$", gambler.getNationality()))
+            return "Nationality can only contain alpha characters, spaces and hyphens.";
+        if(!Pattern.matches("^[A-Z\\-][a-z]*(?: [A-Za-z \\-]+)*$", gambler.getCity()))
+            return "City can only contain alpha characters, spaces and hyphens.";
+        if(!Pattern.matches("^[A-Z\\-][a-z]*(?:( [A-Za-z \\-]+)|[.,])*$", gambler.getAddress()))
+            return "Address can only contain alpha characters, spaces, commas, dots and hyphens.";
+        if(!Pattern.matches("^\\d{4}-\\d{3}$", gambler.getPostal_code()))
+            return "A valid portuguese postal code is formed by 4 digits followed plus an hyphen plus 3 more digits.";
+        if(!Pattern.matches("^[A-Z\\-][a-z]*(?: [A-Za-z \\-]+)*$", gambler.getOccupation()))
+            return "Occupation can only contain alpha characters, spaces and hyphens.";
+        if(!Pattern.matches("^\\d{8}$", gambler.getCc()))
+            return "CC has to be a 8 digits number.";
+        if(!Pattern.matches("^\\d{9}$", gambler.getNif().toString()))
+            return "NIF has to be a 9 digits number.";
+        if(gambler.getDate_of_birth().isAfter(LocalDate.now().minusYears(18)))
+            return "Minimum age of 18 is required!";
+
         return null;
     }
 
@@ -134,9 +158,8 @@ public class UserService {
     }
 
     /** @return "null" if all attributes are valid or string mentioning error **/
-    //TODO
     private String validateAdminAttributes(Admin admin){
-        return null;
+        return validateUserAttributes(admin);
     }
 
     // ------------ Expert Methods ------------
@@ -169,16 +192,18 @@ public class UserService {
     }
 
     /** @return "null" if all attributes are valid or string mentioning error **/
-    //TODO
     private String validateExpertAttributes(Expert expert){
-        return null;
+        return validateUserAttributes(expert);
     }
 
     // ------------ Shared Methods ------------
 
     /** @return "null" if all attributes are valid or string mentioning error **/
-    //TODO
     private String validateUserAttributes(User user){
+        if(!Pattern.matches("^\\w[\\w ]*$", user.getName()))
+            return "A name can only contain alphanumeric characters and spaces. Must also start with an alphanumeric.";
+        if(!Pattern.matches("^\\w[\\w.]*@\\w+(?:\\.\\w+)+$", user.getEmail()))
+            return "Invalid email format";
         return null;
     }
 
