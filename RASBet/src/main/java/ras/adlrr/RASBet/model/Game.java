@@ -42,10 +42,9 @@ public class Game {
 
     @Getter(AccessLevel.NONE)
     private String extID;
-
+    private Integer winner_id;
     private String title;
     private LocalDateTime date;
-
     private int state;
 
     public static final int SUSPENDED = 1;

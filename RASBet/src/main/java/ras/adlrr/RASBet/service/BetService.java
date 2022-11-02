@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.*;
 import ras.adlrr.RASBet.model.*;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -69,8 +70,9 @@ public class BetService {
 
         Wallet wallet = transaction.getWallet();
         if(wallet != null) {
-            wallet = walletService.performBilling(wallet.getId(), transaction.getValue());
+            wallet = walletService.removeFromBalance(wallet.getId(), transaction.getValue());
             transaction.setWallet(wallet);
+            transaction.setBalance_after_mov(wallet.getBalance());
         }
 
         transaction.setDescription("Bet expenses");
@@ -98,18 +100,62 @@ public class BetService {
         //TODO
     }
 
-    public void withdrawBetWinnings(int bet_id, int wallet_id) throws Exception{
-        Bet bet = betRepository.findById(bet_id).orElse(null);
+    public Transaction withdrawBetWinnings(int bet_id, int wallet_id) throws Exception{
+        Bet bet = getBet(bet_id);
         if(bet == null)
             throw new Exception("Bet does not exist!");
+
+        if(bet.getState() != Bet.STATE_OPEN)
+            throw new Exception("Bet not valid for withdraw!");
         bet.setState(Bet.STATE_CLOSED);
 
-        Wallet wallet = walletService.getWallet(wallet_id);
+        Transaction bet_transaction = bet.getTransaction();
+        Wallet wallet_withdraw = walletService.getWallet(wallet_id);
+        if(wallet_withdraw == null)
+            throw new Exception("Wallet chosen for withdraw does not exist!");
 
-        //TODO
+        if(bet_transaction.getGambler().getId() != wallet_withdraw.getGambler().getId())
+            throw new Exception("Withdraw cannot be performed into a wallet that " +
+                    "does not belong to the gambler that placed the bet!");
+
+        float winnings = calculateBetWinnings(bet_transaction.getValue(), bet.getGameChoices());
+        if(winnings == 0) {
+            betRepository.save(bet);
+            return null;
+        }
+
+        wallet_withdraw = walletService.addToBalance(wallet_id, winnings);
+        Transaction newTransaction = new Transaction(wallet_withdraw.getGambler().getId(), wallet_id, wallet_withdraw.getBalance(),
+                "Bet Winnings", winnings, LocalDateTime.now());
+
+        betRepository.save(bet);
+        return transactionService.addTransaction(newTransaction);
     }
 
-    // --------------- Auxiliar Methods ---------------
+    //Assuming value is positive
+    private float calculateBetWinnings(float value, Collection<GameChoice> gameChoices) throws Exception {
+        if(gameChoices == null)
+            return 0;
+
+        if(value < 0)
+            throw new Exception("Amount betted can not be negative!");
+
+        for(GameChoice gc : gameChoices){
+            if(gc != null) {
+                Game game = gameService.getGame(gc.getGame().getId());
+                if (game.getState() != Game.CLOSED)
+                    throw new Exception("Game state does not allow withdraw of bet. Check back later!");
+                if (game.getWinner_id() == gc.getParticipant().getId())
+                    value *= gc.getOdd();
+                else
+                    return 0;
+            }
+        }
+
+        return value;
+    }
+
+    // --------------- Auxiliary Methods ---------------
     
     private void validateGameChoices(Collection<GameChoice> gameChoices) throws Exception {
         if(gameChoices == null || gameChoices.size() == 0)

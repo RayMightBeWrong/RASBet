@@ -40,9 +40,9 @@ public class Bet {
     @JsonProperty("state")
     private int state = STATE_OPEN;
 
-    public static int STATE_OPEN = 1;
-    public static int STATE_CLOSED = 1;
-    public static int STATE_CANCELED = 3;
+    public static final int STATE_OPEN = 1;
+    public static final int STATE_CLOSED = 2;
+    public static final int STATE_CANCELED = 3;
 
     public Bet(@JsonProperty("gambler_id") int gambler_id, @JsonProperty("wallet_id") Integer wallet_id,
                @JsonProperty("value") float value,

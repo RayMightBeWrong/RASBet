@@ -25,6 +25,17 @@ public class TransactionService {
         return transactionRepository.findById(id).orElse(null);
     }
 
+    public List<Transaction> getGamblerTransactions(int gambler_id) throws Exception {
+        Gambler gambler = userService.getGamblerById(gambler_id);
+        if(gambler == null)
+            throw new Exception("Gambler does not exist!");
+        return transactionRepository.findAllByGambler(gambler);
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactionRepository.findAll();
+    }
+
     public Transaction addTransaction(Transaction t) throws Exception {
 
         if(t == null)
@@ -53,20 +64,45 @@ public class TransactionService {
         return transactionRepository.save(t);
     }
 
-    public List<Transaction> getGamblerTransactions(int gambler_id) throws Exception {
-        Gambler gambler = userService.getGamblerById(gambler_id);
-        if(gambler == null)
-            throw new Exception("Gambler does not exist!");
-        return transactionRepository.findAllByGambler(gambler);
+    public Transaction deposit(int wallet_id, float valueToDeposit) throws Exception {
+        Integer gambler_id = walletService.findGamblerIdByWalletId(wallet_id);
+        if(gambler_id == null)
+            throw new Exception("A gambler does not exist for the given wallet! This should not be happening...");
+        Wallet wallet = walletService.addToBalance(wallet_id, valueToDeposit);
+
+        Transaction transaction = new Transaction();
+        transaction.setWallet(wallet);
+        transaction.setValue(valueToDeposit);
+        transaction.setDescription("Deposit");
+        transaction.setBalance_after_mov(wallet.getBalance());
+        Gambler gambler = new Gambler();
+        gambler.setId(gambler_id);
+        transaction.setGambler(gambler);
+
+        return addTransaction(transaction);
+    }
+
+    public Transaction withdraw(int wallet_id, float valueToWithdraw) throws Exception {
+        Integer gambler_id = walletService.findGamblerIdByWalletId(wallet_id);
+        if(gambler_id == null)
+            throw new Exception("A gambler does not exist for the given wallet! This should not be happening...");
+        Wallet wallet = walletService.removeFromBalance(wallet_id, valueToWithdraw);
+
+        Transaction transaction = new Transaction();
+        transaction.setWallet(wallet);
+        transaction.setValue(valueToWithdraw);
+        transaction.setDescription("Withdraw");
+        transaction.setBalance_after_mov(wallet.getBalance());
+        Gambler gambler = new Gambler();
+        gambler.setId(gambler_id);
+        transaction.setGambler(gambler);
+
+        return addTransaction(transaction);
     }
 
     public void removeTransaction(int id) throws Exception {
         if(!transactionRepository.existsById(id))
             throw new Exception("Transaction needs to exist, to be removed!");
         transactionRepository.deleteById(id);
-    }
-
-    public List<Transaction> getTransactions() {
-        return transactionRepository.findAll();
     }
 }

@@ -13,14 +13,12 @@ import ras.adlrr.RASBet.model.Wallet;
 
 @Service
 public class WalletService {
-    private final TransactionService transactionService;
     private final UserService userService;
     private final WalletRepository walletRepository;
     private final CoinRepository coinRepository;
 
     @Autowired
-    public WalletService(TransactionService transactionService, WalletRepository walletRepository, CoinRepository coinRepository, UserService userService){
-        this.transactionService = transactionService;
+    public WalletService(WalletRepository walletRepository, CoinRepository coinRepository, UserService userService){
         this.walletRepository = walletRepository;
         this.coinRepository = coinRepository;
         this.userService = userService;
@@ -31,6 +29,14 @@ public class WalletService {
 
     public Wallet getWallet(int id){
         return walletRepository.findById(id).orElse(null);
+    }
+
+    public List<Wallet> getGamblerWallets(int gambler_id){
+        return walletRepository.findAllByGamblerId(gambler_id);
+    }
+
+    public List<Wallet> getListOfWallets(){
+        return walletRepository.findAll();
     }
 
     public Wallet createWallet(Wallet wallet) throws Exception {
@@ -53,58 +59,17 @@ public class WalletService {
         walletRepository.deleteById(id);
     }
 
-    public List<Wallet> getListOfWallets(){
-        return walletRepository.findAll();
+    public Wallet addToBalance(int wallet_id, float valueToAdd) throws Exception {
+        if (valueToAdd < 0) throw new Exception("Cannot perform the operation with a negative value!");
+        return changeBalance(wallet_id, valueToAdd);
     }
 
-    public Wallet deposit(int wallet_id, float valueToDeposit) throws Exception {
-        Wallet wallet = changeBalance(wallet_id, valueToDeposit);
-
-        Transaction transaction = new Transaction();
-        transaction.setWallet(wallet);
-        transaction.setValue(valueToDeposit);
-        transaction.setDescription("Deposit");
-        transaction.setBalance_after_mov(wallet.getBalance());
-
-        Integer gambler_id = walletRepository.findGamblerIdByWalletId(wallet_id).orElse(null);
-        if(gambler_id == null)
-            throw new Exception("A gambler does not exist for the given wallet! This should not be happening...");
-        Gambler gambler = new Gambler();
-        gambler.setId(gambler_id);
-        transaction.setGambler(gambler);
-
-        transactionService.addTransaction(transaction);
-
-        return wallet;
-    }
-
-    public Wallet withdraw(int wallet_id, float valueToWithdraw) throws Exception {
-        Wallet wallet = changeBalance(wallet_id, -valueToWithdraw);
-
-        Transaction transaction = new Transaction();
-        transaction.setWallet(wallet);
-        transaction.setValue(valueToWithdraw);
-        transaction.setDescription("Withdraw");
-        transaction.setBalance_after_mov(wallet.getBalance());
-
-        Integer gambler_id = walletRepository.findGamblerIdByWalletId(wallet_id).orElse(null);
-        if(gambler_id == null)
-            throw new Exception("A gambler does not exist for the given wallet! This should not be happening...");
-        Gambler gambler = new Gambler();
-        gambler.setId(gambler_id);
-        transaction.setGambler(gambler);
-
-        transactionService.addTransaction(transaction);
-
-        return wallet;
-    }
-
-    public Wallet performBilling(int wallet_id, float valueToBill) throws Exception {
-        return changeBalance(wallet_id, -valueToBill);
+    public Wallet removeFromBalance(int wallet_id, float valueToRemove) throws Exception {
+        if (valueToRemove < 0) throw new Exception("Cannot perform the operation with a negative value!");
+        return changeBalance(wallet_id, -valueToRemove);
     }
 
     private Wallet changeBalance(int wallet_id, float value) throws Exception {
-        if (value < 0) throw new Exception("Cannot perform the operation with a negative value!");
         Wallet wallet = walletRepository.findById(wallet_id).orElse(null);
         if(wallet == null)
             throw new Exception("Cannot perform deposit operation to a non existent wallet!");
@@ -115,6 +80,10 @@ public class WalletService {
 
     public boolean walletExistsById(int id) {
         return walletRepository.existsById(id);
+    }
+
+    public Integer findGamblerIdByWalletId(int wallet_id){
+        return walletRepository.findGamblerIdByWalletId(wallet_id).orElse(null);
     }
 
     // ---------- Coin Methods ----------
