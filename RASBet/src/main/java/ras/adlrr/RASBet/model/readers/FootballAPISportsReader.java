@@ -1,5 +1,10 @@
 package ras.adlrr.RASBet.model.readers;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -11,24 +16,45 @@ import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
-import ras.adlrr.RASBet.dao.GameRepository;
 import ras.adlrr.RASBet.model.APIGameReader;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 
-// TODO: criar ID para o jogo, tratar de erros na loadGames e getID de futebol
 public class FootballAPISportsReader implements APIGameReader{
-    private int footballID;
-    private JSONArray games;
-    private GameRepository gameRepository;
+    private int sport_id;
+    private String currentRound;
 
-    public FootballAPISportsReader(String games, GameRepository gameRepository){
-        this.games = (JSONArray) (new JSONObject(games).get("response"));
-        this.gameRepository = gameRepository;
+    public FootballAPISportsReader(int sport_id){
+        this.sport_id = sport_id;
     }
 
-    public int getGameId(JSONObject game) {
-        return 0;
+    @Override
+    public List<Game> getAPIGames() {
+        String leagueID = "94";
+        String season = "2022";
+        String url = "https://v3.football.api-sports.io/fixtures/rounds?league=" + leagueID + "&season=" + season + "&current=true";
+        String roundResponse = readJSONfromHTTPRequest(url, "current_round.json");
+        JSONArray round = (JSONArray) (new JSONObject(roundResponse).get("response"));
+        this.currentRound = (String) round.get(0);
+        System.out.println(this.currentRound);
+
+        url = "https://v3.football.api-sports.io/fixtures?league=" + leagueID + "&season=" + season;
+        String response = readJSONfromHTTPRequest(url, "jogos.json");
+        JSONArray games = (JSONArray) (new JSONObject(response).get("response"));
+        List<Game> res = new ArrayList<>();
+
+        System.out.println(games.length());
+        for(int i = 0; i < games.length(); i++){
+            JSONObject obj = (JSONObject) games.get(i);
+            JSONObject league = (JSONObject) obj.get("league");
+
+            if (league.get("round").equals(this.currentRound)){
+                System.out.print(getGameExternalId(obj));
+                Game g = new Game(getGameExternalId(obj), getGameDate(obj), getGameState(obj), getName(obj), getSportID(), getGameParticipants(obj));
+                res.add(g);
+            }
+        }
+        return res;
     }
 
     public String getGameExternalId(JSONObject game) {
@@ -46,7 +72,8 @@ public class FootballAPISportsReader implements APIGameReader{
     }
 
     public List<Float> getOdds(JSONObject game){
-        String url = "https://v3.football.api-sports.io/odds?season=2022&bet=1&fixture=" + getGameExternalId(game) + "&league=94";
+        String idLeague = "94";
+        String url = "https://v3.football.api-sports.io/odds?season=2022&bet=1&fixture=" + getGameExternalId(game) + "&league=" + idLeague;
         HttpResponse<String> response = Unirest.get(url)
                                             .header("x-rapidapi-key", "b68a93e4291b512a0f3179eb9ee1bc2b")
                                             .header("x-rapidapi-host", "v3.football.api-sports.io").asString();
@@ -84,13 +111,13 @@ public class FootballAPISportsReader implements APIGameReader{
 
 
         Set<Participant> ps = new HashSet<>();
-        //List<Float> odds = getOdds(game);
-        //Participant homeP = new Participant(homeTeam, odds.get(0), 0);
-        //Participant drawP = new Participant("draw", odds.get(1), 0);
-        //Participant awayP = new Participant(awayTeam, odds.get(2), 0);
-        Participant homeP = new Participant(homeTeam, 0, 0);
-        Participant drawP = new Participant("draw", 0, 0);
-        Participant awayP = new Participant(awayTeam, 0, 0);
+        List<Float> odds = getOdds(game);
+        Participant homeP = new Participant(homeTeam, odds.get(0), 0);
+        Participant drawP = new Participant("draw", odds.get(1), 0);
+        Participant awayP = new Participant(awayTeam, odds.get(2), 0);
+        //Participant homeP = new Participant(homeTeam, 0, 0);
+        //Participant drawP = new Participant("draw", 0, 0);
+        //Participant awayP = new Participant(awayTeam, 0, 0);
 
 
         ps.add(homeP); ps.add(drawP); ps.add(awayP);
@@ -99,7 +126,7 @@ public class FootballAPISportsReader implements APIGameReader{
     }
 
     public int getSportID() {
-        return 1;
+        return this.sport_id;
     }
 
     public int getGameState(JSONObject game) {
@@ -114,22 +141,44 @@ public class FootballAPISportsReader implements APIGameReader{
             return Game.CLOSED;
     }
 
-    @Override
-    public int loadGames() {
-        int k = 1;
+    public String getName(JSONObject game){
+        JSONObject teams = (JSONObject) game.get("teams");
+        JSONObject home = (JSONObject) teams.get("home");
+        JSONObject away = (JSONObject) teams.get("away");
+        String homeTeam = (String) home.get("name");
+        String awayTeam = (String) away.get("name");
 
-        for(int i = 0; i < games.length(); i++){
-            JSONObject obj = (JSONObject) games.get(i);
-            JSONObject league = (JSONObject) obj.get("league");
-
-            if (league.get("round").equals("Regular Season - 10")){
-                Game g = new Game(k, getGameExternalId(obj), getGameDate(obj), getGameState(obj), getSportID(), getGameParticipants(obj));
-                // TODO - RAy
-                //gameRepository.addGame(g);
-                k++;
-            }
-        }
-        return 0;
+        return homeTeam + " vs " + awayTeam;
     }
-    
+
+    public String readJSONfromHTTPRequest(String url, String path){
+        HttpResponse<String> response = Unirest.get(url)
+                                            .header("x-rapidapi-key", "b68a93e4291b512a0f3179eb9ee1bc2b")
+                                            .header("x-rapidapi-host", "v3.football.api-sports.io").asString();
+        try {
+            Files.write(Paths.get(path), response.getBody().getBytes());
+        } catch (Exception e) {
+            // ignore
+        }
+
+        return response.getBody();
+    }
+
+    public String readFromLocalFile(String path){
+        StringBuilder sb = new StringBuilder();
+        
+        try {
+            BufferedReader br;
+            br = new BufferedReader(new FileReader(new File(path)));
+            
+            String st;
+            while ((st = br.readLine()) != null)
+                sb.append(st);
+            }
+        catch (Exception e){
+            return "";
+        }
+
+        return sb.toString();
+    }
 }

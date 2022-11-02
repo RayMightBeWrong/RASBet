@@ -33,6 +33,28 @@ public class GameController {
         }
     }
 
+    @PostMapping(path = "/updateVPN")
+    public ResponseEntity updateGamesVPN(){
+        try{ 
+            gameService.updateGamesVPN();
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntityBadRequest<Game>().createBadRequest(e.getMessage());
+        }
+    }
+
+    @PostMapping(path = "/update")
+    public ResponseEntity updateGames(){
+        try{ 
+            gameService.updateGames();
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntityBadRequest<Game>().createBadRequest(e.getMessage());
+        }
+    }
+
     @GetMapping(path = "/{id}")
     public ResponseEntity<Game> getGame(@PathVariable("id") int id){
         return ResponseEntity.ok().body(gameService.getGame(id));

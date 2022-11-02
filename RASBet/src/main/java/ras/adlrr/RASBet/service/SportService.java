@@ -10,7 +10,6 @@ import ras.adlrr.RASBet.model.Sport;
 
 import java.util.List;
 
-//TODO
 @Service
 public class SportService {
     private final SportRepository sportRepository;
@@ -55,4 +54,11 @@ public class SportService {
         return gameRepository.findAllBySportId(s.getId());
     }
 
+    public boolean sportExistsById(int id) {
+        return sportRepository.existsById(id);
+    }
+
+    public Sport findSportByName(String name) {
+        return sportRepository.findByName(name);
+    }
 }
