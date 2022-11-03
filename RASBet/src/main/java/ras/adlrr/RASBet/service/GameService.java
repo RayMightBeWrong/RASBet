@@ -191,6 +191,17 @@ public class GameService {
         return pr.existsById(id);
     }
 
+    public void giveOddToGameChoice(GameChoice gc){
+        int pid = gc.getParticipant().getId();
+        Participant p = getParticipant(pid);
+        gc.setOdd(p.getOdd());
+    }
+
+    public void giveOddToGameChoices(List<GameChoice> gcs){
+        for(GameChoice gc: gcs)
+            giveOddToGameChoice(gc);
+    }
+
     /*  UPDATE DE JOGOS */
     
     public void getGamesFromAPIVPN() throws Exception{

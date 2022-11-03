@@ -42,6 +42,8 @@ public class BetService {
             gameChoices = gameChoices.stream().filter(Objects::nonNull).toList();
         validateGameChoices(gameChoices);
 
+        gameService.giveOddToGameChoices(gameChoices);
+
         Transaction transaction = bet.getTransaction();
         if(transaction == null)
             throw new Exception("Null Transaction!");
@@ -153,9 +155,6 @@ public class BetService {
 
             if(game.getState() != Game.OPEN)
                 throw new Exception("Game with id " + game.getId() + " is not open for bets");
-
-            if(gc.getOdd() < 1)
-                throw new Exception("Odds must be equal or higher to/than 1!");
 
             Participant p = gc.getParticipant();
             if(p == null || !gameService.participantExistsById(p.getId()))

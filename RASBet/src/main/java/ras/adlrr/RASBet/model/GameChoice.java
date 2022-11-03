@@ -42,9 +42,8 @@ public class GameChoice {
 
     private float odd;
 
-    public GameChoice(@JsonProperty("game_id") int game_id, @JsonProperty("participant_id") int participant_id, @JsonProperty("odd") float odd){
+    public GameChoice(@JsonProperty("game_id") int game_id, @JsonProperty("participant_id") int participant_id){
         game = new Game(); game.setId(game_id);
         participant = new Participant(); participant.setId(participant_id);
-        this.odd = odd;
     }
 }
