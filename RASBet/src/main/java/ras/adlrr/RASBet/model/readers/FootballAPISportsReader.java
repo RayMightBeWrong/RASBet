@@ -36,20 +36,17 @@ public class FootballAPISportsReader implements APIGameReader{
         String roundResponse = readJSONfromHTTPRequest(url, "current_round.json");
         JSONArray round = (JSONArray) (new JSONObject(roundResponse).get("response"));
         this.currentRound = (String) round.get(0);
-        System.out.println(this.currentRound);
 
         url = "https://v3.football.api-sports.io/fixtures?league=" + leagueID + "&season=" + season;
         String response = readJSONfromHTTPRequest(url, "jogos.json");
         JSONArray games = (JSONArray) (new JSONObject(response).get("response"));
         List<Game> res = new ArrayList<>();
 
-        System.out.println(games.length());
         for(int i = 0; i < games.length(); i++){
             JSONObject obj = (JSONObject) games.get(i);
             JSONObject league = (JSONObject) obj.get("league");
 
             if (league.get("round").equals(this.currentRound)){
-                System.out.print(getGameExternalId(obj));
                 Game g = new Game(getGameExternalId(obj), getGameDate(obj), getGameState(obj), getName(obj), getSportID(), getGameParticipants(obj));
                 res.add(g);
             }
@@ -118,7 +115,6 @@ public class FootballAPISportsReader implements APIGameReader{
         //Participant homeP = new Participant(homeTeam, 0, 0);
         //Participant drawP = new Participant("draw", 0, 0);
         //Participant awayP = new Participant(awayTeam, 0, 0);
-
 
         ps.add(homeP); ps.add(drawP); ps.add(awayP);
 

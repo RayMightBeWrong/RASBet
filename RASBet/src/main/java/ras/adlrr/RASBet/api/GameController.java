@@ -75,6 +75,16 @@ public class GameController {
         return ResponseEntity.ok().body(gameService.getGames());
     }
 
+    @PutMapping(path = "/{id}/state/close")
+    public ResponseEntity closeGame(@PathVariable("id") int id){
+        try {
+            gameService.closeGame(id);
+            return new ResponseEntity(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
+        }
+    }
+
     @PutMapping(path = "/{id}/state/{state}")
     public ResponseEntity changeGameState(@PathVariable("id") int id, @PathVariable("state") int state){
         try {

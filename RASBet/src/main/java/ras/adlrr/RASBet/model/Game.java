@@ -100,4 +100,84 @@ public class Game {
             participants = new HashSet<>();
         this.participants.add(p);
     }
+
+    public void decideWinner(){
+        int sportType = this.sport.getType();
+
+        int winner = 0;
+        switch(sportType){
+            case Sport.RACE:
+                winner = decideWinnerRace();         break;
+            case Sport.WITHOUT_DRAW:
+                winner = decideWinnerWithoutDraw();  break;
+            case Sport.WITH_DRAW:
+                winner = decideWinnerWithDraw();     break;
+        }
+
+        this.winner_id = winner;
+    }
+
+    private int decideWinnerRace(){
+        int winner = 0;
+        int scoreWinner = Integer.MAX_VALUE;
+
+        for(Participant p: this.participants){
+            if (scoreWinner > p.getScore()){
+                winner = p.getId();
+                scoreWinner = p.getScore();
+            }
+        }
+
+        return winner;
+    }
+
+    private int decideWinnerWithDraw(){
+        int idDraw = 0, idTeamOne = 0, idTeamTwo = 0;
+        String teamOne = "", teamTwo = "";
+        int scoreT1 = 0, scoreT2 = 0;
+
+        for(Participant p: this.participants){
+            if (p.getName().equals("draw"))
+                idDraw = p.getId();
+            else if (teamOne.equals("")){
+                scoreT1 = p.getScore();
+                idTeamOne = p.getId();
+            }
+            else{
+                scoreT2 = p.getScore();
+                idTeamTwo = p.getId();
+            }
+        }
+
+        if (scoreT1 > scoreT2)
+            return idTeamOne;
+        else if (scoreT2 > scoreT2)
+            return idTeamTwo;
+        else
+            return idDraw;
+    }
+
+    private int decideWinnerWithoutDraw(){
+        int idTeamOne = 0, idTeamTwo = 0;
+        String teamOne = "", teamTwo = "";
+        int scoreT1 = 0, scoreT2 = 0;
+
+        for(Participant p: this.participants){
+            if (teamOne.equals("")){
+                scoreT1 = p.getScore();
+                idTeamOne = p.getId();
+            }
+            else{
+                scoreT2 = p.getScore();
+                idTeamTwo = p.getId();
+            }
+        }
+
+        if (scoreT1 > scoreT2)
+            return idTeamOne;
+        else if (scoreT2 > scoreT2)
+            return idTeamTwo;
+        else
+            return -1;
+    }
 }

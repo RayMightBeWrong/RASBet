@@ -12,6 +12,7 @@ import ras.adlrr.RASBet.dao.GameRepository;
 import ras.adlrr.RASBet.dao.ParticipantRepository;
 import ras.adlrr.RASBet.model.APIGameReader;
 import ras.adlrr.RASBet.model.Game;
+import ras.adlrr.RASBet.model.GameChoice;
 import ras.adlrr.RASBet.model.Participant;
 import ras.adlrr.RASBet.model.Sport;
 import ras.adlrr.RASBet.model.readers.F1APISportsReader;
@@ -93,6 +94,19 @@ public class GameService {
         if (!gr.existsById(id))
             throw new Exception("Game needs to exist to be removed!");
         gr.deleteById(id);
+    }
+
+    public void closeGame(int id) throws Exception{
+        Game game = gr.loadGameChoicesById(id).orElse(null);
+        if (game == null)
+            throw new Exception("Game doesn't exist!");
+
+        List<GameChoice> gcs = game.getGameChoices();
+        for(GameChoice gc: gcs)
+            System.out.println("GC: " + gc.getId());
+        game.decideWinner();
+        game.setState(Game.CLOSED);
+        gr.save(game);
     }
 
     public void changeGameState(int id, int state) throws Exception{

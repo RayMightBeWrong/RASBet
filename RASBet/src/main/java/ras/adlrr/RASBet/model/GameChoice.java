@@ -35,6 +35,11 @@ public class GameChoice {
     @JsonIgnoreProperties({"odd"})
     private Participant participant;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "bet_id", nullable = false, updatable = false, insertable = false)
+    @JsonIgnoreProperties({"bet"})
+    private Bet bet;
+
     private float odd;
 
     public GameChoice(@JsonProperty("game_id") int game_id, @JsonProperty("participant_id") int participant_id, @JsonProperty("odd") float odd){

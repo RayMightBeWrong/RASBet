@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ras.adlrr.RASBet.model.Game;
-import ras.adlrr.RASBet.model.Sport;
 
 @Repository
 public interface GameRepository extends JpaRepository<Game, Integer> {
@@ -19,4 +18,7 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
     //Get game with participants
     @Query("SELECT g FROM Game g LEFT JOIN FETCH g.participants WHERE g.id = :game_id")
     Optional<Game> loadGameById(@Param("game_id") int game_id);
+
+    @Query("SELECT g FROM Game g LEFT JOIN FETCH g.gameChoices WHERE g.id = :game_id")
+    Optional<Game> loadGameChoicesById(@Param("game_id") int game_id);
 }
