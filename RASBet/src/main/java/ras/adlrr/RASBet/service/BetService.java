@@ -148,7 +148,7 @@ public class BetService {
             gc.setId(0); // Certifica q n dá erro por ter sido mencionado um id
 
             Game game = gc.getGame();
-            if(!gameService.gameExistsById(game.getId()))
+            if(game == null || (game = gameService.getGame(game.getId())) == null)
                 throw new Exception("Trying to bet in a non existent game!");
 
             if(game.getState() != Game.OPEN)
