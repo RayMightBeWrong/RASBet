@@ -78,12 +78,12 @@ public class UIController implements Runnable
         menuGambler.setHandler(5,this::escolheWalletHandler);
 
 
-
         //Menu de administrador
-        Menu menuAdmin = new Menu("Administrador", new String[]{"Update jogos API's","Consultar jogos"});
+        Menu menuAdmin = new Menu("Administrador", new String[]{"Update jogos API (VPN necessária)","Update jogos API's","Consultar jogos"});
         menuAdmin.setHandlerSaida(() -> flag.setValue(Flag.NOT_AUTHENTICATED));
-        menuAdmin.setHandler(1, () -> gameController.updateGames());
-        menuAdmin.setHandler(2, this::consultarJogosMenuHandler);
+        menuAdmin.setHandler(1, () -> gameController.updateGamesVPN());
+        menuAdmin.setHandler(2, () -> gameController.updateGames());
+        menuAdmin.setHandler(3, this::consultarJogosMenuHandler);
 
         Menu menuExpert = new Menu("Especialista", new String[]{"Consultar Jogos"});
         menuExpert.setHandlerSaida(() -> flag.setValue(Flag.NOT_AUTHENTICATED));

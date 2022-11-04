@@ -200,7 +200,7 @@ public class GameService {
     /*  UPDATE DE JOGOS */
     
     public void getGamesFromAPIVPN() throws Exception{
-        Sport sport = sportService.findSportById("Futebol");
+        Sport sport = sportService.findSportById("Football");
         if (sport != null){
             APIGameReader reader = new UcrasAPIReader(sport.getId());
             
