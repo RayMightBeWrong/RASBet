@@ -1,7 +1,6 @@
 package ras.adlrr.RASBet.UI;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
 import ras.adlrr.RASBet.UI.ModelViews.*;
 import ras.adlrr.RASBet.api.*;
 import ras.adlrr.RASBet.model.*;
@@ -11,8 +10,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class UIController implements Runnable
 {
@@ -81,9 +80,10 @@ public class UIController implements Runnable
 
 
         //Menu de administrador
-        Menu menuAdmin = new Menu("Administrador", new String[]{"Update jogos API's"});
+        Menu menuAdmin = new Menu("Administrador", new String[]{"Update jogos API's","Consultar jogos"});
         menuAdmin.setHandlerSaida(() -> flag.setValue(Flag.NOT_AUTHENTICATED));
         menuAdmin.setHandler(1, () -> gameController.updateGames());
+        menuAdmin.setHandler(2, this::consultarJogosMenuHandler);
 
         Menu menuExpert = new Menu("Especialista", new String[]{"Consultar Jogos"});
         menuExpert.setHandlerSaida(() -> flag.setValue(Flag.NOT_AUTHENTICATED));
@@ -148,7 +148,7 @@ public class UIController implements Runnable
                 mnationality.getOpcao(), mcity.getOpcao(),mendereco.getOpcao(),mcodigopostal.getOpcao(),mocupation.getOpcao()));
         switch (resposta.getStatusCode()) {
             case OK -> System.out.println("Gambler criado com sucesso");
-            case BAD_REQUEST -> System.out.println("Email repetido, a conta gambler não foi criada");
+            case BAD_REQUEST -> System.out.println(resposta.getHeaders().get("Error"));
         }
     }
 
@@ -163,7 +163,7 @@ public class UIController implements Runnable
         ResponseEntity resposta = userController.addAdmin(new Admin(0,m1.getOpcao(),m3.getOpcao(),m2.getOpcao()));
         switch (resposta.getStatusCode()) {
             case OK -> System.out.println("Admininistrador criado com sucesso");
-            case BAD_REQUEST -> System.out.println("Email repetido, a conta administrador não foi criada");
+            case BAD_REQUEST -> System.out.println(resposta.getHeaders().get("Error"));
         }
     }
 
@@ -178,7 +178,7 @@ public class UIController implements Runnable
         ResponseEntity resposta = userController.addExpert(new Expert(0,m1.getOpcao(),m3.getOpcao(),m2.getOpcao()));
         switch (resposta.getStatusCode()) {
             case OK -> System.out.println("Expert criado com sucesso");
-            case BAD_REQUEST -> System.out.println("Email repetido, a conta expert não foi criada");
+            case BAD_REQUEST -> System.out.println(resposta.getHeaders().get("Error"));
         }
     }
 
@@ -217,7 +217,7 @@ public class UIController implements Runnable
         while (flagInterna.get()==0) {
             List<Sport> desportos = sportController.getListOfSports().getBody();
 
-            List<String> sportsList = new ArrayList<>(desportos.stream().map(Sport::getName).toList());
+            List<String> sportsList = new ArrayList<>(desportos.stream().map(Sport::getId).toList());
             String[] sportNames = sportsList.toArray(new String[0]);
             sportsList.add(0, "Todos os desportos");
             String[] menuTitle = sportsList.toArray(new String[0]);
@@ -243,7 +243,9 @@ public class UIController implements Runnable
             flagInterna.set(0);
 
             while (flagInterna.get()==0) {
-                List<GameView> gameviews = games.stream().map(GameView::new).toList();
+                List<GameView> gameviews = games.stream()
+                        .map(e->gameController.getGame(e.getId()).getBody())
+                        .map(GameView::new).toList();
 
                 Menu menuChooseGame = new Menu("Menu de jogos", gameviews.stream().map(GameView::toString).toList().toArray(new String[0]));
                 menuChooseGame.setHandlerSaida(() -> flagInterna.set(1));
@@ -262,19 +264,28 @@ public class UIController implements Runnable
         AtomicInteger flagInterna = new AtomicInteger();
         flagInterna.set(0);
 
-        GameView gameView = new GameView(game);
         while (flagInterna.get()==0) {
+            game = gameController.getGame(game.getId()).getBody(); //atualizar o jogo
+            GameView gameView = new GameView(game);
             Set<Participant> participants = gameController.getGameParticipants(game.getId()).getBody();
             System.out.println(gameView.toStringExtended(participants));
 
             if(flag.getValue()==Flag.GAMBLER_LOGGED_IN){
                 Menu gameMenu = new Menu("Menu do jogo", new String[]{"Apostar"});
-                gameMenu.setHandler(1, () -> simpleBetHandler(game,participants));
+                Game finalGame = game;
+                gameMenu.setHandler(1, () -> simpleBetHandler(finalGame,participants));
                 gameMenu.setHandlerSaida(() -> flagInterna.set(1));
                 gameMenu.runOneTime();
             } else if(flag.getValue()==Flag.EXPERT_LOGGED_IN){
                 Menu gameMenu = new Menu("Menu do jogo", new String[]{"Alterar odd"});
-                gameMenu.setHandler(1, () -> changeOddHandler(game,participants));
+                Game finalGame1 = game;
+                gameMenu.setHandler(1, () -> changeOddHandler(finalGame1,participants));
+                gameMenu.setHandlerSaida(() -> flagInterna.set(1));
+                gameMenu.runOneTime();
+            } else if(flag.getValue()==Flag.ADMIN_LOGGED_IN){
+                Menu gameMenu = new Menu("Menu do jogo", new String[]{"Alterar o estado do jogo"});
+                Game finalGame2 = game;
+                gameMenu.setHandler(1, () -> changeGameStateHandler(finalGame2));
                 gameMenu.setHandlerSaida(() -> flagInterna.set(1));
                 gameMenu.runOneTime();
             }
@@ -297,24 +308,34 @@ public class UIController implements Runnable
         if(betAtual==null) {
             Wallet wallet = escolheWalletAux();
             if (wallet != null) {
-                boolean valido = false;
+                AtomicBoolean valido = new AtomicBoolean(false);
                 float aposta = 0;
-                while (!valido) {
+                while (!valido.get()) {
                     MenuInput m = new MenuInput("Insira o valor da sua aposta", "Valor:");
                     m.executa();
                     aposta = Float.parseFloat(m.getOpcao());
                     if (wallet.getBalance() >= aposta && aposta >= 0)
-                        valido = true;
+                        valido.set(true);
+                    if(wallet.getBalance() < aposta){
+                        Menu fastDeposit= new Menu("Deseja carregar a diferença na carteira?",new String[]{"Sim","Não"});
+                        float finalAposta = aposta;
+                        fastDeposit.setHandler(1, () -> {
+                            valido.set(true);
+                            transactionController.deposit(wallet.getId(), finalAposta - wallet.getBalance());
+                        });
+                        fastDeposit.setHandler(2, () -> {});
+                        fastDeposit.runOneTime();
+                    }
                 }
 
-                GameChoice gc = new GameChoice(gameId, participant.getId(), participant.getOdd());
+                GameChoice gc = new GameChoice(gameId, participant.getId());
                 List<GameChoice> gameChoices = new ArrayList<>();
                 gameChoices.add(gc);
-                betAtual = new Bet(clienteID, wallet.getId(), aposta, gameChoices);
+                betAtual = new Bet(clienteID, wallet.getId(), aposta, wallet.getCoin().getId() ,gameChoices);
                 betMultiplaMenu();
             }
         } else {
-            GameChoice gc = new GameChoice(gameId, participant.getId(), participant.getOdd());
+            GameChoice gc = new GameChoice(gameId, participant.getId());
             betAtual.addGameChoice(gc);
             betMultiplaMenu();
         }
@@ -336,7 +357,7 @@ public class UIController implements Runnable
         flagInterna.set(0);
 
         while (flagInterna.get()==0){
-            Gambler g = (Gambler) userController.getGambler(clienteID,null).getBody(); //todo faltam anguns getters
+            Gambler g = (Gambler) userController.getGambler(clienteID,null).getBody();
             System.out.println("Dados do utilizador");
             System.out.println("Email :"+ g.getEmail());
             System.out.println("CC :"+ g.getCc());
@@ -411,9 +432,25 @@ public class UIController implements Runnable
     }
 
     private void historicoApostasHandler(){
-        List<Bet> apostas = betController.getGamblerBets(clienteID).getBody();
-        for (BetView betView:apostas.stream().map(BetView::new).toList())
-            System.out.println(betView.toString());
+        AtomicInteger flagInterna = new AtomicInteger();
+        flagInterna.set(0);
+
+        while (flagInterna.get()==0) {
+            List<Bet> apostas = betController.getGamblerBets(clienteID).getBody();
+            List<String> apostasViews = new ArrayList<>(apostas.stream().map(BetView::new).map(BetView::toString).toList());
+
+            Menu betMenu = new Menu("Escolha uma bet que pretanda retirar o dinheiro", apostasViews.toArray(new String[0]));
+            betMenu.setHandlerSaida(() -> flagInterna.set(1));
+            int i=1;
+            for (Bet aposta:apostas) {
+                betMenu.setHandler(i, () -> {
+                    Wallet wallet = escolheWalletAux();
+                    betController.withdrawBetWinnings(aposta.getId(),wallet.getId());
+                });
+                i++;
+            }
+            betMenu.runOneTime();
+        }
     }
 
 
@@ -439,7 +476,6 @@ public class UIController implements Runnable
     }
 
     private Wallet escolheWalletAux(){
-        System.out.println("YOO");
         AtomicInteger flagInterna = new AtomicInteger();
         flagInterna.set(0);
         final Wallet[] walletRet = {null};
@@ -476,7 +512,7 @@ public class UIController implements Runnable
 
         List<Coin> coins = walletController.getListOfCoins().getBody();
 
-        Menu chooseWalletMenu= new Menu("Escolha o tipo de moeda da carteira", coins.stream().map(Coin::getName).toList().toArray(new String[0])); //todo usar um coin to string
+        Menu chooseWalletMenu= new Menu("Escolha o tipo de moeda da carteira", coins.stream().map(Coin::getId).toList().toArray(new String[0])); //todo usar um coin to string
         int i=1;
         for (Coin coin:coins) {
             chooseWalletMenu.setHandler(i, () -> criaWalletAux(coin.getId()));
@@ -484,7 +520,7 @@ public class UIController implements Runnable
         }
         chooseWalletMenu.runOneTime();
     }
-    private void criaWalletAux(int coinId){
+    private void criaWalletAux(String coinId){
         Wallet wallet = new Wallet(coinId,clienteID);
         walletController.createWallet(wallet);
     }
@@ -519,6 +555,7 @@ public class UIController implements Runnable
 
     }
 
+
     // ****** Expert Handlers ****** //
     private void changeOddHandler(Game game,Set<Participant> participants){
 
@@ -546,4 +583,28 @@ public class UIController implements Runnable
         gameController.editOddInParticipant(participant.getId(), novaOdd);
     }
 
+    // ****** Admin Handlers ****** //
+    private void changeGameStateHandler(Game game){
+        Menu gameMenu = new Menu("Selecione o estado do jogo", new String[]{"Aberto","Fechado","Suspenso"});
+
+        gameMenu.setHandler(1, () -> {gameController.changeGameState(game.getId(),Game.OPEN);});
+        gameMenu.setHandler(2, () -> {gameController.closeGame(game.getId());});
+        gameMenu.setHandler(3, () -> {gameController.changeGameState(game.getId(),Game.SUSPENDED);});
+        gameMenu.runOneTime();
+
+    }
+
+    /*
+    private void chooseWinnerHandler(Game game){
+        Set<Participant> participants = gameController.getGameParticipants(game.getId()).getBody();
+        Menu gameMenu = new Menu("Selecione o participante que pretende que ganhe", participants.stream().map(ParticipantView::new)
+                .map(ParticipantView::toString).toList().toArray(new String[0]));
+        int i = 1;
+        for (Participant participant:participants){
+            gameMenu.setHandler(i, () -> gameController.closeGame() changeOddAux(participant,game.getId()));
+            i++;
+        }
+        gameMenu.runOneTime();
+    }
+    */
 }

@@ -142,16 +142,18 @@ public class Game {
             else if (teamOne.equals("")){
                 scoreT1 = p.getScore();
                 idTeamOne = p.getId();
+                teamOne = p.getName();
             }
             else{
                 scoreT2 = p.getScore();
                 idTeamTwo = p.getId();
+                teamTwo = p.getName();
             }
         }
 
         if (scoreT1 > scoreT2)
             return idTeamOne;
-        else if (scoreT2 > scoreT2)
+        else if (scoreT2 > scoreT1)
             return idTeamTwo;
         else
             return idDraw;
@@ -179,5 +181,19 @@ public class Game {
             return idTeamTwo;
         else
             return -1;
+    }
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "id=" + id +
+                ", sport=" + sport +
+                ", gameChoices=" + gameChoices +
+                ", extID='" + extID + '\'' +
+                ", winner_id=" + winner_id +
+                ", title='" + title + '\'' +
+                ", date=" + date +
+                ", state=" + state +
+                '}';
     }
 }

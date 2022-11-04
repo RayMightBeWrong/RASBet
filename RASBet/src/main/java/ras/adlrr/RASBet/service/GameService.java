@@ -1,8 +1,5 @@
 package ras.adlrr.RASBet.service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,13 +94,11 @@ public class GameService {
     }
 
     public void closeGame(int id) throws Exception{
-        Game game = gr.loadGameChoicesById(id).orElse(null);
+        Game game = gr.loadGameById(id).orElse(null);
         if (game == null)
             throw new Exception("Game doesn't exist!");
 
-        List<GameChoice> gcs = game.getGameChoices();
-        for(GameChoice gc: gcs)
-            System.out.println("GC: " + gc.getId());
+        //List<GameChoice> gcs = game.getGameChoices(); todo withdraw bets
         game.decideWinner();
         game.setState(Game.CLOSED);
         gr.save(game);
@@ -139,14 +134,14 @@ public class GameService {
     }
 
     public Set<Participant> getGameParticipants(int gameID) throws Exception {
-        Game game = gr.loadGameById(gameID).orElse(null);
+        Game game = gr.loadGameParticipantsById(gameID).orElse(null);
         if(game == null)
             throw new Exception("Cannot get participants from an invalid game!");
         return game.getParticipants();
     }
 
     public void addParticipantsToGame(int gameID, Collection<Participant> participants) throws Exception {
-        Game game = gr.loadGameById(gameID).orElse(null);
+        Game game = gr.loadGameParticipantsById(gameID).orElse(null);
         if(game == null)
             throw new Exception("Cannot add participants to non existent game!");
 

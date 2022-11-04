@@ -10,6 +10,6 @@ public class CoinView {
     }
 
     public String toString(){
-        return coin.getName() + " | Ratio de euro: " + coin.getRatio_EUR();
+        return coin.getId() + " | Ratio de euro: " + coin.getRatio_EUR();
     }
 }
