@@ -34,7 +34,7 @@ public class SportController {
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<Sport> getSport(@PathVariable("id") String id){
-        return new ResponseEntity<>(sportService.getSport(id), HttpStatus.OK);
+        return new ResponseEntity<>(sportService.findSportById(id), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{id}")
