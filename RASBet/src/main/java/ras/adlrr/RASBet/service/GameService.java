@@ -14,6 +14,7 @@ import ras.adlrr.RASBet.model.Participant;
 import ras.adlrr.RASBet.model.Sport;
 import ras.adlrr.RASBet.model.readers.F1APISportsReader;
 import ras.adlrr.RASBet.model.readers.FootballAPISportsReader;
+import ras.adlrr.RASBet.model.readers.NBAAPISportsReader;
 import ras.adlrr.RASBet.model.readers.NFLOddsAPIReader;
 import ras.adlrr.RASBet.model.readers.UcrasAPIReader;
 
@@ -213,6 +214,7 @@ public class GameService {
     }
 
     public void getGamesFromAPI() throws Exception{
+        /*
         Sport sport = sportService.findSportById("NFL");
         if (sport != null){
             APIGameReader reader = new NFLOddsAPIReader(sport.getId());
@@ -230,6 +232,13 @@ public class GameService {
         sport = sportService.findSportById("Football");
         if (sport != null){
             APIGameReader reader = new FootballAPISportsReader(sport.getId());
+            List<Game> games = reader.getAPIGames();
+            addGames(games);
+        }*/
+
+        Sport sport = sportService.findSportById("NBA");
+        if (sport != null){
+            APIGameReader reader = new NBAAPISportsReader(sport.getId(), 10);
             List<Game> games = reader.getAPIGames();
             addGames(games);
         }

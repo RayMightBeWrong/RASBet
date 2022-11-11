@@ -51,6 +51,7 @@ public class FootballAPISportsReader implements APIGameReader{
                 res.add(g);
             }
         }
+        
         return res;
     }
 
@@ -93,9 +94,10 @@ public class FootballAPISportsReader implements APIGameReader{
             }
         }
         else{
-            float tmp = (float) -1.0;
+            float tmp = 1.1f;
             res.add(tmp); res.add(tmp); res.add(tmp); 
         }
+
         return res;
     }
 
