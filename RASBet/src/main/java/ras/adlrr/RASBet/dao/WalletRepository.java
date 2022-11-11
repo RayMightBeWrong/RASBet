@@ -12,6 +12,10 @@ public interface WalletRepository extends JpaRepository<Wallet,Integer> {
     @Query("SELECT w.gambler.id FROM Wallet w WHERE w.id = :wallet_id")
     Optional<Integer> findGamblerIdByWalletId(@Param("wallet_id") int wallet_id);
 
+    @Query("SELECT w.coin.id FROM Wallet w WHERE w.id = :wallet_id")
+    // Returns the coin identification of coin used by the wallet with the given id
+    String getCoinIdFromWallet(@Param("wallet_id") int wallet_id);
+
     @Query("SELECT w FROM Wallet w WHERE w.gambler.id = :gambler_id")
     List<Wallet> findAllByGamblerId(int gambler_id);
 }

@@ -1,9 +1,6 @@
 package ras.adlrr.RASBet.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,7 +34,7 @@ public class GameChoice {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "bet_id", nullable = false, updatable = false, insertable = false)
-    @JsonIgnoreProperties({"bet"})
+    @JsonIgnore
     private Bet bet;
 
     private float odd;

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.*;
 import ras.adlrr.RASBet.model.*;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -44,6 +45,7 @@ public class BetService {
      * @return bet updated by the repository
      * @throws Exception If any of the attributes does not meet the requirements an Exception is thrown indicating the error.
      */
+    @Transactional(rollbackOn = {Exception.class}, value = Transactional.TxType.REQUIRES_NEW)
     public Bet addBet(Bet bet) throws Exception {
         //Cannot add a null bet to the repository
         if(bet == null)
@@ -64,12 +66,17 @@ public class BetService {
             throw new Exception("Null Transaction!");
 
         //Validates the coin used for the transaction
-        if(transaction.getCoin() == null || !walletService.coinExistsById(transaction.getCoin().getId()))
+        Coin transactionCoin = transaction.getCoin();
+        if(transactionCoin == null || !walletService.coinExistsById(transaction.getCoin().getId()))
             throw new Exception("A Coin is required!");
 
-        //Checks if the transaction is performed using a wallet, and if it is, performs the billing operation and updates the transaction information
+        //Checks if the transaction is performed using a wallet, and if the coin used by the wallet matches the one from the transaction,
+        //In case the transaction is made using a wallet, performs the billing operation and updates the transaction information
         Wallet wallet = transaction.getWallet();
         if(wallet != null) {
+            if(!walletService.getCoinIdFromWallet(wallet.getId()).equals(transactionCoin.getId()))
+                throw new Exception("Coin of the transaction does not match the coin from the wallet!");
+
             wallet = walletService.removeFromBalance(wallet.getId(), transaction.getValue());
             transaction.setWallet(wallet);
             transaction.setBalance_after_mov(wallet.getBalance());

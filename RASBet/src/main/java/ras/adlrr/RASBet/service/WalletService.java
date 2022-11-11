@@ -188,4 +188,8 @@ public class WalletService {
     public Integer findGamblerIdByWalletId(int wallet_id){
         return walletRepository.findGamblerIdByWalletId(wallet_id).orElse(null);
     }
+
+    public String getCoinIdFromWallet(int wallet_id){
+        return walletRepository.getCoinIdFromWallet(wallet_id);
+    }
 }
