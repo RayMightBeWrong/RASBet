@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Game.css';
 import { Button } from '../Button';
 
@@ -8,8 +8,24 @@ export const Game = ({
     title,
     time,
     betsArray,
-    odsArray
+    odsArray,
+    addBet,
+    removeBet
 }) => {
+    
+    const [locked, setLock] = useState({
+        fechada: false,
+        bet: ""
+      });
+    const handleClick = (title,bet,odd) => {
+        if(locked.fechada&&locked.bet==bet){
+            setLock({fechada:false,bet:""});
+            removeBet(title);
+        } else if(!locked.fechada){
+            setLock({fechada:true,bet:bet});
+            addBet(title,bet,odd);
+        }
+    };
 
     const dicionario = [];
     for (let i = 0; i < betsArray.length; i++) {
@@ -25,7 +41,8 @@ export const Game = ({
                 <div className='bets'>
                     {dicionario.map(dic => (
                         <div key={dic.count}>
-                            <Button buttonStyle={"btn--bet"} buttonSize={'btn--flex'}>
+                            <Button buttonStyle={locked.fechada&&locked.bet==dic.bet?"btn--bet-clicked":"btn--bet"} 
+                            buttonSize={'btn--flex'} onClick={()=>handleClick(title,dic.bet,dic.odd)}>
                                 <div>{dic.bet}</div>
                                 <div>{dic.odd}</div>
                             </Button>

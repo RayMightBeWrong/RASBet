@@ -1,24 +1,25 @@
 import React from 'react';
-import './Game.css';
+import './Boletim.css';
 import { Button } from '../Button';
+import { BoletimBet } from './BoletimBet';
 
 
-
-export const Game = ({
-    title,
-    time,
-    betsArray,
-    odsArray
+export const Boletim = ({
+    bets
 }) => {
-
-    const dicionario = [];
-    for (let i = 0; i < betsArray.length; i++) {
-        dicionario[i] = { bet: betsArray[i], odd: odsArray[i], count: i }
-    }
     return (
         <>
             <div className='boletim'>
-                BOLETIM
+                <div>BOLETIM</div>
+                <div className='tipoAposta'>
+                    <div>Simples</div>
+                    <div>Múltipla</div>
+                </div>
+                <div>
+                    {bets.map(game => (
+                      <div><BoletimBet title={game.title} winner={game.winner} cota={game.cota}/></div>
+                    ))}
+                </div>
             </div>
         </>
     );

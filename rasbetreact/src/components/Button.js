@@ -13,7 +13,7 @@
 import React from 'react';
 import './Button.css';
 
-const STYLES = ['btn--primary', 'btn--outline', 'btn--bet'];
+const STYLES = ['btn--primary', 'btn--outline', 'btn--bet','btn--bet-clicked'];
 
 const SIZES = ['btn--medium', 'btn--large', 'btn--flex'];
 

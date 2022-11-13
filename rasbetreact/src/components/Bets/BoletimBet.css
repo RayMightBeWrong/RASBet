@@ -1,0 +1,16 @@
+.boletimbet-gameChoice {
+    border: 2px solid #003915;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+}
+
+.boletimbet-winner-cota {
+    display: flex;
+    flex-direction: row;
+    align-items: left;
+}
+
+.boletimbet-title {
+    font-size: 1.2rem;
+}

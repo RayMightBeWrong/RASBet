@@ -65,3 +65,11 @@
   color: #242424;
   transition: 250ms;
 }
+
+.btn--bet-clicked {
+  transition: all 0.3s ease-out;
+  background: #dc7633;
+  border: 2px solid #dc7633;
+  color: #242424;
+  transition: 250ms;
+}
