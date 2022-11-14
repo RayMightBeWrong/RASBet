@@ -17,13 +17,17 @@ import java.io.Serializable;
 @Table(name = "coupons")
 public class Coupon {
     @Embeddable
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @Setter
     public static class CouponID implements Serializable {
-        public int promotionId;
-        public int gamblerId;
+        private int promotionId;
+        private int gamblerId;
     }
 
     @EmbeddedId
-    private CouponID couponID;
+    private CouponID id;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "promotion_id", insertable = false, updatable = false, nullable = false)
@@ -36,4 +40,11 @@ public class Coupon {
     private Gambler gambler;
 
     private int nr_uses_left; //Number of times left to use the coupon
+
+    public Coupon(int promotionId, int gamblerId, int nr_uses_left) {
+        this.id = new CouponID(promotionId, gamblerId);
+        this.promotion = new Promotion(); promotion.setId(promotionId);
+        this.gambler = new Gambler(); gambler.setId(gamblerId);
+        this.nr_uses_left = nr_uses_left;
+    }
 }

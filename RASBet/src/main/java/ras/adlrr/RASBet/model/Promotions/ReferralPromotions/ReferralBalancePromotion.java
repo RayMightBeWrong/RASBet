@@ -1,5 +1,6 @@
 package ras.adlrr.RASBet.model.Promotions.ReferralPromotions;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -24,4 +26,14 @@ public class ReferralBalancePromotion extends Promotion {
     @ManyToOne
     @JoinColumn(name = "coin_id", updatable = false, insertable = false)
     private Coin coin;
+
+    public ReferralBalancePromotion(@JsonProperty("title") String title, @JsonProperty("description") String description,
+                                    @JsonProperty("beginDate") LocalDateTime beginDate, @JsonProperty("expirationDate") LocalDateTime expirationDate,
+                                    @JsonProperty("number_of_referrals_needed") int number_of_referrals_needed,
+                                    @JsonProperty("value_to_give") float value_to_give, @JsonProperty("coin_id") String coin_id) {
+        super(title, description, beginDate, expirationDate);
+        this.number_of_referrals_needed = number_of_referrals_needed;
+        this.value_to_give = value_to_give;
+        this.coin = new Coin(); this.coin.setId(coin_id);
+    }
 }
