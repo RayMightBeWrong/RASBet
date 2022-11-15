@@ -29,9 +29,9 @@ public class ReferralBalancePromotion extends Promotion {
 
     public ReferralBalancePromotion(@JsonProperty("title") String title, @JsonProperty("description") String description,
                                     @JsonProperty("beginDate") LocalDateTime beginDate, @JsonProperty("expirationDate") LocalDateTime expirationDate,
-                                    @JsonProperty("number_of_referrals_needed") int number_of_referrals_needed,
+                                    @JsonProperty("nr_uses") int nr_uses, @JsonProperty("number_of_referrals_needed") int number_of_referrals_needed,
                                     @JsonProperty("value_to_give") float value_to_give, @JsonProperty("coin_id") String coin_id) {
-        super(title, description, beginDate, expirationDate);
+        super(title, description, beginDate, expirationDate, nr_uses);
         this.number_of_referrals_needed = number_of_referrals_needed;
         this.value_to_give = value_to_give;
         this.coin = new Coin(); this.coin.setId(coin_id);

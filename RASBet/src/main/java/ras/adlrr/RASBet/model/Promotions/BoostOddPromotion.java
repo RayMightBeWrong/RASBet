@@ -17,14 +17,12 @@ import java.time.LocalDateTime;
 @Setter
 @Table(name = "boost_odd_promotions")
 public class BoostOddPromotion extends Promotion{
-    private int nr_uses; //nr of uses allowed for the coupon generated
     private float boost_percentage;
 
     public BoostOddPromotion(@JsonProperty("title") String title, @JsonProperty("description") String description,
                              @JsonProperty("beginDate") LocalDateTime beginDate, @JsonProperty("expirationDate") LocalDateTime expirationDate,
                              @JsonProperty("nr_uses") int nr_uses, @JsonProperty("boost_percentage") float boost_percentage) {
-        super(title, description, beginDate, expirationDate);
-        this.nr_uses = nr_uses;
+        super(title, description, beginDate, expirationDate, nr_uses);
         this.boost_percentage = boost_percentage;
     }
 }

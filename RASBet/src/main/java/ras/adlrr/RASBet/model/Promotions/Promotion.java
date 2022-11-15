@@ -32,11 +32,18 @@ public class Promotion {
 
     private LocalDateTime expirationDate;
 
+    private int nr_uses; //nr of uses allowed for the coupon generated
+
+    @Column(unique = true)
+    private String coupon;
+
     public Promotion(@JsonProperty("title") String title,@JsonProperty("description") String description,
-                     @JsonProperty("beginDate") LocalDateTime beginDate, @JsonProperty("expirationDate") LocalDateTime expirationDate) {
+                     @JsonProperty("beginDate") LocalDateTime beginDate, @JsonProperty("expirationDate") LocalDateTime expirationDate,
+                     @JsonProperty("nr_uses") int nr_uses) {
         this.title = title;
         this.description = description;
         this.beginDate = beginDate;
         this.expirationDate = expirationDate;
+        this.nr_uses = nr_uses;
     }
 }

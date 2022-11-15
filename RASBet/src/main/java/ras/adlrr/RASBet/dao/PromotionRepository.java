@@ -6,4 +6,8 @@ import ras.adlrr.RASBet.model.Promotions.Promotion;
 
 @Repository
 public interface PromotionRepository extends JpaRepository<Promotion,Integer> {
+    Promotion findByCoupon(String coupon);
+    boolean existsByCoupon(String coupon);
+
+
 }

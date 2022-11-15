@@ -48,6 +48,6 @@ public class Referral {
         this.id = new ReferralID(referredId, referrerId);
         this.registration_date = registration_date;
         this.referred = new Gambler(); this.referred.setId(referredId);
-        this.referrer = new Gambler();this.referrer.setId(referrerId);
+        this.referrer = new Gambler(); this.referrer.setId(referrerId);
     }
 }
