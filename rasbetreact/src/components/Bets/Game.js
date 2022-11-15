@@ -10,18 +10,22 @@ export const Game = ({
     betsArray,
     odsArray,
     addBet,
-    removeBet
+    removeBet,
+    changeBet
 }) => {
     
     const [locked, setLock] = useState({
         fechada: false,
         bet: ""
       });
-    const handleClick = (title,bet,odd) => {
+    const handleClick = (bet,odd) => {
         if(locked.fechada&&locked.bet==bet){
             setLock({fechada:false,bet:""});
             removeBet(title);
-        } else if(!locked.fechada){
+        }else if(locked.fechada&&locked.bet!=bet){
+            setLock({fechada:true,bet:bet});
+            changeBet(title,bet,odd)
+        }else if(!locked.fechada){
             setLock({fechada:true,bet:bet});
             addBet(title,bet,odd);
         }
@@ -42,7 +46,7 @@ export const Game = ({
                     {dicionario.map(dic => (
                         <div key={dic.count}>
                             <Button buttonStyle={locked.fechada&&locked.bet==dic.bet?"btn--bet-clicked":"btn--bet"} 
-                            buttonSize={'btn--flex'} onClick={()=>handleClick(title,dic.bet,dic.odd)}>
+                            buttonSize={'btn--flex'} onClick={()=>handleClick(dic.bet,dic.odd)}>
                                 <div>{dic.bet}</div>
                                 <div>{dic.odd}</div>
                             </Button>
