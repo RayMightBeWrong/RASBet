@@ -9,12 +9,23 @@ export const Boletim = ({
 }) => {
     const [value, setValue] = useState('');
 
+    const [finalWin, setFinalWin] = useState(0);
+
     const handleChange = event => {
         const result = event.target.value.replace(/\D/g, '');
 
         setValue(result);
     };
 
+    useEffect(() => {
+        var soma = 0
+        if(value!=='' && bets.length!==0)
+            soma=parseFloat(value)
+        {bets.map(game => (
+            soma = soma*parseFloat(game.cota)
+        ))}
+        setFinalWin(soma)
+    });
 
     return (
         <>
@@ -30,10 +41,17 @@ export const Boletim = ({
                     ))}
                 </div>
                 <div>
-                    <input type="text" placeholder="Valor da aposta" name="aposta" required />
+                    Aposta:
                     <input type="text"
+                        required
+                        placeholder="Valor da aposta"
                         value={value}
                         onChange={handleChange} />
+                    Possivel ganho: {finalWin}
+                    <Button buttonStyle={"btn--bet"} 
+                            buttonSize={'btn--flex'}>
+                                Submeter
+                            </Button>
                 </div>
             </div>
         </>

@@ -17,6 +17,7 @@ export const GamesTab = ({
     const [bets, setBets] = useState([]);
 
     const addBet = (title,winner,cota) => {
+        console.log("adicionar")
         const updateBets = [
             // copy the current bets state
             ...bets,
@@ -35,9 +36,21 @@ export const GamesTab = ({
     }
 
     const removeBet = (title) => {
+        console.log("remover")
         const newbets=[]
         bets.forEach((element) => {if(element.title!==title) newbets.push(element)})
         setBets(newbets)
+    }
+
+    const changeBet = (title,winner,cota) => {
+        const newbets=[]
+        bets.forEach((element) => {if(element.title!==title) newbets.push(element)})
+        newbets.push({
+            title: title,
+            winner: winner,
+            cota: cota
+        })
+        setBets(newbets);
     }
 
     const checkSport = SPORTS.includes(sport)
@@ -57,7 +70,7 @@ export const GamesTab = ({
                 <div className='gamestab'>
                     <div className='bets-tab'>
                         {filtredGames.map(game => (
-                            <div><Game title={game.title} time={game.time} betsArray={game.betsArray} odsArray={game.odsArray} removeBet={removeBet} addBet={addBet}/></div>
+                            <div><Game title={game.title} time={game.time} betsArray={game.betsArray} odsArray={game.odsArray} removeBet={removeBet} addBet={addBet} changeBet={changeBet}/></div>
                         ))}
                     </div>
                     <div className='boletimbox'>
