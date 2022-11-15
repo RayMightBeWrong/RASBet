@@ -38,7 +38,7 @@ public class Referral {
 
     @MapsId("referrerId")
     @ManyToOne(optional = false)
-    @JoinColumn(name = "referrer_id", updatable = false, insertable = false, nullable = false)
+    @JoinColumn(name = "referrer_id", updatable = false, insertable = false, nullable = false, unique = true)
     private Gambler referrer;
 
     @Column(nullable = false)
