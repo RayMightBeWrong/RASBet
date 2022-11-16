@@ -18,7 +18,15 @@
 
 .btn--outline {
   background-color: white;
-  color: #dc7633;
+  color: #d15909;
+  padding: 8px 20px;
+  border: 2px solid #dc7633;
+  transition: all 0.3s ease-out;
+}
+
+.btn--inverted {
+  background-color: white;
+  color: black;
   padding: 8px 20px;
   border: 2px solid #dc7633;
   transition: all 0.3s ease-out;
@@ -30,6 +38,14 @@
   padding: 8px 20px;
   border: 2px solid #003915;
   transition: all 0.3s ease-out;
+}
+
+.btn--bet-clicked {
+  transition: all 0.3s ease-out;
+  background: #dc7633;
+  border: 2px solid #dc7633;
+  color: #242424;
+  transition: 250ms;
 }
 
 .btn--medium {
@@ -49,27 +65,25 @@
 
 
 
-.btn--large:hover,
-.btn--medium:hover,
-.btn--flex:hover {
+.btn--primary:hover,
+.btn--outline:hover{
   transition: all 0.3s ease-out;
   background: #fff;
   color: #242424;
   transition: 250ms;
 }
 
-.btn--bet:hover {
+.btn--inverted:hover{
   transition: all 0.3s ease-out;
   background: #dc7633;
-  border: 2px solid #dc7633;
   color: #242424;
   transition: 250ms;
 }
 
-.btn--bet-clicked {
-  transition: all 0.3s ease-out;
-  background: #dc7633;
+.btn--bet:hover {
+  transition: all 0.2s ease-out;
+  background: white;
   border: 2px solid #dc7633;
-  color: #242424;
-  transition: 250ms;
+  color: #d15909;
+  transition: 125ms;
 }

@@ -11,10 +11,10 @@ function Registo() {
                         <form action="/action_page.php" class="container-form">
                             <h1>Registo</h1>
 
-                            <input type="text" placeholder="E-mail" name="email" required />
-                            <input type="text" placeholder="Palavra-passe" name="psw" required />
-                            <input type="text" placeholder="Data de Nascimento" name="dataNascimento" required />
-                            <input type="text" placeholder="NIF" name="nif" required />
+                            <input type="txtL" placeholder="E-mail" name="email" required />
+                            <input type="txtL" placeholder="Palavra-passe" name="psw" required />
+                            <input type="txtL" placeholder="Data de Nascimento" name="dataNascimento" required />
+                            <input type="txtL" placeholder="NIF" name="nif" required />
 
                             <Button type="submit" buttonSize='btn--flex'>Concluir</Button>
 

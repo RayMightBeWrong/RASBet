@@ -12,9 +12,9 @@ function Login() {
             <form action="/action_page.php" class="container-form">
               <h1>BEM VINDO</h1>
 
-              <input type="text" placeholder="E-mail" name="email" required />
+              <input type="txtL" placeholder="E-mail" name="email" required />
 
-              <input type="password" placeholder="Palavra-passe" name="psw" required />
+              <input type="txtL" placeholder="Palavra-passe" name="psw" required />
               <Link to='/password_recovery' className='registerbutton'>
                 Esqueci-me da palavra-passe
               </Link>

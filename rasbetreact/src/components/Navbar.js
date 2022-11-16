@@ -38,11 +38,11 @@ function Navbar() {
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
           </div>
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-            <li className='nav-item'>
+            {/* <li className='nav-item'>
               <Link to='/' className='nav-links' onClick={closeMobileMenu}>
                 TODOS
               </Link>
-            </li>
+            </li> */}
             <li className='nav-item'>
               <Link
                 to='/futebol'
@@ -79,7 +79,15 @@ function Navbar() {
                 MOTOGP
               </Link>
             </li>
-
+            <li>
+              <Link
+                to='/perfil'
+                className='nav-links'
+                onClick={closeMobileMenu}
+              >
+                PERFIL
+              </Link>
+            </li>
             <li>
               <Link
                 to='/login'
