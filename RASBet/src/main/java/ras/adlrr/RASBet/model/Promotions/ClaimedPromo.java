@@ -41,9 +41,10 @@ public class ClaimedPromo {
 
     private int nr_uses_left; //Number of times left to use the coupon
 
-    public ClaimedPromo(int promotionId, int gamblerId) {
+    public ClaimedPromo(int promotionId, int gamblerId, int nr_uses_left) {
         this.id = new ClaimedPromoID(promotionId, gamblerId);
         this.promotion = new Promotion(); promotion.setId(promotionId);
         this.gambler = new Gambler(); gambler.setId(gamblerId);
+        this.nr_uses_left = nr_uses_left;
     }
 }

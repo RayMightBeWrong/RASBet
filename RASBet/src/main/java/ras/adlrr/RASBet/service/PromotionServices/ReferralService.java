@@ -1,4 +1,4 @@
-package ras.adlrr.RASBet.service;
+package ras.adlrr.RASBet.service.PromotionServices;
 
 import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.ReferralRepository;
