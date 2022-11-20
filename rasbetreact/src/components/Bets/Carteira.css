@@ -1,0 +1,28 @@
+.carteira {
+    border: 2px solid #003915;
+    border-style: dotted;
+    border-radius: 15px;
+    padding: 20px;
+    width: 60vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.carteira-header {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+}
+
+.carteira-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.carteira-transferencia {
+    display: flex;
+    flex-direction: row;
+    align-items: left;
+}
