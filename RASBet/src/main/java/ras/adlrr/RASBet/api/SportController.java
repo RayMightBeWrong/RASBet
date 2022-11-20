@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Sport;
+import ras.adlrr.RASBet.service.ISportService;
 import ras.adlrr.RASBet.service.SportService;
 
 import java.util.List;
@@ -15,10 +16,10 @@ import java.util.List;
 @RequestMapping("/api/sports")
 @RestController
 public class SportController {
-    private final SportService sportService;
+    private final ISportService sportService;
 
     @Autowired
-    public SportController(SportService sportService){
+    public SportController(ISportService sportService){
         this.sportService = sportService;
     }
 

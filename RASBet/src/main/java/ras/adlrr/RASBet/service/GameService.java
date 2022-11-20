@@ -20,7 +20,7 @@ import ras.adlrr.RASBet.model.readers.UcrasAPIReader;
 
 
 @Service
-public class GameService {
+public class GameService implements IGameService{
     private final GameRepository gr;
     private final ParticipantRepository pr;
     private final SportService sportService;

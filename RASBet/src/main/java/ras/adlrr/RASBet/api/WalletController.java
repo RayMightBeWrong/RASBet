@@ -10,15 +10,16 @@ import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Coin;
 import ras.adlrr.RASBet.model.Wallet;
+import ras.adlrr.RASBet.service.IWalletService;
 import ras.adlrr.RASBet.service.WalletService;
 
 @RequestMapping("/api/wallets")
 @RestController
 public class WalletController {
-    private final WalletService walletService;
+    private final IWalletService walletService;
 
     @Autowired
-    public WalletController(WalletService walletService){
+    public WalletController(IWalletService walletService){
         this.walletService = walletService;
     }
 

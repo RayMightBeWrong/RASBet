@@ -12,7 +12,7 @@ import ras.adlrr.RASBet.model.Transaction;
 import ras.adlrr.RASBet.model.Wallet;
 
 @Service
-public class WalletService {
+public class WalletService implements IWalletService{
     private final UserService userService;
     private final WalletRepository walletRepository;
     private final CoinRepository coinRepository;

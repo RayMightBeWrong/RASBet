@@ -11,7 +11,7 @@ import ras.adlrr.RASBet.model.Sport;
 import java.util.List;
 
 @Service
-public class SportService {
+public class SportService implements ISportService{
     private final SportRepository sportRepository;
     private final GameRepository gameRepository;
 

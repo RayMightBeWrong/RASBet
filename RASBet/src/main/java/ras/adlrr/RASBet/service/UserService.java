@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class UserService {
+public class UserService implements IUserService{
     private final GamblerRepository gamblerRepository;
     private final AdminRepository adminRepository;
     private final ExpertRepository expertRepository;

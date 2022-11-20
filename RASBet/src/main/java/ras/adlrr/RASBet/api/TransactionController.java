@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Transaction;
+import ras.adlrr.RASBet.service.ITransactionService;
 import ras.adlrr.RASBet.service.TransactionService;
 
 import java.util.List;
@@ -13,10 +14,10 @@ import java.util.List;
 @RequestMapping("/api/transactions")
 @RestController
 public class TransactionController {
-    private final TransactionService transactionService;
+    private final ITransactionService transactionService;
 
     @Autowired
-    public TransactionController(TransactionService t){
+    public TransactionController(ITransactionService t){
         this.transactionService = t;
     }
 

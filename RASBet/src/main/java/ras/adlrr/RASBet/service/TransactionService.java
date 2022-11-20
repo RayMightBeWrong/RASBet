@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class TransactionService {
+public class TransactionService implements ITransactionService{
     private final TransactionRepository transactionRepository;
     private final UserService userService;
     private final WalletService walletService;

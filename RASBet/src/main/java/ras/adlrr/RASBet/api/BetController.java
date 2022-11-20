@@ -7,17 +7,17 @@ import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Bet;
 import ras.adlrr.RASBet.model.Transaction;
-import ras.adlrr.RASBet.service.BetService;
+import ras.adlrr.RASBet.service.IBetService;
 
 import java.util.List;
 
 @RequestMapping("/api/bets")
 @RestController
 public class BetController {
-    private final BetService betService;
+    private final IBetService betService;
 
     @Autowired
-    public BetController(BetService betService) {
+    public BetController(IBetService betService) {
         this.betService = betService;
     }
 

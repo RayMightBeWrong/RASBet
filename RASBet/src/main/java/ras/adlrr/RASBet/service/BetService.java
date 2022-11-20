@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class BetService {
+public class BetService implements IBetService{
     private final TransactionService transactionService;
     private final WalletService walletService;
     private final UserService userService;

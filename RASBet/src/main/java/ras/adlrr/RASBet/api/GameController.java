@@ -8,6 +8,7 @@ import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 import ras.adlrr.RASBet.service.GameService;
+import ras.adlrr.RASBet.service.IGameService;
 
 import java.util.List;
 import java.util.Set;
@@ -15,11 +16,11 @@ import java.util.Set;
 @RequestMapping("/api/games")
 @RestController
 public class GameController {
-    private final GameService gameService;
+    private final IGameService gameService;
 
     /* **** Game Methods **** */
     @Autowired
-    public GameController(GameService gameService){
+    public GameController(IGameService gameService){
         this.gameService = gameService;
     }
 
