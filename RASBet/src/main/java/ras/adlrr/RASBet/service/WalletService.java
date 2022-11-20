@@ -107,7 +107,9 @@ public class WalletService implements IWalletService{
      * @throws Exception If any of the attributes does not meet the requirements an Exception is thrown indicating the error.
      */
     public Wallet createWallet(Wallet wallet) throws Exception {
-        wallet.setId(0);
+        wallet.setId(0); //Grants that a wallet is created, instead of updating an existing wallet
+        wallet.setBalance(0); //Grants that a wallet is created with balance equal to 0
+        wallet.setTransactions(null); //Grants that a wallet does not start with transactions associated
 
         Coin coin = wallet.getCoin();
         if(coin == null || !coinExistsById(coin.getId()))
