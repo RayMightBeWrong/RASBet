@@ -64,15 +64,15 @@ export const Boletim = ({
                         <div className='boletim-ganhos'>
                             Possivel ganho: {finalWin}
                         </div>
-                        <button onClick={() => setOpen(true)}> Click to Open Popup </button>
+                        <Button buttonStyle={"btn--bet"}
+                            buttonSize={'btn--flex'}
+                            onClick={() => setOpen(true)}>
+                            Submeter
+                        </Button>
                         {open ?
                             <CarteirasPopUp carteiras={carteiras} closePopup={() => setOpen(false)} valormin={value} />
                             : null
                         }
-                        <Button buttonStyle={"btn--bet"}
-                            buttonSize={'btn--flex'}>
-                            Submeter
-                        </Button>
                     </div>
                 </div>
             </div>
