@@ -16,7 +16,6 @@
 .boletim-body {
     display: flex;
     flex-direction: column;
-    align-items: left;
 }
 
 .tipoAposta {
@@ -36,5 +35,4 @@
 
 .boletim-ganhos {
     flex-direction: row;
-    align-items: left;
 }

@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react';
 import './Boletim.css';
 import { Button } from '../Button';
 import { BoletimBet } from './BoletimBet';
+import { CarteirasPopUp } from './CarteirasPopUp';
+import { Carteira } from './Carteira';
 
+const carteira1 = { ratioEuro: "0.35", balance: "30" }
+const carteira2 = { ratioEuro: "1", balance: "700" }
+const carteiras = [carteira1, carteira2]
 
 export const Boletim = ({
     bets
@@ -10,6 +15,8 @@ export const Boletim = ({
     const [value, setValue] = useState('');
     const [tipoAposta, setTipoAposta] = useState("Simples");
     const [finalWin, setFinalWin] = useState(0);
+    const [open, setOpen] = useState(false);
+
 
     const handleChange = event => {
         const result = event.target.value.replace(/\D/g, '');
@@ -57,6 +64,11 @@ export const Boletim = ({
                         <div className='boletim-ganhos'>
                             Possivel ganho: {finalWin}
                         </div>
+                        <button onClick={() => setOpen(true)}> Click to Open Popup </button>
+                        {open ?
+                            <CarteirasPopUp carteiras={carteiras} closePopup={() => setOpen(false)} valormin={value} />
+                            : null
+                        }
                         <Button buttonStyle={"btn--bet"}
                             buttonSize={'btn--flex'}>
                             Submeter

@@ -6,41 +6,57 @@ import { Button } from '../Button';
 
 export const Carteira = ({
     ratioEuro,
-    balance
+    balance,
+    verificaCarteira
 }) => {
+
+
+    const [value, setValue] = useState('');
+
+    const handleChange = event => {
+        const result = event.target.value.replace(/\D/g, '');
+
+        setValue(result);
+    };
+
+    const handleClick = (balance) => {
+        console.log("entrar");
+        console.log(verificaCarteira);
+        console.log("meio");
+        verificaCarteira(balance);
+        console.log("sair");
+    };
+
     return (
         <>
             <div className='carteira'>
                 <div className='carteira-header'>
-                    <div>Tatio euro: {ratioEuro}</div>
+                    <div>Ratio euro: {ratioEuro}</div>
                     <div>Balance: {balance}</div>
                 </div>
                 <div className='carteira-body'>
                     <div className='carteira-transferencia'>
-                        Aposta:
                         <input type="text"
                             required
-                            placeholder="Levantar"
+                            placeholder="Quantia de dinheiro"
                             value={value}
                             onChange={handleChange} />
                         <Button buttonStyle={"btn--bet"}
-                            buttonSize={'btn--flex'}
-                            onClick={() => handleClick(dic.bet, dic.odd)}>
+                            buttonSize={'btn--flex'}> {/* todo on click diminui */}
+                            Levantar
                         </Button>
-                    </div>
-                    <div className='carteira-transferencia'>
-                        Aposta:
-                        <input type="text"
-                            required
-                            placeholder="Depositar"
-                            value={value}
-                            onChange={handleChange} />
                         <Button buttonStyle={"btn--bet"}
-                            buttonSize={'btn--flex'}
-                            onClick={() => handleClick(dic.bet, dic.odd)}>
+                            buttonSize={'btn--flex'}> {/*todo on click aumenta*/}
+                            Depositar
                         </Button>
                     </div>
-
+                </div>
+                <div>
+                    <Button buttonStyle={"btn"}
+                        buttonSize={'btn--flex'}
+                        onClick={() => handleClick(balance)}>
+                        x
+                    </Button>
                 </div>
 
             </div>
