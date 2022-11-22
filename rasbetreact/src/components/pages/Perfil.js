@@ -1,19 +1,21 @@
 import React from 'react';
 import './Perfil.css';
-import { Link } from 'react-router-dom';
 import { Button } from '../Button';
+import { CarteiraSimplificada } from '../Bets/Carteira';
+
+const carteira1 = { ratioEuro: "0.35", balance: "30" }
+const carteira2 = { ratioEuro: "1", balance: "700" }
+const carteiras = [carteira1, carteira2]
+const nome = "Carteiro Paulo"
+const saldo = "13"
+
 
 function Perfil() {
   return (
     <div className='perfil'>
       <div className='perfil-box'>
-        <h1>Carlos Pereira</h1>
-        <h2>Saldo:</h2>
-        <hr class='sp'></hr>
-        <div className='levantar-depositar'>
-          <Button className='btn' buttonStyle={"btn--inverted"} buttonSize={'btn--flex'}>Levantar</Button>
-          <Button className='btn' buttonStyle={"btn--inverted"} buttonSize='btn--flex'>Depositar</Button>
-        </div>
+        <h1>{nome}</h1>
+        <h2>Saldo total: {saldo}€</h2>
         <div className='informacoes-perfil'>
           <s1>
             <t>Nome:</t>
@@ -24,13 +26,30 @@ function Perfil() {
             <input type="txtP" placeholder="Apelido" name="apelido" required />
           </s1>
           <s1>
-            <t>Mudar palavra-passe:</t>
+            <t>Antiga palavra-passe:</t>
             <input type="txtP" placeholder="Palavra-passe" name="psw" required />
           </s1>
+          <s1>
+            <t>Nova palavra-passe:</t>
+            <input type="txtP" placeholder="Palavra-passe" name="psw" required />
+          </s1>
+          <s1>
+            <t>Confirme:</t>
+            <input type="txtP" placeholder="Palavra-passe" name="psw" required />
+          </s1>
+          <div className='save'>
+            <Button  buttonSize={'btn--medium'}>Gravar Alterações</Button>
+          </div>
+        </div>
+        <h1> Informação das carteiras </h1>
+        <div className='carteiras-body'>
+          {carteiras.map(wallet => (
+            <CarteiraSimplificada ratioEuro={wallet.ratioEuro} balance={wallet.balance}/>
+          ))}
         </div>
         <div className='save'>
-          <Button  buttonSize={'btn--medium'}>Gravar Alterações</Button>
-        </div>
+            <Button  buttonSize={'btn--medium'}>Nova Carteira</Button>
+          </div>
       </div>
     </div>
   );
