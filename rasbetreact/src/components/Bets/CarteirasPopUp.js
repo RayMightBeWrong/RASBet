@@ -1,6 +1,7 @@
 import React from "react";
 import "./CarteirasPopUp.css";
 import { Carteira } from './Carteira';
+import { Button } from '../Button';
 
 export const CarteirasPopUp = ({
     carteiras,
@@ -23,6 +24,9 @@ export const CarteirasPopUp = ({
                 {carteiras.map(wallet => (
                     <div><Carteira ratioEuro={wallet.ratioEuro} balance={wallet.balance} verificaCarteira={verificaCarteira} /></div>
                 ))}
+                <Button buttonStyle={"btn--bet"}> {/* todo on click diminui */}
+                    Criar carteira
+                </Button>
                 <button onClick={closePopup}>Fechar menu das carteiras</button >
             </div>
         </div >

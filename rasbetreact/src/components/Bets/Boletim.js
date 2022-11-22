@@ -16,7 +16,11 @@ export const Boletim = ({
     const [tipoAposta, setTipoAposta] = useState("Simples");
     const [finalWin, setFinalWin] = useState(0);
     const [open, setOpen] = useState(false);
+    const [cupao, setCupao] = useState('');
 
+    const changeCupao = event => {
+        setCupao(event.target.value)
+    };
 
     const handleChange = event => {
         const result = event.target.value.replace(/\D/g, '');
@@ -56,10 +60,17 @@ export const Boletim = ({
                         <div className='boletim-ganhos'>
                             Aposta:
                             <input type="text"
-                                required
                                 placeholder="Valor da aposta"
                                 value={value}
                                 onChange={handleChange} />
+                        </div>
+                        <div className='boletim-ganhos'>
+                            Cupão:
+                            <input type="text"
+                                placeholder="Cupão da aposta"
+                                value={cupao}
+                                onChange={changeCupao} />
+                            <button>Apply</button>
                         </div>
                         <div className='boletim-ganhos'>
                             Possivel ganho: {finalWin}

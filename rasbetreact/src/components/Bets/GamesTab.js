@@ -5,18 +5,30 @@ import './GamesTab.css';
 
 const SPORTS = ['any', 'futebol', 'basquetebol', 'tenis', 'motogp'];
 
-const bet1 = { title: "Benfica - Sporting", winner: "Benfica", cota: "1.4"}
-const bet2 = { title: "Benfica - Sporting", winner: "Benfica", cota: "1.4"}
-const bet3 = { title: "Benfica - Sporting", winner: "Benfica", cota: "1.4"}
+const bet1 = { title: "Benfica - Sporting", winner: "Benfica", cota: "1.4" }
+const bet2 = { title: "Benfica - Sporting", winner: "Benfica", cota: "1.4" }
+const bet3 = { title: "Benfica - Sporting", winner: "Benfica", cota: "1.4" }
 
 export const GamesTab = ({
     sport,
-    games
+    games,
+    userState
 }) => {
 
     const [bets, setBets] = useState([]);
 
-    const addBet = (title,winner,cota) => {
+    function boletimLock() {
+        if (userState === 'gambler') {
+            return (
+                <div className='boletimbox'>
+                    <div><Boletim bets={bets} /></div>
+                </div>
+            );
+        }
+        else return;
+    }
+
+    const addBet = (title, winner, cota) => {
         console.log("adicionar")
         const updateBets = [
             // copy the current bets state
@@ -37,14 +49,14 @@ export const GamesTab = ({
 
     const removeBet = (title) => {
         console.log("remover")
-        const newbets=[]
-        bets.forEach((element) => {if(element.title!==title) newbets.push(element)})
+        const newbets = []
+        bets.forEach((element) => { if (element.title !== title) newbets.push(element) })
         setBets(newbets)
     }
 
-    const changeBet = (title,winner,cota) => {
-        const newbets=[]
-        bets.forEach((element) => {if(element.title!==title) newbets.push(element)})
+    const changeBet = (title, winner, cota) => {
+        const newbets = []
+        bets.forEach((element) => { if (element.title !== title) newbets.push(element) })
         newbets.push({
             title: title,
             winner: winner,
@@ -70,12 +82,10 @@ export const GamesTab = ({
                 <div className='gamestab'>
                     <div className='bets-tab'>
                         {filtredGames.map(game => (
-                            <div><Game title={game.title} time={game.time} betsArray={game.betsArray} odsArray={game.odsArray} removeBet={removeBet} addBet={addBet} changeBet={changeBet}/></div>
+                            <div><Game title={game.title} time={game.time} betsArray={game.betsArray} odsArray={game.odsArray} removeBet={removeBet} addBet={addBet} changeBet={changeBet} /></div>
                         ))}
                     </div>
-                    <div className='boletimbox'>
-                        <div><Boletim bets={bets}/></div>
-                    </div>
+                    {boletimLock}
                 </div>
             </>
         );
