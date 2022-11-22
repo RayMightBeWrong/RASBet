@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Boletim.css';
 import { Button } from '../Button';
 import { BoletimBet } from './BoletimBet';
-import { CarteirasPopUp } from './CarteirasPopUp';
-import { Carteira } from './Carteira';
+import { CarteirasPopUp } from '../CarteirasPopUp';
 
 const carteira1 = { ratioEuro: "0.35", balance: "30" }
 const carteira2 = { ratioEuro: "1", balance: "700" }

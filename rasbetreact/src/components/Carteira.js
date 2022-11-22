@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Carteira.css';
-import { Button } from '../Button';
+import { Button } from './Button';
 
 
 
@@ -87,18 +87,18 @@ export const CarteiraSimplificada = ({
                     <div>Balance: {balance}</div>
                 </div>
                 <div className='carteira-transferenciaS'>
-                    <input  type="txtC" placeholder="Quantia de dinheiro" value={value} onChange={handleChange}/>
+                    <input type="txtC" placeholder="Quantia de dinheiro" value={value} onChange={handleChange} />
                     <div className='carteira-transferencia-botoes'>
                         <Button
-                            buttonStyle={"btn--bet"} 
-                            buttonSize={'btn--medium'}> 
-                            {/*todo on click diminui*/} 
+                            buttonStyle={"btn--bet"}
+                            buttonSize={'btn--medium'}>
+                            {/*todo on click diminui*/}
                             Levantar
                         </Button>
-                        <Button 
-                            buttonStyle={"btn--bet"} 
-                            buttonSize={'btn--medium'}> 
-                            {/*todo on click aumenta*/} 
+                        <Button
+                            buttonStyle={"btn--bet"}
+                            buttonSize={'btn--medium'}>
+                            {/*todo on click aumenta*/}
                             Depositar
                         </Button>
                     </div>

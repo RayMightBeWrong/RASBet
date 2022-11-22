@@ -1,7 +1,7 @@
 import React from "react";
 import "./CarteirasPopUp.css";
 import { Carteira } from './Carteira';
-import { Button } from '../Button';
+import { Button } from './Button';
 
 export const CarteirasPopUp = ({
     carteiras,

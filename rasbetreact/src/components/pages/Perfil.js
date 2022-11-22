@@ -1,7 +1,7 @@
 import React from 'react';
 import './Perfil.css';
 import { Button } from '../Button';
-import { CarteiraSimplificada } from '../Bets/Carteira';
+import { CarteiraSimplificada } from '../Carteira';
 
 const carteira1 = { ratioEuro: "0.35", balance: "30" }
 const carteira2 = { ratioEuro: "1", balance: "700" }
@@ -38,18 +38,18 @@ function Perfil() {
             <input type="txtP" placeholder="Palavra-passe" name="psw" required />
           </s1>
           <div className='save'>
-            <Button  buttonSize={'btn--medium'}>Gravar Alterações</Button>
+            <Button buttonSize={'btn--medium'}>Gravar Alterações</Button>
           </div>
         </div>
         <h1> Informação das carteiras </h1>
         <div className='carteiras-body'>
           {carteiras.map(wallet => (
-            <CarteiraSimplificada ratioEuro={wallet.ratioEuro} balance={wallet.balance}/>
+            <CarteiraSimplificada ratioEuro={wallet.ratioEuro} balance={wallet.balance} />
           ))}
         </div>
         <div className='save'>
-            <Button  buttonSize={'btn--medium'}>Nova Carteira</Button>
-          </div>
+          <Button buttonSize={'btn--medium'}>Nova Carteira</Button>
+        </div>
       </div>
     </div>
   );
