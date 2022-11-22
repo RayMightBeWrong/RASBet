@@ -32,45 +32,44 @@ public class SeedController {
     }
 
     @PostMapping
-    public void seed(){
-        try {
-            //Create gambler
-            Gambler gambler = new Gambler(0, "Gambler", "gambler@gmail.com", "1234", "12345678", 123456789,
-                    LocalDate.now().minusYears(18), 123456789, "Portugal", "Braga", "Rua", "4705-651", "Student");
-            gambler = userService.addGambler(gambler);
+    public void seed() throws Exception {
+        //Create gambler
+        Gambler gambler = new Gambler(0, "Gambler", "gambler@gmail.com", "1234", "12345678", 123456789,
+                LocalDate.now().minusYears(18), 123456789, "Portugal", "Braga", "Rua", "4705-651", "Student");
+        gambler = userService.addGambler(gambler);
 
-            //Create admin
-            Admin admin = new Admin(0, "Admin", "1234", "admin@gmail.com");
-            admin = userService.addAdmin(admin);
+        //Create admin
+        Admin admin = new Admin(0, "Admin", "1234", "admin@gmail.com");
+        admin = userService.addAdmin(admin);
 
-            //Create expert
-            Expert expert = new Expert(0, "Expert", "1234", "expert@gmail.com");
-            expert = userService.addExpert(expert);
+        //Create expert
+        Expert expert = new Expert(0, "Expert", "1234", "expert@gmail.com");
+        expert = userService.addExpert(expert);
 
-            //Create coins
-            Coin EUR = new Coin("EUR", 1);
-            Coin Bitcoin = new Coin("Bitcoin", 20500);
-            EUR = walletService.addCoin(EUR);
-            Bitcoin = walletService.addCoin(Bitcoin);
+        //Create coins
+        Coin EUR = new Coin("EUR", 1);
+        Coin Bitcoin = new Coin("Bitcoin", 20500);
+        EUR = walletService.addCoin(EUR);
+        Bitcoin = walletService.addCoin(Bitcoin);
 
-            //Create wallets for gambler
-            Wallet walletEUR = new Wallet("EUR", gambler.getId());
-            walletEUR = walletService.createWallet(walletEUR);
-            Wallet walletBitcoin = new Wallet("Bitcoin", gambler.getId());
-            walletBitcoin = walletService.createWallet(walletBitcoin);
+        //Create wallets for gambler
+        Wallet walletEUR = new Wallet("EUR", gambler.getId());
+        walletEUR = walletService.createWallet(walletEUR);
+        Wallet walletBitcoin = new Wallet("Bitcoin", gambler.getId());
+        walletBitcoin = walletService.createWallet(walletBitcoin);
 
-            //Create sports
-            Sport football = new Sport("Football", Sport.WITH_DRAW);
-            Sport nfl = new Sport("NFL", Sport.WITH_DRAW);
-            Sport F1 = new Sport("F1", Sport.RACE);
-            football = sportService.addSport(football);
-            nfl = sportService.addSport(nfl);
-            F1 = sportService.addSport(F1);
+        //Create sports
+        Sport football = new Sport("Football", Sport.WITH_DRAW);
+        Sport nfl = new Sport("NFL", Sport.WITH_DRAW);
+        Sport F1 = new Sport("F1", Sport.RACE);
+        Sport NBA = new Sport("NBA", Sport.WITHOUT_DRAW);
+        football = sportService.addSport(football);
+        nfl = sportService.addSport(nfl);
+        F1 = sportService.addSport(F1);
+        NBA = sportService.addSport(NBA);
 
-            //Update games with football api
-            gameService.updateGamesVPN();
-            //gameService.updateGames();
-        }
-        catch (Exception e){}
+        //Update games with football api
+        //gameService.updateGamesVPN();
+        //gameService.updateGames();
     }
 }
