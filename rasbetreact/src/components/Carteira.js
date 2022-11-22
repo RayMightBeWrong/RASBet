@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Carteira.css';
-import { Button } from '../Button';
+import { Button } from './Button';
 
 
 
@@ -49,6 +49,10 @@ export const Carteira = ({
                             buttonSize={'btn--flex'}> {/*todo on click aumenta*/}
                             Depositar
                         </Button>
+                        <Button buttonStyle={"btn--bet"}
+                            buttonSize={'btn--flex'}> {/todo on click aumenta/}
+                            Cupão
+                        </Button>
                     </div>
                 </div>
                 <div>
@@ -58,7 +62,47 @@ export const Carteira = ({
                         x
                     </Button>
                 </div>
+            </div>
+        </>
+    );
+};
 
+export const CarteiraSimplificada = ({
+    ratioEuro,
+    balance
+}) => {
+
+    const [value, setValue] = useState('');
+
+    const handleChange = event => {
+        const result = event.target.value.replace(/\D/g, '');
+        setValue(result);
+    };
+
+    return (
+        <>
+            <div className='carteiraSimples'>
+                <div className='carteira-headerS'>
+                    <div>Ratio euro: {ratioEuro}</div>
+                    <div>Balance: {balance}</div>
+                </div>
+                <div className='carteira-transferenciaS'>
+                    <input type="txtC" placeholder="Quantia de dinheiro" value={value} onChange={handleChange} />
+                    <div className='carteira-transferencia-botoes'>
+                        <Button
+                            buttonStyle={"btn--bet"}
+                            buttonSize={'btn--medium'}>
+                            {/*todo on click diminui*/}
+                            Levantar
+                        </Button>
+                        <Button
+                            buttonStyle={"btn--bet"}
+                            buttonSize={'btn--medium'}>
+                            {/*todo on click aumenta*/}
+                            Depositar
+                        </Button>
+                    </div>
+                </div>
             </div>
         </>
     );
