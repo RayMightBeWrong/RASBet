@@ -3,6 +3,7 @@ package ras.adlrr.RASBet.api;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,11 +40,13 @@ public class WalletController {
     }
 
     @DeleteMapping(path = "/coin/{id}")
-    //TODO - So se consegue eliminar coins que n estejam relacionadas a outras entidades
     public ResponseEntity removeCoin(@PathVariable String id){
         try {
             walletService.removeCoin(id);
             return new ResponseEntity(HttpStatus.OK); }
+        catch (DataAccessException dae){
+            return new ResponseEntityBadRequest().createBadRequest("A coin that already is associated with other entities cannot be removed!");
+        }
         catch (Exception e){
             return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
         }

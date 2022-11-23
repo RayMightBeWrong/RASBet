@@ -214,33 +214,56 @@ public class GameService implements IGameService{
     }
 
     public void getGamesFromAPI() throws Exception{
+        String errorMsg = "| ";
+        Sport sport;
         /*
-        Sport sport = sportService.findSportById("NFL");
-        if (sport != null){
-            APIGameReader reader = new NFLOddsAPIReader(sport.getId());
-            List<Game> games = reader.getAPIGames();
-            addGames(games);
+        try {
+            Sport sport = sportService.findSportById("NFL");
+            if (sport != null){
+                APIGameReader reader = new NFLOddsAPIReader(sport.getId());
+                List<Game> games = reader.getAPIGames();
+                addGames(games);
+            }
+        }catch (Exception e){
+            errorMsg = errorMsg + "Could not update NFL games" + " | ";
         }
 
-        sport = sportService.findSportById("F1");
-        if (sport != null){
-            APIGameReader reader = new F1APISportsReader(sport.getId());
-            List<Game> games = reader.getAPIGames();
-            addGames(games);
+        */
+
+        try {
+            sport = sportService.findSportById("F1");
+            if (sport != null){
+                APIGameReader reader = new F1APISportsReader(sport.getId());
+                List<Game> games = reader.getAPIGames();
+                addGames(games);
+            }
+        }catch (Exception e){
+            errorMsg = errorMsg + "Could not update F1 games." + " | ";
         }
 
-        sport = sportService.findSportById("Football");
-        if (sport != null){
-            APIGameReader reader = new FootballAPISportsReader(sport.getId());
-            List<Game> games = reader.getAPIGames();
-            addGames(games);
-        }*/
-
-        Sport sport = sportService.findSportById("NBA");
-        if (sport != null){
-            APIGameReader reader = new NBAAPISportsReader(sport.getId(), 10);
-            List<Game> games = reader.getAPIGames();
-            addGames(games);
+        try {
+            sport = sportService.findSportById("Football");
+            if (sport != null){
+                APIGameReader reader = new FootballAPISportsReader(sport.getId());
+                List<Game> games = reader.getAPIGames();
+                addGames(games);
+            }
+        }catch (Exception e){
+            errorMsg = errorMsg + "Could not update Football games" + " | ";
         }
+
+        try {
+            sport = sportService.findSportById("NBA");
+            if (sport != null){
+                APIGameReader reader = new NBAAPISportsReader(sport.getId(), 10);
+                List<Game> games = reader.getAPIGames();
+                addGames(games);
+            }
+        }catch (Exception e){
+            errorMsg = errorMsg + "Could not update NBA games" + " | ";
+        }
+
+        if(!errorMsg.equals("| "))
+            throw new Exception(errorMsg);
     }
 }

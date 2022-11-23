@@ -1,18 +1,24 @@
 .boletim {
     border: 2px solid #003915;
-    border-style: dotted;
     border-radius: 15px;
     padding: 20px;
     width: 30vw;
     display: flex;
     flex-direction: column;
+}
+
+.boletim-header {
+    display: flex;
+    flex-direction: column;
     align-items: center;
 }
 
+.boletim-body {
+    display: flex;
+    flex-direction: column;
+}
+
 .tipoAposta {
-    border-radius: 15px;
-    padding: 20px;
-    width: 30vw;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -25,4 +31,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.boletim-ganhos {
+    flex-direction: row;
 }

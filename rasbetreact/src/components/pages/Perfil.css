@@ -12,29 +12,17 @@
   color: #003915;
   padding: 30px;
   border-radius: 25px;
-  max-width: 700px;
+  max-width: 800px;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-/* Add styles to the form container */
-
-.levantar-depositar {
-  display: flex;
-  flex-direction: row;
-  padding: 60px;
-}
-
-
-.levantar-depositar .btn {
-  margin: 20px;
 }
 
 .informacoes-perfil {
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-bottom: 100px;
 }
 
 
@@ -49,7 +37,7 @@
 
 input[type=txtP]{
   border-radius: 5px;
-  width: 400px;
+  width: 500px;
   padding: 15px;
   margin: 5px 0 22px 0;
   border: none;
@@ -60,6 +48,14 @@ input[type=txtP]:focus,
 input[type=txtP]:hover{
   background-color: #ddd;
   outline: none;
+}
+
+.carteiras-body{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 10px;
+  align-items: center;
 }
 
 .save{
@@ -80,12 +76,6 @@ input[type=txtP]:hover{
     width: 100%;
   }
   .informacoes-perfil > s1 {
-    flex-direction: column;
-  }
-}
-
-@media only screen and (max-width: 500px){
-  .levantar-depositar {
     flex-direction: column;
   }
 }

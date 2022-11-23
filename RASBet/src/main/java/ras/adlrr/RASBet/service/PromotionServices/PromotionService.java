@@ -105,7 +105,7 @@ public class PromotionService {
      * @return all the promotions ordered by the start date or expiration date. A null value is returned if the argument "whichDate" is invalid.
      */
     public List<Promotion> getAllPromotionsOrderedByDate(String whichDate, Sort.Direction direction) throws Exception {
-        if(!whichDate.equals("begin_Date") && !whichDate.equals("expiration_date"))
+        if(!whichDate.equals("begin_date") && !whichDate.equals("expiration_date"))
             throw new Exception("Parameter \"which_date\" can either be \"begin_date\" or \"expiration_date\"");
         return promotionRepository.findAll(Sort.by(direction, whichDate));
     }
@@ -118,7 +118,7 @@ public class PromotionService {
      * @return list of ordered promotions which begin date (or expiration date, depending on the value of the parameter "which_date") is contained between dates.
      */
     public List<Promotion> getPromotionsBetweenDatesOrderedByDate(String which_date, LocalDateTime startDate, LocalDateTime endDate, Sort.Direction direction) throws Exception {
-        if(!which_date.equals("begin_Date") && !which_date.equals("expiration_date"))
+        if(!which_date.equals("begin_date") && !which_date.equals("expiration_date"))
             throw new Exception("Parameter \"which_date\" can either be \"begin_date\" or \"expiration_date\"");
         return promotionRepository.getPromotionsBetweenDatesOrderedByDate(which_date, startDate, endDate, Sort.by(direction, which_date));
     }
