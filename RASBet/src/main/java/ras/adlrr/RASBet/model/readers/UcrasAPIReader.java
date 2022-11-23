@@ -1,13 +1,10 @@
 package ras.adlrr.RASBet.model.readers;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Set;
 
 import kong.unirest.json.JSONArray;
@@ -16,15 +13,17 @@ import ras.adlrr.RASBet.model.APIGameReader;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 
-public class UcrasAPIReader implements APIGameReader{
+public class UcrasAPIReader extends APIGameReader{
     private String sport_id;
 
     public UcrasAPIReader(String sport_id){
+        ReadJSONBehaviour readMethod = new ReadJSONBasic();
+        super.setReadMethod(readMethod);
         this.sport_id = sport_id;
     }
 
     public List<Game> getAPIGames(){
-        String json = readJSONfromHTTPRequest("http://ucras.di.uminho.pt/v1/games/");
+        String json = super.readJSON("http://ucras.di.uminho.pt/v1/games/", null, null);
 
         if (json.equals(""))
             return null;
@@ -101,30 +100,5 @@ public class UcrasAPIReader implements APIGameReader{
         String awayTeam = (String) jo.get("awayTeam");
 
         return homeTeam + " vs " + awayTeam;
-    }
-
-    public String readJSONfromHTTPRequest(String urlString){
-        try{
-            URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
-
-            int rCode = connection.getResponseCode();
-            if (rCode != 200){
-                throw new RuntimeException("HTTP Response Code: " + rCode);
-            }
-
-            StringBuilder sb = new StringBuilder();
-            Scanner scanner = new Scanner(url.openStream());
-            while (scanner.hasNext()){
-                sb.append(scanner.nextLine());
-            }
-
-            scanner.close();
-            return sb.toString();
-        }
-        catch (Exception e){
-           return "";
-        }
     }
 }
