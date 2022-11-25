@@ -8,11 +8,10 @@ import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.*;
 import ras.adlrr.RASBet.model.Coin;
 import ras.adlrr.RASBet.model.Gambler;
-import ras.adlrr.RASBet.model.Transaction;
 import ras.adlrr.RASBet.model.Wallet;
 
 @Service
-public class WalletService implements IWalletService{
+public class WalletService implements IWalletService, ICoinService{
     private final UserService userService;
     private final WalletRepository walletRepository;
     private final CoinRepository coinRepository;

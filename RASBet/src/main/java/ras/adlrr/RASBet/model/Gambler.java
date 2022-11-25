@@ -42,6 +42,10 @@ public class Gambler extends User{
     @JsonIgnore
     private List<Transaction> transactions;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gambler", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Notification> notifications;
+
 
     public Gambler(@JsonProperty("id") int id, @JsonProperty("name") String name, @JsonProperty("email") String email, @JsonProperty("password") String password,
                    @JsonProperty("cc") String cc, @JsonProperty("nif") Integer nif, @JsonProperty("date_of_birth") LocalDate date_of_birth,
@@ -64,7 +68,7 @@ public class Gambler extends User{
                    String cc, int nif, LocalDate date_of_birth, int phoneNumber,
                    String nationality, String city, String address,
                    String postal_code, String occupation, List<Wallet> wallets,
-                   List<Transaction> transactions){
+                   List<Transaction> transactions, List<Notification> notifications){
         super(id, name, password,email);
         this.cc = cc;
         this.nif = nif;
@@ -77,6 +81,7 @@ public class Gambler extends User{
         this.occupation = occupation;
         this.wallets = wallets;
         this.transactions = transactions;
+        this.notifications = notifications;
     }
 
     // ----------- Additional Methods ------------

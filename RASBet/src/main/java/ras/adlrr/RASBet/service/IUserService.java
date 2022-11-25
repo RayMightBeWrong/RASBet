@@ -12,6 +12,8 @@ public interface IUserService {
 
     public Gambler getGamblerByEmail(String email);
 
+    public String getGamblerEmail(int id);
+
     public Gambler addGambler(Gambler gambler) throws Exception;
 
     public void removeGambler(int id) throws Exception;

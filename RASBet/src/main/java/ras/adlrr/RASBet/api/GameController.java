@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
-import ras.adlrr.RASBet.service.GameService;
 import ras.adlrr.RASBet.service.IGameService;
+import ras.adlrr.RASBet.service.IParticipantService;
 
 import java.util.List;
 import java.util.Set;
@@ -17,11 +17,13 @@ import java.util.Set;
 @RestController
 public class GameController {
     private final IGameService gameService;
+    private final IParticipantService participantService;
 
     /* **** Game Methods **** */
     @Autowired
-    public GameController(IGameService gameService){
+    public GameController(IGameService gameService, IParticipantService participantService){
         this.gameService = gameService;
+        this.participantService = participantService;
     }
 
     @PostMapping
@@ -100,7 +102,7 @@ public class GameController {
     @GetMapping("/{game_id}/participants")
     public ResponseEntity<Set<Participant>> getGameParticipants(@PathVariable("game_id") int gameID) {
         try{
-            return ResponseEntity.ok().body(gameService.getGameParticipants(gameID));
+            return ResponseEntity.ok().body(participantService.getGameParticipants(gameID));
         } catch (Exception e){
             return new ResponseEntityBadRequest<Set<Participant>>().createBadRequest(e.getMessage());
         }
@@ -109,7 +111,7 @@ public class GameController {
     @PutMapping("/{game_id}/participants")
     public ResponseEntity<Participant> addParticipantToGame(@PathVariable("game_id") int gameID, @RequestBody Participant p){
         try{
-            gameService.addParticipantToGame(gameID, p);
+            participantService.addParticipantToGame(gameID, p);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntityBadRequest<Participant>().createBadRequest(e.getMessage());
@@ -119,7 +121,7 @@ public class GameController {
     @DeleteMapping("/participants/{pid}")
     public ResponseEntity deleteParticipant(@PathVariable("pid") int participant_id){
         try{
-            gameService.removeParticipant(participant_id);
+            participantService.removeParticipant(participant_id);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
@@ -128,13 +130,13 @@ public class GameController {
 
     @GetMapping("/participants/{pid}")
     public ResponseEntity<Participant> getParticipant(@PathVariable("pid") int participant_id){
-        return ResponseEntity.ok().body(gameService.getParticipant(participant_id));
+        return ResponseEntity.ok().body(participantService.getParticipant(participant_id));
     }
 
     @PutMapping("/participants/{pid}/odd/{odd}")
     public ResponseEntity editOddInParticipant(@PathVariable("pid") int participant_id, @PathVariable("odd") float odd){
         try{
-            gameService.editOddInParticipant(participant_id, odd);
+            participantService.editOddInParticipant(participant_id, odd);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
