@@ -17,7 +17,8 @@ export const GamesTab = ({
 
     const [bets, setBets] = useState([]);
 
-    function boletimLock() {
+    function BoletimLock() {
+        console.log("gamblerrrrr")
         if (userState === 'gambler') {
             return (
                 <div className='boletimbox'>
@@ -82,16 +83,16 @@ export const GamesTab = ({
                 <div className='gamestab'>
                     <div className='bets-tab'>
                         {filtredGames.map(game => (
-                            <div><Game title={game.title} time={game.time} betsArray={game.betsArray} odsArray={game.odsArray} removeBet={removeBet} addBet={addBet} changeBet={changeBet} /></div>
+                            <div><Game title={game.title} time={game.time} betsArray={game.betsArray} odsArray={game.odsArray}
+                                removeBet={removeBet} addBet={addBet} changeBet={changeBet} userState={userState} /></div>
                         ))}
                     </div>
-                    {boletimLock}
+                    <BoletimLock />
                 </div>
             </>
         );
     }
     else {
-        const noGames = "Não há jogos de" + { checkSport } + "disponíveis";
         if (checkSport === 'any') {
             return (
                 <h1>Não há jogos disponíveis</h1>
