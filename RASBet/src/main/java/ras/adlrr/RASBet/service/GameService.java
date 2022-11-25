@@ -17,6 +17,9 @@ import ras.adlrr.RASBet.model.readers.FootballAPISportsReader;
 import ras.adlrr.RASBet.model.readers.NBAAPISportsReader;
 import ras.adlrr.RASBet.model.readers.NFLOddsAPIReader;
 import ras.adlrr.RASBet.model.readers.UcrasAPIReader;
+import ras.adlrr.RASBet.service.interfaces.IGameService;
+import ras.adlrr.RASBet.service.interfaces.IParticipantService;
+import ras.adlrr.RASBet.service.interfaces.ISportService;
 
 
 @Service

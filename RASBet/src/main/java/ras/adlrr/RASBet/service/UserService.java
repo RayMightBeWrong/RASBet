@@ -11,6 +11,9 @@ import ras.adlrr.RASBet.model.Expert;
 import ras.adlrr.RASBet.model.Gambler;
 import ras.adlrr.RASBet.model.Notification;
 import ras.adlrr.RASBet.model.User;
+import ras.adlrr.RASBet.service.interfaces.INotificationService;
+import ras.adlrr.RASBet.service.interfaces.IUserService;
+
 import java.util.regex.*;
 
 import java.time.LocalDate;

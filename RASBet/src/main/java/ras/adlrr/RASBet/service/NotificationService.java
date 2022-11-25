@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import ras.adlrr.RASBet.dao.NotificationRepository;
 import ras.adlrr.RASBet.model.Notification;
+import ras.adlrr.RASBet.service.interfaces.IEmailService;
+import ras.adlrr.RASBet.service.interfaces.INotificationService;
 
 @Service
 public class NotificationService implements INotificationService{

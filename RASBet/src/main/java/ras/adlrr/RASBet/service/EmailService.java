@@ -8,6 +8,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
+import ras.adlrr.RASBet.service.interfaces.IEmailService;
+
 
 @Service
 public class EmailService implements IEmailService {

@@ -1,4 +1,4 @@
-package ras.adlrr.RASBet.service;
+package ras.adlrr.RASBet.service.interfaces;
 
 import org.springframework.mail.MailSender;
 

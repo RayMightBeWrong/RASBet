@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.*;
-import ras.adlrr.RASBet.service.IUserService;
 import ras.adlrr.RASBet.service.UserService;
+import ras.adlrr.RASBet.service.interfaces.IUserService;
 
 
 

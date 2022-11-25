@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Sport;
-import ras.adlrr.RASBet.service.ISportService;
 import ras.adlrr.RASBet.service.SportService;
+import ras.adlrr.RASBet.service.interfaces.ISportService;
 
 import java.util.List;
 

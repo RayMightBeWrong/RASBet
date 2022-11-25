@@ -9,6 +9,8 @@ import ras.adlrr.RASBet.dao.*;
 import ras.adlrr.RASBet.model.Coin;
 import ras.adlrr.RASBet.model.Gambler;
 import ras.adlrr.RASBet.model.Wallet;
+import ras.adlrr.RASBet.service.interfaces.ICoinService;
+import ras.adlrr.RASBet.service.interfaces.IWalletService;
 
 @Service
 public class WalletService implements IWalletService, ICoinService{

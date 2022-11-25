@@ -1,15 +1,27 @@
 package ras.adlrr.RASBet.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import ras.adlrr.RASBet.dao.*;
-import ras.adlrr.RASBet.model.*;
-
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import ras.adlrr.RASBet.dao.BetRepository;
+import ras.adlrr.RASBet.model.Bet;
+import ras.adlrr.RASBet.model.Coin;
+import ras.adlrr.RASBet.model.Gambler;
+import ras.adlrr.RASBet.model.Game;
+import ras.adlrr.RASBet.model.GameChoice;
+import ras.adlrr.RASBet.model.Notification;
+import ras.adlrr.RASBet.model.Participant;
+import ras.adlrr.RASBet.model.Transaction;
+import ras.adlrr.RASBet.model.Wallet;
+import ras.adlrr.RASBet.service.interfaces.IBetService;
+import ras.adlrr.RASBet.service.interfaces.INotificationService;
 
 @Service
 public class BetService implements IBetService{
@@ -18,16 +30,18 @@ public class BetService implements IBetService{
     private final UserService userService;
     private final GameService gameService;
     private final BetRepository betRepository;
+    private final INotificationService notificationService;
 
     @Autowired
     public BetService(TransactionService transactionService, WalletService walletService,
                       BetRepository betRepository, UserService userService,
-                      GameService gameService) {
+                      GameService gameService, INotificationService notificationService) {
         this.transactionService = transactionService;
         this.walletService = walletService;
         this.betRepository = betRepository;
         this.userService = userService;
         this.gameService = gameService;
+        this.notificationService = notificationService;
     }
 
     /**
@@ -89,7 +103,16 @@ public class BetService implements IBetService{
         //Updates the bet and persists it
         bet.setTransaction(transaction);
         bet.setId(transaction.getId());
-        return betRepository.save(bet);
+        Bet res = betRepository.save(bet);
+
+        Gambler gambler = transaction.getGambler();
+        String email = userService.getGamblerEmail(gambler.getId());
+        String message = "A bet has been made in your RASBet account.";
+        String subject = "[RASBet] Bet Made";
+        Notification notification = new Notification(gambler.getId(), email, message, subject);
+        notificationService.addNotification(notification);
+
+        return res;
     }
 
     /**
@@ -149,6 +172,14 @@ public class BetService implements IBetService{
         float winnings = calculateBetWinnings(bet_transaction.getValue(), bet.getGameChoices());
         if(winnings == 0) {
             betRepository.save(bet);
+            
+            Gambler gambler = wallet_withdraw.getGambler();
+            String email = userService.getGamblerEmail(gambler.getId());
+            String message = "Unfortunately, it seems that you have lost a bet.";
+            String subject = "[RASBet] Bet Lost";
+            Notification notification = new Notification(gambler.getId(), email, message, subject);
+            notificationService.addNotification(notification);
+
             return null;
         }
 
@@ -157,7 +188,17 @@ public class BetService implements IBetService{
                 "Bet Winnings", winnings, wallet_withdraw.getCoin().getId(), LocalDateTime.now());
 
         betRepository.save(bet);
-        return transactionService.addTransaction(newTransaction);
+
+        Transaction res = transactionService.addTransaction(newTransaction);
+
+        Gambler gambler = res.getGambler();
+        String email = userService.getGamblerEmail(gambler.getId());
+        String message = "Congratulations! You just won a bet!";
+        String subject = "[RASBet] Bet Won";
+        Notification notification = new Notification(gambler.getId(), email, message, subject);
+        notificationService.addNotification(notification);
+
+        return res;
     }
 
     /**
