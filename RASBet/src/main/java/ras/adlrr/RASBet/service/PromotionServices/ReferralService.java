@@ -5,6 +5,7 @@ import ras.adlrr.RASBet.dao.ReferralRepository;
 import ras.adlrr.RASBet.model.Promotions.Referral;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Service
 public class ReferralService {
@@ -22,7 +23,7 @@ public class ReferralService {
      * @throws Exception If the referrer is the same as the referred. If the referrer already referred someone. If the referral already exists.
      */
     public void addReferral(int referredId, int referrerId) throws Exception{
-        Referral referral = new Referral(referredId, referrerId, LocalDateTime.now());
+        Referral referral = new Referral(referredId, referrerId, LocalDateTime.now(ZoneId.of("UTC+00:00")));
         if(referredId == referrerId)
             throw new Exception("A user cannot refer himself.");
         if(referralRepository.countTimesAsReferrer(referrerId) != 0)

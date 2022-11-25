@@ -14,6 +14,7 @@ import ras.adlrr.RASBet.model.User;
 import ras.adlrr.RASBet.service.interfaces.INotificationService;
 import ras.adlrr.RASBet.service.interfaces.IUserService;
 
+import java.time.ZoneId;
 import java.util.regex.*;
 
 import java.time.LocalDate;
@@ -193,7 +194,7 @@ public class UserService implements IUserService{
             return "CC has to be a 8 digits number.";
         if(!Pattern.matches("^\\d{9}$", gambler.getNif().toString()))
             return "NIF has to be a 9 digits number.";
-        if(gambler.getDate_of_birth().isAfter(LocalDate.now().minusYears(18)))
+        if(gambler.getDate_of_birth().isAfter(LocalDate.now(ZoneId.of("UTC+00:00")).minusYears(18)))
             return "Minimum age of 18 is required!";
 
         return null;

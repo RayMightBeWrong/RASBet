@@ -8,6 +8,7 @@ import ras.adlrr.RASBet.service.PromotionServices.PromotionService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -168,7 +169,7 @@ public class BetService implements IBetService{
         }
 
         Transaction newTransaction = new Transaction(bet_transaction.getGambler().getId(), null, null,
-                "Bet Winnings", winnings, bet_transaction.getCoin().getId(), LocalDateTime.now());
+                "Bet Winnings", winnings, bet_transaction.getCoin().getId(), LocalDateTime.now(ZoneId.of("UTC+00:00")));
 
         betRepository.save(bet);
         return transactionService.addTransaction(newTransaction);
@@ -218,7 +219,7 @@ public class BetService implements IBetService{
 
         wallet_withdraw = walletService.addToBalance(wallet_id, winnings);
         Transaction newTransaction = new Transaction(bet_transaction.getGambler().getId(), wallet_id, wallet_withdraw.getBalance(),
-                "Bet Winnings", winnings, bet_transaction.getCoin().getId(), LocalDateTime.now());
+                "Bet Winnings", winnings, bet_transaction.getCoin().getId(), LocalDateTime.now(ZoneId.of("UTC+00:00")));
 
         betRepository.save(bet);
 

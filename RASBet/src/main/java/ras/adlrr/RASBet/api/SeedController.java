@@ -9,6 +9,7 @@ import ras.adlrr.RASBet.model.*;
 import ras.adlrr.RASBet.service.*;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 @RestController
 @RequestMapping("/seed")
@@ -35,7 +36,7 @@ public class SeedController {
     public void seed() throws Exception {
         //Create gambler
         Gambler gambler = new Gambler(0, "Gambler", "gambler@gmail.com", "1234", "12345678", 123456789,
-                LocalDate.now().minusYears(18), 123456789, "Portugal", "Braga", "Rua", "4705-651", "Student");
+                LocalDate.now(ZoneId.of("UTC+00:00")).minusYears(18), 123456789, "Portugal", "Braga", "Rua", "4705-651", "Student");
         gambler = userService.addGambler(gambler);
 
         //Create admin

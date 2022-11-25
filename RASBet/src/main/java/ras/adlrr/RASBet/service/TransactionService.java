@@ -14,6 +14,7 @@ import ras.adlrr.RASBet.service.interfaces.ITransactionService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -101,7 +102,7 @@ public class TransactionService implements ITransactionService{
         }
 
         //Sets the date of the transaction to the current date
-        t.setDate(LocalDateTime.now());
+        t.setDate(LocalDateTime.now(ZoneId.of("UTC+00:00")));
 
         return transactionRepository.save(t);
     }
@@ -210,7 +211,7 @@ public class TransactionService implements ITransactionService{
 
         Transaction transaction = new Transaction(gambler_id, wallet_id, wallet.getBalance(),
                                                   "Claimed balance with promotion coupon " + coupon + ".",
-                                                  balanceToGive, coin_id, LocalDateTime.now());
+                                                  balanceToGive, coin_id, LocalDateTime.now(ZoneId.of("UTC+00:00")));
 
         return transactionRepository.save(transaction);
     }
