@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.*;
 import ras.adlrr.RASBet.model.Coin;
 import ras.adlrr.RASBet.model.Gambler;
-import ras.adlrr.RASBet.model.Promotions.IBalancePromotion;
-import ras.adlrr.RASBet.model.Promotions.IPromotion;
+import ras.adlrr.RASBet.model.Promotions.interfaces.IBalancePromotion;
+import ras.adlrr.RASBet.model.Promotions.interfaces.IPromotion;
 import ras.adlrr.RASBet.model.Wallet;
 import ras.adlrr.RASBet.service.PromotionServices.ClientPromotionService;
 import ras.adlrr.RASBet.service.PromotionServices.PromotionService;
@@ -22,18 +22,13 @@ public class WalletService implements IWalletService, ICoinService{
     private final UserService userService;
     private final WalletRepository walletRepository;
     private final CoinRepository coinRepository;
-    private final ClientPromotionService clientPromotionService;
-    private final PromotionService promotionService;
 
     @Autowired
     public WalletService(WalletRepository walletRepository, CoinRepository coinRepository,
-                         UserService userService,  ClientPromotionService clientPromotionService,
-                         PromotionService promotionService){
+                         UserService userService){
         this.walletRepository = walletRepository;
         this.coinRepository = coinRepository;
         this.userService = userService;
-        this.clientPromotionService = clientPromotionService;
-        this.promotionService = promotionService;
     }
 
     // ---------- Coin Methods ----------
@@ -183,32 +178,6 @@ public class WalletService implements IWalletService, ICoinService{
         if(!wallet.changeBalance(value))
             throw new Exception("Wallet does not have sufficient funds to execute the withdraw operation!");
         return walletRepository.save(wallet);
-    }
-
-    /**
-     * Claims the balance offered by a balance promotion
-     * @param wallet_id Identification of the wallet that is supposed to receive the balance
-     * @param coupon Identification of the balance promotion
-     * @throws Exception If a necessary condition is not met. The message contains the error.
-     */
-    @Transactional(rollbackOn = {Exception.class}, value = Transactional.TxType.REQUIRES_NEW)
-    public void claimBalancePromotion(int wallet_id, String coupon) throws Exception {
-        Wallet wallet = getWallet(wallet_id);
-        if(wallet == null)
-            throw new Exception("Cannot claim the balance to a invalid wallet.");
-
-        //Checks if coupon belongs to a balance promotion
-        IPromotion promotion = promotionService.getPromotionByCoupon(coupon);
-        if(!(promotion instanceof IBalancePromotion balancePromotion))
-            throw new Exception("Invalid coupon.");
-
-        //Checks if the coin of the wallet matches the coin of the promotion
-        if(!balancePromotion.getCoin().getId().equals(wallet.getCoin().getId()))
-            throw new Exception("Coin of the wallet does not match the coin of the promotion.");
-
-        clientPromotionService.claimPromotionWithCoupon(wallet.getGambler().getId(), coupon);
-
-        addToBalance(wallet_id, balancePromotion.getValue_to_give());
     }
 
     /**

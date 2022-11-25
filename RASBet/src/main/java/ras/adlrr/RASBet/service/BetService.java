@@ -2,7 +2,7 @@ package ras.adlrr.RASBet.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ras.adlrr.RASBet.model.Promotions.IBoostOddPromotion;
+import ras.adlrr.RASBet.model.Promotions.interfaces.IBoostOddPromotion;
 import ras.adlrr.RASBet.service.PromotionServices.ClientPromotionService;
 import ras.adlrr.RASBet.service.PromotionServices.PromotionService;
 

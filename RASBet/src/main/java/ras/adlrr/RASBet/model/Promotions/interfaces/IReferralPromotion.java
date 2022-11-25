@@ -1,4 +1,4 @@
-package ras.adlrr.RASBet.model.Promotions;
+package ras.adlrr.RASBet.model.Promotions.interfaces;
 
 public interface IReferralPromotion extends IPromotion{
     int getNumber_of_referrals_needed();

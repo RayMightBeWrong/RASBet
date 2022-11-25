@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ras.adlrr.RASBet.model.Promotions.interfaces.IBoostOddPromotion;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "boost_odd_promotions")
-public class BoostOddPromotion extends Promotion implements IBoostOddPromotion{
+public class BoostOddPromotion extends Promotion implements IBoostOddPromotion {
     private float boost_percentage;
 
     public BoostOddPromotion(@JsonProperty("title") String title, @JsonProperty("description") String description,

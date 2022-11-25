@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ras.adlrr.RASBet.model.Promotions.IBoostOddPromotion;
-import ras.adlrr.RASBet.model.Promotions.IReferralPromotion;
+import ras.adlrr.RASBet.model.Promotions.interfaces.IBoostOddPromotion;
+import ras.adlrr.RASBet.model.Promotions.interfaces.IReferralPromotion;
 import ras.adlrr.RASBet.model.Promotions.Promotion;
 
 import javax.persistence.Entity;

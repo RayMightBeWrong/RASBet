@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ras.adlrr.RASBet.model.Promotions.interfaces.IPromotion;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @Setter
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "promotions")
-public class Promotion implements IPromotion{
+public class Promotion implements IPromotion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

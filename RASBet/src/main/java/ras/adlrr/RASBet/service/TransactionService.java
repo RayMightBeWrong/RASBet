@@ -5,9 +5,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.*;
 import ras.adlrr.RASBet.model.*;
+import ras.adlrr.RASBet.model.Promotions.interfaces.IBalancePromotion;
+import ras.adlrr.RASBet.model.Promotions.interfaces.IPromotion;
+import ras.adlrr.RASBet.service.PromotionServices.ClientPromotionService;
+import ras.adlrr.RASBet.service.PromotionServices.PromotionService;
 import ras.adlrr.RASBet.service.interfaces.INotificationService;
 import ras.adlrr.RASBet.service.interfaces.ITransactionService;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,14 +22,19 @@ public class TransactionService implements ITransactionService{
     private final UserService userService;
     private final WalletService walletService;
     private final INotificationService notificationService;
+    private final ClientPromotionService clientPromotionService;
+    private final PromotionService promotionService;
 
     @Autowired
     public TransactionService (TransactionRepository transactionRepository, UserService userService, 
-                                    WalletService walletService, INotificationService notificationService){
+                               WalletService walletService, INotificationService notificationService,
+                               ClientPromotionService clientPromotionService, PromotionService promotionService){
         this.transactionRepository = transactionRepository;
         this.userService = userService;
         this.walletService = walletService;
         this.notificationService = notificationService;
+        this.clientPromotionService = clientPromotionService;
+        this.promotionService = promotionService;
     }
 
     /**
@@ -168,5 +178,40 @@ public class TransactionService implements ITransactionService{
         if(!transactionRepository.existsById(id))
             throw new Exception("Transaction needs to exist, to be removed!");
         transactionRepository.deleteById(id);
+    }
+
+    /**
+     * Claims the balance offered by a balance promotion
+     * @param wallet_id Identification of the wallet that is supposed to receive the balance
+     * @param coupon Identification of the balance promotion
+     * @throws Exception If a necessary condition is not met. The message contains the error.
+     */
+    @Transactional(rollbackOn = {Exception.class}, value = Transactional.TxType.REQUIRES_NEW)
+    public Transaction claimBalancePromotion(int wallet_id, String coupon) throws Exception {
+        Wallet wallet = walletService.getWallet(wallet_id);
+        if(wallet == null)
+            throw new Exception("Cannot claim the balance to a invalid wallet.");
+        int gambler_id = wallet.getGambler().getId();
+
+        //Checks if coupon belongs to a balance promotion
+        IPromotion promotion = promotionService.getPromotionByCoupon(coupon);
+        if(!(promotion instanceof IBalancePromotion balancePromotion))
+            throw new Exception("Invalid coupon.");
+        String coin_id = balancePromotion.getCoin().getId();
+        float balanceToGive = balancePromotion.getValue_to_give();
+
+        //Checks if the coin of the wallet matches the coin of the promotion
+        if(!coin_id.equals(wallet.getCoin().getId()))
+            throw new Exception("Coin of the wallet does not match the coin of the promotion.");
+
+        clientPromotionService.claimPromotionWithCoupon(gambler_id, coupon);
+
+        wallet = walletService.addToBalance(wallet_id, balancePromotion.getValue_to_give());
+
+        Transaction transaction = new Transaction(gambler_id, wallet_id, wallet.getBalance(),
+                                                  "Claimed balance with promotion coupon " + coupon + ".",
+                                                  balanceToGive, coin_id, LocalDateTime.now());
+
+        return transactionRepository.save(transaction);
     }
 }

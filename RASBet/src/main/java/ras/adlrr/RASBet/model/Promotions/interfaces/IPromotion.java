@@ -1,4 +1,4 @@
-package ras.adlrr.RASBet.model.Promotions;
+package ras.adlrr.RASBet.model.Promotions.interfaces;
 
 import java.time.LocalDateTime;
 

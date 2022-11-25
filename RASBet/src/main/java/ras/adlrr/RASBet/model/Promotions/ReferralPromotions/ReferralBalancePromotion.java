@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ras.adlrr.RASBet.model.Coin;
-import ras.adlrr.RASBet.model.Promotions.IBalancePromotion;
-import ras.adlrr.RASBet.model.Promotions.IReferralPromotion;
+import ras.adlrr.RASBet.model.Promotions.interfaces.IBalancePromotion;
+import ras.adlrr.RASBet.model.Promotions.interfaces.IReferralPromotion;
 import ras.adlrr.RASBet.model.Promotions.Promotion;
 
 import javax.persistence.Entity;
