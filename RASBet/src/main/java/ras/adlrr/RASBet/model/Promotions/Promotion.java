@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Setter
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "promotions")
-public class Promotion {
+public class Promotion implements IPromotion{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ras.adlrr.RASBet.model.Promotions.Promotion;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -31,12 +32,14 @@ public class Bet {
     @OneToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "id", updatable = false)
     @MapsId
-    @JsonIncludeProperties("id")
+    @JsonIncludeProperties({"id","value"})
     private Transaction transaction;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "bet_id", nullable = false)
     private List<GameChoice> gameChoices;
+
+    private String coupon;
 
     @JsonProperty("state")
     private int state = STATE_OPEN;
@@ -47,6 +50,7 @@ public class Bet {
 
     public Bet(@JsonProperty("gambler_id") int gambler_id, @JsonProperty("wallet_id") Integer wallet_id,
                @JsonProperty("value") float value, @JsonProperty("coin_id") String coin_id,
+               @JsonProperty("coupon") String coupon,
                @JsonProperty("game_choices") List<GameChoice> gameChoices){
         transaction = new Transaction();
 
@@ -68,6 +72,7 @@ public class Bet {
 
         transaction.setValue(value);
 
+        this.coupon = coupon;
         this.gameChoices = gameChoices;
     }
 

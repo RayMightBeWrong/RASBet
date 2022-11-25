@@ -69,7 +69,7 @@ public class SeedController {
         NBA = sportService.addSport(NBA);
 
         //Update games with football api
-        //gameService.updateGamesVPN();
+        gameService.updateGamesVPN();
         //gameService.updateGames();
     }
 }

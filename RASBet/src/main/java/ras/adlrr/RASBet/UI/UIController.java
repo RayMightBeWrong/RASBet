@@ -331,7 +331,7 @@ public class UIController implements Runnable
                 GameChoice gc = new GameChoice(gameId, participant.getId());
                 List<GameChoice> gameChoices = new ArrayList<>();
                 gameChoices.add(gc);
-                betAtual = new Bet(clienteID, wallet.getId(), aposta, wallet.getCoin().getId() ,gameChoices);
+                betAtual = new Bet(clienteID, wallet.getId(), aposta, wallet.getCoin().getId(), null ,gameChoices);
                 betMultiplaMenu();
             }
         } else {

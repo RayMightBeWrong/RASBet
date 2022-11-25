@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ras.adlrr.RASBet.model.Coin;
+import ras.adlrr.RASBet.model.Promotions.IBalancePromotion;
+import ras.adlrr.RASBet.model.Promotions.IReferralPromotion;
 import ras.adlrr.RASBet.model.Promotions.Promotion;
 
 import javax.persistence.Entity;
@@ -20,7 +22,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "referral_balance_promotions")
-public class ReferralBalancePromotion extends Promotion {
+public class ReferralBalancePromotion extends Promotion implements IBalancePromotion, IReferralPromotion {
     private int number_of_referrals_needed;
     private float value_to_give;
     @ManyToOne
