@@ -1,10 +1,5 @@
 package ras.adlrr.RASBet.model.readers;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -12,15 +7,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import kong.unirest.HttpResponse;
-import kong.unirest.Unirest;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
 import ras.adlrr.RASBet.model.APIGameReader;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 
-public class NBAAPISportsReader implements APIGameReader{
+public class NBAAPISportsReader extends APIGameReader{
     private String sport_id;
     private int gamesToLoad;
     private String season;
@@ -36,7 +29,7 @@ public class NBAAPISportsReader implements APIGameReader{
     @Override
     public List<Game> getAPIGames() {
         String url = "https://v1.basketball.api-sports.io/games?league=" + this.leagueID + "&season=" + this.season;
-        String response = readJSONfromHTTPRequest(url, "jsons/nba.json");
+        String response = super.readJSON(url, "jsons/nba.json", "b68a93e4291b512a0f3179eb9ee1bc2b");
         //String response = readFromLocalFile("jsons/nba.json");
         JSONArray games = (JSONArray) (new JSONObject(response).get("response"));
         List<Game> res = new ArrayList<>();
@@ -94,7 +87,7 @@ public class NBAAPISportsReader implements APIGameReader{
     public List<Float> getOdds(JSONObject game){
         String url = "https://v1.basketball.api-sports.io/odds?league=" + this.leagueID + "&season=" + this.season + "&game=" + getGameExternalId(game);
         String path = "jsons/nba/odds_" + getGameExternalId(game) + ".json";
-        String response = readJSONfromHTTPRequest(url, path);
+        String response = super.readJSON(url, path, "b68a93e4291b512a0f3179eb9ee1bc2b");
         //String response = readFromLocalFile(path);
         List<Float> res = new ArrayList<>();
 
@@ -145,44 +138,9 @@ public class NBAAPISportsReader implements APIGameReader{
         List<Float> odds = getOdds(game);
         Participant homeP = new Participant(homeTeam, odds.get(0), 0);
         Participant awayP = new Participant(awayTeam, odds.get(1), 0);
-        //Participant homeP = new Participant(homeTeam, 1.1f, 0);
-        //Participant drawP = new Participant("draw", 1.1f, 0);
-        //Participant awayP = new Participant(awayTeam, 1.1f, 0);
 
         ps.add(homeP); ps.add(awayP);
 
         return ps;
-    }
-
-    public String readJSONfromHTTPRequest(String url, String path){
-        HttpResponse<String> response = Unirest.get(url)
-                                            .header("x-rapidapi-key", "b68a93e4291b512a0f3179eb9ee1bc2b")
-                                            .header("x-rapidapi-host", "v3.football.api-sports.io").asString();
-        try {
-            Files.write(Paths.get(path), response.getBody().getBytes());
-        } catch (Exception e) {
-            // ignore
-        }
-
-        return response.getBody();
-    }
-
-    public String readFromLocalFile(String path){
-        StringBuilder sb = new StringBuilder();
-        
-        try {
-            BufferedReader br;
-            br = new BufferedReader(new FileReader(new File(path)));
-            
-            String st;
-            while ((st = br.readLine()) != null)
-                sb.append(st);
-            }
-        catch (Exception e){
-            e.printStackTrace();
-            return "";
-        }
-
-        return sb.toString();
     }
 }

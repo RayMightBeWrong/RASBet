@@ -11,24 +11,27 @@ import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Coin;
 import ras.adlrr.RASBet.model.Wallet;
-import ras.adlrr.RASBet.service.IWalletService;
 import ras.adlrr.RASBet.service.WalletService;
+import ras.adlrr.RASBet.service.interfaces.ICoinService;
+import ras.adlrr.RASBet.service.interfaces.IWalletService;
 
 @RequestMapping("/api/wallets")
 @RestController
 public class WalletController {
     private final IWalletService walletService;
+    private final ICoinService coinService;
 
     @Autowired
-    public WalletController(IWalletService walletService){
+    public WalletController(IWalletService walletService, ICoinService coinService){
         this.walletService = walletService;
+        this.coinService = coinService;
     }
 
     // ---------- Coin Methods ----------
 
     @PostMapping("/coin")
     public ResponseEntity<Coin> addCoin(@RequestBody Coin coin){
-        try{ return ResponseEntity.ok().body(walletService.addCoin(coin)); }
+        try{ return ResponseEntity.ok().body(coinService.addCoin(coin)); }
         catch (Exception e) {
             return new ResponseEntityBadRequest<Coin>().createBadRequest(e.getMessage());
         }
@@ -36,13 +39,13 @@ public class WalletController {
 
     @GetMapping(path = "/coin/{id}")
     public ResponseEntity<Coin> getCoin(@PathVariable("id") String id){
-        return ResponseEntity.ok().body(walletService.getCoin(id));
+        return ResponseEntity.ok().body(coinService.getCoin(id));
     }
 
     @DeleteMapping(path = "/coin/{id}")
     public ResponseEntity removeCoin(@PathVariable String id){
         try {
-            walletService.removeCoin(id);
+            coinService.removeCoin(id);
             return new ResponseEntity(HttpStatus.OK); }
         catch (DataAccessException dae){
             return new ResponseEntityBadRequest().createBadRequest("A coin that already is associated with other entities cannot be removed!");
@@ -54,7 +57,7 @@ public class WalletController {
 
     @GetMapping("/coin")
     public ResponseEntity<List<Coin>> getListOfCoins(){
-        return ResponseEntity.ok().body(walletService.getListOfCoins());
+        return ResponseEntity.ok().body(coinService.getListOfCoins());
     }
 
     // ---------- Wallet Methods ----------

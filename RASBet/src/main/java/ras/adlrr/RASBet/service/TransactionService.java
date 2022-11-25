@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.*;
 import ras.adlrr.RASBet.model.*;
+import ras.adlrr.RASBet.service.interfaces.INotificationService;
+import ras.adlrr.RASBet.service.interfaces.ITransactionService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,11 +16,15 @@ public class TransactionService implements ITransactionService{
     private final TransactionRepository transactionRepository;
     private final UserService userService;
     private final WalletService walletService;
+    private final INotificationService notificationService;
+
     @Autowired
-    public TransactionService (TransactionRepository transactionRepository, UserService userService, WalletService walletService){
+    public TransactionService (TransactionRepository transactionRepository, UserService userService, 
+                                    WalletService walletService, INotificationService notificationService){
         this.transactionRepository = transactionRepository;
         this.userService = userService;
         this.walletService = walletService;
+        this.notificationService = notificationService;
     }
 
     /**
@@ -102,14 +108,24 @@ public class TransactionService implements ITransactionService{
 
         Transaction transaction = new Transaction();
         Coin coin = wallet.getCoin();
+        Gambler gambler = wallet.getGambler();
+
         transaction.setCoin(coin);
         transaction.setWallet(wallet);
         transaction.setValue(valueToDeposit);
         transaction.setDescription("Deposit");
         transaction.setBalance_after_mov(wallet.getBalance());
-        transaction.setGambler(wallet.getGambler());
+        transaction.setGambler(gambler);
 
-        return addTransaction(transaction);
+        Transaction res = addTransaction(transaction);
+
+        String email = userService.getGamblerEmail(gambler.getId());
+        String message = "A deposit has been made in your RASBet account.";
+        String subject = "[RASBet] Deposit Made";
+        Notification notification = new Notification(gambler.getId(), email, message, subject);
+        notificationService.addNotification(notification);
+
+        return res;
     }
 
     /**
@@ -123,6 +139,8 @@ public class TransactionService implements ITransactionService{
         Wallet wallet = walletService.removeFromBalance(wallet_id, valueToWithdraw);
 
         Transaction transaction = new Transaction();
+        Gambler gambler = wallet.getGambler();
+
         transaction.setCoin(wallet.getCoin());
         transaction.setWallet(wallet);
         transaction.setValue(valueToWithdraw);
@@ -130,7 +148,15 @@ public class TransactionService implements ITransactionService{
         transaction.setBalance_after_mov(wallet.getBalance());
         transaction.setGambler(wallet.getGambler());
 
-        return addTransaction(transaction);
+        Transaction res = addTransaction(transaction);
+
+        String email = userService.getGamblerEmail(gambler.getId());
+        String message = "A withdrawal has been made in your RASBet account.";
+        String subject = "[RASBet] Withdrawal Made";
+        Notification notification = new Notification(gambler.getId(), email, message, subject);
+        notificationService.addNotification(notification);
+
+        return res;
     }
 
     /**

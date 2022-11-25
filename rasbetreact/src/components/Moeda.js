@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Moeda.css';
-import { Button } from '../Button';
+import { Button } from './Button';
 
 
 

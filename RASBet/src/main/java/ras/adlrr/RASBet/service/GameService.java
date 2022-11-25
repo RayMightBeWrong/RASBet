@@ -17,21 +17,24 @@ import ras.adlrr.RASBet.model.readers.FootballAPISportsReader;
 import ras.adlrr.RASBet.model.readers.NBAAPISportsReader;
 import ras.adlrr.RASBet.model.readers.NFLOddsAPIReader;
 import ras.adlrr.RASBet.model.readers.UcrasAPIReader;
+import ras.adlrr.RASBet.service.interfaces.IGameService;
+import ras.adlrr.RASBet.service.interfaces.IParticipantService;
+import ras.adlrr.RASBet.service.interfaces.ISportService;
 
 
 @Service
-public class GameService implements IGameService{
+public class GameService implements IGameService, IParticipantService{
     private final GameRepository gr;
     private final ParticipantRepository pr;
-    private final SportService sportService;
-
+    private final ISportService sportService;
 
     @Autowired
-    public GameService(GameRepository gameRepository, ParticipantRepository participantRepository, SportService sportService){
+    public GameService(GameRepository gameRepository, ParticipantRepository participantRepository, ISportService sportService){
         this.gr = gameRepository;
         this.pr = participantRepository;
         this.sportService = sportService;
     }
+
 
     /* **** Game Methods **** */
     
@@ -99,7 +102,6 @@ public class GameService implements IGameService{
         if (game == null)
             throw new Exception("Game doesn't exist!");
 
-        //List<GameChoice> gcs = game.getGameChoices(); todo withdraw bets
         game.decideWinner();
         game.setState(Game.CLOSED);
         gr.save(game);
@@ -120,6 +122,7 @@ public class GameService implements IGameService{
     public boolean gameExistsById(int id) {
         return gr.existsById(id);
     }
+
     /* **** Participants Methods **** */
     private void validateParticipants(Collection<Participant> participants) throws Exception {
         if(participants == null || participants.stream().noneMatch(Objects::nonNull))

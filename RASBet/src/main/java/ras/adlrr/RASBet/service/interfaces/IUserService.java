@@ -1,4 +1,4 @@
-package ras.adlrr.RASBet.service;
+package ras.adlrr.RASBet.service.interfaces;
 
 import java.util.List;
 
@@ -11,6 +11,8 @@ public interface IUserService {
     public Gambler getGamblerById(int id);
 
     public Gambler getGamblerByEmail(String email);
+
+    public String getGamblerEmail(int id);
 
     public Gambler addGambler(Gambler gambler) throws Exception;
 

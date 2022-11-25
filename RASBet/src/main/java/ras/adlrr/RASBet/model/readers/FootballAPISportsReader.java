@@ -1,10 +1,5 @@
 package ras.adlrr.RASBet.model.readers;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -12,19 +7,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import kong.unirest.HttpResponse;
-import kong.unirest.Unirest;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
 import ras.adlrr.RASBet.model.APIGameReader;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 
-public class FootballAPISportsReader implements APIGameReader{
+public class FootballAPISportsReader extends APIGameReader{
     private String sport_id;
     private String currentRound;
 
     public FootballAPISportsReader(String sport_id){
+        ReadJSONBehaviour readMethod = new ReadJSONFromExternalAPI();
+        super.setReadMethod(readMethod);
         this.sport_id = sport_id;
     }
 
@@ -33,12 +28,12 @@ public class FootballAPISportsReader implements APIGameReader{
         String leagueID = "94";
         String season = "2022";
         String url = "https://v3.football.api-sports.io/fixtures/rounds?league=" + leagueID + "&season=" + season + "&current=true";
-        String roundResponse = readJSONfromHTTPRequest(url, "current_round.json");
+        String roundResponse = super.readJSON(url, "jsons/current_round_" + leagueID + ".json", "b68a93e4291b512a0f3179eb9ee1bc2b");
         JSONArray round = (JSONArray) (new JSONObject(roundResponse).get("response"));
         this.currentRound = (String) round.get(0);
 
         url = "https://v3.football.api-sports.io/fixtures?league=" + leagueID + "&season=" + season;
-        String response = readJSONfromHTTPRequest(url, "jogos.json");
+        String response = super.readJSON(url, "jsons/jogos.json", "b68a93e4291b512a0f3179eb9ee1bc2b");
         JSONArray games = (JSONArray) (new JSONObject(response).get("response"));
         List<Game> res = new ArrayList<>();
 
@@ -72,13 +67,10 @@ public class FootballAPISportsReader implements APIGameReader{
     public List<Float> getOdds(JSONObject game){
         String idLeague = "94";
         String url = "https://v3.football.api-sports.io/odds?season=2022&bet=1&fixture=" + getGameExternalId(game) + "&league=" + idLeague;
-        HttpResponse<String> response = Unirest.get(url)
-                                            .header("x-rapidapi-key", "b68a93e4291b512a0f3179eb9ee1bc2b")
-                                            .header("x-rapidapi-host", "v3.football.api-sports.io").asString();
 
+        String fixtureResponse = super.readJSON(url, "jsons/football/" + idLeague + "_" + getGameExternalId(game), "b68a93e4291b512a0f3179eb9ee1bc2b");
+        JSONArray oddsFixture = (JSONArray) (new JSONObject(fixtureResponse).get("response"));
         List<Float> res = new ArrayList<>();
-
-        JSONArray oddsFixture = (JSONArray) (new JSONObject(response.getBody()).get("response"));
 
         if(oddsFixture.length() > 0){
             JSONObject obj = (JSONObject) oddsFixture.get(0);
@@ -114,9 +106,6 @@ public class FootballAPISportsReader implements APIGameReader{
         Participant homeP = new Participant(homeTeam, odds.get(0), 0);
         Participant drawP = new Participant("draw", odds.get(1), 0);
         Participant awayP = new Participant(awayTeam, odds.get(2), 0);
-        //Participant homeP = new Participant(homeTeam, 0, 0);
-        //Participant drawP = new Participant("draw", 0, 0);
-        //Participant awayP = new Participant(awayTeam, 0, 0);
 
         ps.add(homeP); ps.add(drawP); ps.add(awayP);
 
@@ -133,7 +122,7 @@ public class FootballAPISportsReader implements APIGameReader{
         String status_short = (String) status.get("short");
 
         if (status_short.equals("NS") || status_short.equals("1H") || status_short.equals("HT")
-                    || status_short.equals("2H") || status_short.equals("ET") || status_short.equals("P"))
+                    || status_short.equals("2H") || status_short.equals("ET") || status_short.equals("P") || status_short.equals("TBD"))
             return Game.OPEN;
         else
             return Game.CLOSED;
@@ -147,36 +136,5 @@ public class FootballAPISportsReader implements APIGameReader{
         String awayTeam = (String) away.get("name");
 
         return homeTeam + " vs " + awayTeam;
-    }
-
-    public String readJSONfromHTTPRequest(String url, String path){
-        HttpResponse<String> response = Unirest.get(url)
-                                            .header("x-rapidapi-key", "b68a93e4291b512a0f3179eb9ee1bc2b")
-                                            .header("x-rapidapi-host", "v3.football.api-sports.io").asString();
-        try {
-            Files.write(Paths.get(path), response.getBody().getBytes());
-        } catch (Exception e) {
-            // ignore
-        }
-
-        return response.getBody();
-    }
-
-    public String readFromLocalFile(String path){
-        StringBuilder sb = new StringBuilder();
-        
-        try {
-            BufferedReader br;
-            br = new BufferedReader(new FileReader(new File(path)));
-            
-            String st;
-            while ((st = br.readLine()) != null)
-                sb.append(st);
-            }
-        catch (Exception e){
-            return "";
-        }
-
-        return sb.toString();
     }
 }

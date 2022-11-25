@@ -3,12 +3,33 @@ import { Button } from './Button';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
 
-function Navbar() {
+function Navbar({
+  userState
+}) {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
+
+  function adminOptions() {
+    if (userState === 'admin') {
+      return (
+        <div className='boletimbox'>
+          <li className='nav-item'>
+            <Link
+              to='/registo_Expert'
+              className='nav-links'
+              onClick={closeMobileMenu}
+            >
+              Expert
+            </Link>
+          </li>
+        </div>
+      );
+    }
+    else return;
+  }
 
   const showButton = () => {
     if (window.innerWidth <= 1250) {
@@ -88,6 +109,7 @@ function Navbar() {
                 PERFIL
               </Link>
             </li>
+            {adminOptions()}
             <li>
               <Link
                 to='/login'

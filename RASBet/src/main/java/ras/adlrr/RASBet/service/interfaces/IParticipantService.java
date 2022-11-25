@@ -1,36 +1,13 @@
-package ras.adlrr.RASBet.service;
+package ras.adlrr.RASBet.service.interfaces;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.GameChoice;
 import ras.adlrr.RASBet.model.Participant;
 
-public interface IGameService {
-    public List<Game> getGames();
-
-    public List<Game> getOngoingGames();
-
-    public void updateGamesVPN() throws Exception;
-
-    public void updateGames() throws Exception;
-
-    public Game getGame(int id);
-
-    public Game addGame(Game newGame) throws Exception;
-
-    public void addGames(List<Game> games) throws Exception;
-
-    public void removeGame(int id) throws Exception;
-
-    public void closeGame(int id) throws Exception;
-
-    public void changeGameState(int id, int state) throws Exception;
-
-    public boolean gameExistsById(int id);
-
+public interface IParticipantService {
     public Set<Participant> getGameParticipants(int gameID) throws Exception;
 
     public void addParticipantsToGame(int gameID, Collection<Participant> participants) throws Exception;
@@ -48,10 +25,4 @@ public interface IGameService {
     public void giveOddToGameChoice(GameChoice gc);
 
     public void giveOddToGameChoices(List<GameChoice> gcs);
-
-    public void getGamesFromAPIVPN() throws Exception;
-
-    public void getGamesFromAPI() throws Exception;
-
-    
 }
