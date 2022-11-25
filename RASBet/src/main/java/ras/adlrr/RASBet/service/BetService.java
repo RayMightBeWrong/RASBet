@@ -4,12 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.*;
 import ras.adlrr.RASBet.model.*;
+import ras.adlrr.RASBet.model.Promotions.IBoostOddPromotion;
+import ras.adlrr.RASBet.service.PromotionServices.ClientPromotionService;
+import ras.adlrr.RASBet.service.PromotionServices.PromotionService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class BetService implements IBetService{
@@ -17,17 +21,22 @@ public class BetService implements IBetService{
     private final WalletService walletService;
     private final UserService userService;
     private final GameService gameService;
+    private final ClientPromotionService clientPromotionService;
     private final BetRepository betRepository;
+    private final PromotionService promotionService;
 
     @Autowired
     public BetService(TransactionService transactionService, WalletService walletService,
                       BetRepository betRepository, UserService userService,
-                      GameService gameService) {
+                      GameService gameService, ClientPromotionService clientPromotionService,
+                      PromotionService promotionService) {
         this.transactionService = transactionService;
         this.walletService = walletService;
         this.betRepository = betRepository;
         this.userService = userService;
         this.gameService = gameService;
+        this.clientPromotionService = clientPromotionService;
+        this.promotionService = promotionService;
     }
 
     /**
@@ -51,29 +60,33 @@ public class BetService implements IBetService{
         if(bet == null)
             throw new Exception("Null Bet!");
 
+        //A bet needs to have transaction data associated, and the value of the bet must be positive
+        Transaction transaction = bet.getTransaction();
+        if(transaction == null)
+            throw new Exception("Null Transaction!");
+        if(transaction.getValue() <= 0)
+            throw new Exception("Bet's value must be positive.");
+
+        //Check if the gambler has not already bet in the game
+        Gambler gambler = transaction.getGambler();
+        if(gambler == null)
+            throw new Exception("Bet needs to have a gambler associated.");
+        int gambler_id = gambler.getId();
+
         //Validates the game choices
         List<GameChoice> gameChoices = bet.getGameChoices();
         if(gameChoices != null)
             gameChoices = gameChoices.stream().filter(Objects::nonNull).toList();
-        validateGameChoices(gameChoices);
+        validateGameChoices(gambler_id, gameChoices);
 
         //Sets the odd of the game choice to the current odd of the game participant
         gameService.giveOddToGameChoices(gameChoices);
-
-        //A bet needs to have transaction data associated
-        Transaction transaction = bet.getTransaction();
-        if(transaction == null)
-            throw new Exception("Null Transaction!");
-
-        //Validates the coin used for the transaction
-        Coin transactionCoin = transaction.getCoin();
-        if(transactionCoin == null || !walletService.coinExistsById(transaction.getCoin().getId()))
-            throw new Exception("A Coin is required!");
 
         //Checks if the transaction is performed using a wallet, and if the coin used by the wallet matches the one from the transaction,
         //In case the transaction is made using a wallet, performs the billing operation and updates the transaction information
         Wallet wallet = transaction.getWallet();
         if(wallet != null) {
+            Coin transactionCoin = transaction.getCoin();
             if(!walletService.getCoinIdFromWallet(wallet.getId()).equals(transactionCoin.getId()))
                 throw new Exception("Coin of the transaction does not match the coin from the wallet!");
 
@@ -82,6 +95,9 @@ public class BetService implements IBetService{
             transaction.setBalance_after_mov(wallet.getBalance());
         }
         transaction.setDescription("Bet expenses");
+
+        //Claims the promotion
+        clientPromotionService.claimPromotionWithCoupon(gambler_id, bet.getCoupon());
 
         //Persists the transaction
         transaction = transactionService.addTransaction(transaction);
@@ -113,13 +129,39 @@ public class BetService implements IBetService{
         return betRepository.findAllByGamblerId(gambler_id);
     }
 
-    //TODO - Withdraw the winnings directly into a bank account, paypal, etc...
-    //public void withdrawBetWinnings() throws Exception{
-    //
-    //}
+    /**
+     * Withdraws the winnings of a bet (to nowhere, because it is supposed to simulate the withdrawal to an external account)
+     * if all the games have ended and all the game choices are correct
+     * @param bet_id Identification of the bet
+     * @return transaction of the winnings' withdrawal, or null if at least one game choice is not correct
+     * @throws Exception If any error occurs during the withdrawal
+     */
+    public Transaction withdrawBetWinnings(int bet_id) throws Exception{
+        Bet bet = getBet(bet_id);
+        if(bet == null)
+            throw new Exception("Bet does not exist!");
+
+        if(bet.getState() != Bet.STATE_OPEN)
+            throw new Exception("Bet not valid for withdraw!");
+        bet.setState(Bet.STATE_CLOSED);
+
+        Transaction bet_transaction = bet.getTransaction();
+
+        float winnings = calculateBetWinnings(bet_transaction.getValue(), bet.getGameChoices(), bet.getCoupon());
+        if(winnings == 0) {
+            betRepository.save(bet);
+            return null;
+        }
+
+        Transaction newTransaction = new Transaction(bet_transaction.getGambler().getId(), null, null,
+                "Bet Winnings", winnings, bet_transaction.getCoin().getId(), LocalDateTime.now());
+
+        betRepository.save(bet);
+        return transactionService.addTransaction(newTransaction);
+    }
 
     /**
-     * Withdraws the winnings of a bet if all the games have ended and all the game choices are correct
+     * Withdraws the winnings of a bet to a wallet, if all the games have ended and all the game choices are correct
      * @param bet_id Identification of the bet
      * @param wallet_id Identification of the wallet in which the deposit must be done
      * @return transaction of the winnings' withdrawal, or null if at least one game choice is not correct
@@ -146,19 +188,21 @@ public class BetService implements IBetService{
         if(!bet_transaction.getCoin().getId().equals(wallet_withdraw.getCoin().getId()))
             throw new Exception("Wallet does not use the same coin has the one used to place the bet!");
 
-        float winnings = calculateBetWinnings(bet_transaction.getValue(), bet.getGameChoices());
+        float winnings = calculateBetWinnings(bet_transaction.getValue(), bet.getGameChoices(), bet.getCoupon());
         if(winnings == 0) {
             betRepository.save(bet);
             return null;
         }
 
         wallet_withdraw = walletService.addToBalance(wallet_id, winnings);
-        Transaction newTransaction = new Transaction(wallet_withdraw.getGambler().getId(), wallet_id, wallet_withdraw.getBalance(),
-                "Bet Winnings", winnings, wallet_withdraw.getCoin().getId(), LocalDateTime.now());
+        Transaction newTransaction = new Transaction(bet_transaction.getGambler().getId(), wallet_id, wallet_withdraw.getBalance(),
+                "Bet Winnings", winnings, bet_transaction.getCoin().getId(), LocalDateTime.now());
 
         betRepository.save(bet);
         return transactionService.addTransaction(newTransaction);
     }
+
+    // --------------- Auxiliary Methods ---------------
 
     /**
      * @param value Value of the bet.
@@ -166,7 +210,7 @@ public class BetService implements IBetService{
      * @return 0 if at least 1 game choice is incorrect, or the value that the gambler should receive for winning the bet.
      * @throws Exception If the value is negative or if the game is not in a state that allows withdrawal.
      */
-    private float calculateBetWinnings(float value, Collection<GameChoice> gameChoices) throws Exception {
+    private float calculateBetWinnings(float value, Collection<GameChoice> gameChoices, String coupon) throws Exception {
         if(gameChoices == null)
             return 0;
 
@@ -185,19 +229,31 @@ public class BetService implements IBetService{
             }
         }
 
+        //Applying the boost odd promotion
+        if(coupon != null){
+            var promotion = promotionService.getPromotionByCoupon(coupon);
+            if(!(promotion instanceof IBoostOddPromotion boostOddPromotion))
+                throw new Exception("Invalid coupon given!");
+            value *= 1 + (boostOddPromotion.getBoostOddPercentage() / 100);
+        }
+
         return value;
     }
-
-    // --------------- Auxiliary Methods ---------------
 
     /**
      * Validates the game choices present in a bet
      * @param gameChoices Collection of game choices belonging to a bet
      * @throws Exception If the game does not exist, if the game is not open for bets or if the participant does not exist or is not associated with the given game.
      */
-    private void validateGameChoices(Collection<GameChoice> gameChoices) throws Exception {
+    private void validateGameChoices(int gambler_id, Collection<GameChoice> gameChoices) throws Exception {
         if(gameChoices == null || gameChoices.size() == 0)
             throw new Exception("Bet requires at least 1 valid game choice!");
+
+        //Gets all the ids of the games in which the gambler has already placed a bet
+        var gamesWithBet = betRepository.findGamblerGameChoices(gambler_id)
+                                                     .stream()
+                                                     .map(gc -> gc.getGame().getId())
+                                                     .collect(Collectors.toSet());
 
         for(GameChoice gc : gameChoices){
             gc.setId(0); // Certifica q n dá erro por ter sido mencionado um id
@@ -206,12 +262,20 @@ public class BetService implements IBetService{
             if(game == null || (game = gameService.getGame(game.getId())) == null)
                 throw new Exception("Trying to bet in a non existent game!");
 
+            //Checks if the gambler has already bet in the game
+            if(gamesWithBet.contains(game.getId()))
+                throw new Exception("Cannot bet multiple times in the same game.");
+
             if(game.getState() != Game.OPEN)
                 throw new Exception("Game with id " + game.getId() + " is not open for bets");
 
             Participant p = gc.getParticipant();
             if(p == null || !gameService.participantExistsById(p.getId()))
                 throw new Exception("One or more participants are invalid!");
+
+            //Adds the game to list of games bet, to avoid betting twice in a game if the list of game choices
+            //given as parameter contains a bet to the same game
+            gamesWithBet.add(game.getId());
         }
     }
 }
