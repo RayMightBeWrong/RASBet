@@ -1,0 +1,85 @@
+.payMethod-container {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.payMethod-body {
+    margin-top: 300px;
+    width: 600px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px;
+    background: white;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.metodo-pagamento{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5px;
+    padding-bottom: 30px;
+    border-radius: 15px;
+}
+
+.botton-payMethod{
+    display: flex;
+    margin: 10px;
+}
+
+.imagem-payMethod {
+    width: 100%;
+    height: 100%;
+    object-fit: scale-down;
+}
+
+.container-form-pay{
+    display: flex;
+    flex-direction: row;
+    padding: 30px;
+}
+
+input{
+    max-width: 250px;
+}
+
+select{
+    border: 1px solid #f1f1f1;
+    background: #f1f1f1;
+    padding: 3px;
+    margin-right: 15px;
+}
+
+select:focus,
+select:hover{
+    background-color: #ddd;
+    border: 1px solid #ddd;
+    outline: none;
+}
+
+input[type="txtPM"]{
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 15px;
+    border: none;
+    background: #f1f1f1;
+    border-right: 1px  lightgray ;
+}
+
+input[type="txtPM"]:focus,
+input[type="txtPM"]:hover{
+    background-color: #ddd;
+    outline: none;
+}

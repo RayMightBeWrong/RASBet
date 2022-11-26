@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './Perfil.css';
 import { Button } from '../Button';
 import { CarteiraSimplificada } from '../Carteira';
+import { PayMethod } from '../PayMethods'
 
 const carteira1 = { ratioEuro: "0.35", balance: "30" }
 const carteira2 = { ratioEuro: "1", balance: "700" }
@@ -11,6 +12,10 @@ const saldo = "13"
 
 
 function Perfil() {
+  const [open, setOpen] = useState(false);
+  const currency = []
+  
+  carteiras.forEach((elem) => (currency.push(elem.currency)))
 
   const handleClick1 = (e) => {
     e.preventDefault()
@@ -75,8 +80,12 @@ function Perfil() {
           ))}
         </div>
         <div className='save'>
-          <Button buttonSize={'btn--medium'} /*onclick={() => handleClick2(wallet.ratioEuro, wallet.balance)}*/ >Nova Carteira</Button>
+          <Button buttonSize={'btn--medium'} onClick={() => setOpen(true)}>Nova Carteira</Button>
         </div>
+        {open ?
+          <PayMethod options={currency} closePopup={() => setOpen(false)} rBack={() => setOpen(false)} />
+          : null
+        }
       </div>
     </div >
   );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Carteira.css';
 import { Button } from './Button';
+import { PayMethod } from "./PayMethods"
 
 
 
@@ -122,6 +123,7 @@ export const CarteiraSimplificada = ({
 }) => {
 
     const [value, setValue] = useState('');
+    const [open, setOpen] = useState(false); 
 
     const handleChange = event => {
         const result = event.target.value.replace(/\D/g, '');
@@ -135,6 +137,7 @@ export const CarteiraSimplificada = ({
     });
 
     const handleClick = (wallet_id, value) => {
+        setOpen(true);
         if (wallet.wallet_id == wallet_id && wallet.depositar == false && wallet.levantar == true) {
             setWallet({ depositar: false, levantar: true, wallet_id: wallet_id, gambler_id: "", coupon: "" })
             withdraw(wallet_id, value)
@@ -175,17 +178,21 @@ export const CarteiraSimplificada = ({
                         <Button
                             buttonStyle={"btn--bet"}
                             buttonSize={'btn--medium'}
-                            onclick={() => handleClick(wallet_id, value)}>
+                            onClick={() => handleClick(wallet_id, value)}>
                             {/*todo on click diminui*/}
                             Levantar
                         </Button>
                         <Button
                             buttonStyle={"btn--bet"}
                             buttonSize={'btn--medium'}
-                            onclick={() => handleClick(wallet_id, value)}>
+                            onClick={() => handleClick(wallet_id, value)}>
                             {/*todo on click aumenta*/}
                             Depositar
                         </Button>
+                        {open ?
+                            <PayMethod  options={["nao sei qual é"]} closePopup={() => setOpen(false)} rBack={() => setOpen(false)} />
+                            : null
+                        }
                     </div>
                 </div>
             </div >

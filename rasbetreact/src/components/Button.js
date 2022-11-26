@@ -13,9 +13,9 @@
 import React from 'react';
 import './Button.css';
 
-const STYLES = ['btn--primary', 'btn--outline', 'btn--bet', 'btn--bet-clicked', 'btn--inverted'];
+const STYLES = ['btn--primary', 'btn--outline', 'btn--bet', 'btn--bet-clicked', 'btn--inverted', 'btn--image', 'btn--image--selected'];
 
-const SIZES = ['btn--medium', 'btn--large', 'btn--flex'];
+const SIZES = ['btn--medium', 'btn--large', 'btn--flex', 'btn--imageFrame'];
 
 export const Button = ({
   children,
