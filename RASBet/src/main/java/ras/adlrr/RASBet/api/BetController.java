@@ -13,6 +13,7 @@ import java.util.List;
 
 @RequestMapping("/api/bets")
 @RestController
+@CrossOrigin
 public class BetController {
     private final IBetService betService;
 

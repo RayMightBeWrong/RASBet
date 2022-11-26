@@ -9,6 +9,17 @@ export const CarteirasPopUp = ({
     closePopup
 }) => {
 
+const handleClick=(e)=>{
+    e.preventDefault()
+    const carteira={ratioEuro,balance}
+    console.log(carteira)
+    fetch("http://localhost:8080/api/wallets/wallet",{ //TODO
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(carteira)}).
+    then(()=>{console.log("Nova Carteira Criada")})
+}
+
     const verificaCarteira = (valor) => {
         console.log("yoo")
         if (parseFloat(valormin) <= parseFloat(valor) || valormin === '') {
@@ -27,7 +38,7 @@ export const CarteirasPopUp = ({
                         <div><Carteira ratioEuro={wallet.ratioEuro} balance={wallet.balance} verificaCarteira={verificaCarteira} /></div>
                     ))}
 
-                    <Button buttonStyle={"btn--bet"}> {/* todo on click diminui */}
+                    <Button buttonStyle={"btn--bet"} onClick=(handleClick)> {/* todo on click diminui */}
                         Criar carteira
                     </Button>
                     <button onClick={closePopup}>Fechar menu das carteiras</button >

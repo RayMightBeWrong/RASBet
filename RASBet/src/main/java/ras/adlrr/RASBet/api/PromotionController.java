@@ -20,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/promotions")
+@CrossOrigin
 public class PromotionController {
 
     private final PromotionService promotionService;

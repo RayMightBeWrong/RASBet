@@ -15,6 +15,7 @@ import ras.adlrr.RASBet.service.interfaces.IUserService;
 
 @RequestMapping("/api/users")
 @RestController
+@CrossOrigin
 public class UserController {
     private final IUserService userService;
 

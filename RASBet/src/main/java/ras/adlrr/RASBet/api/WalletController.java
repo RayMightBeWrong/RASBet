@@ -17,6 +17,7 @@ import ras.adlrr.RASBet.service.interfaces.IWalletService;
 
 @RequestMapping("/api/wallets")
 @RestController
+@CrossOrigin
 public class WalletController {
     private final IWalletService walletService;
     private final ICoinService coinService;

@@ -11,6 +11,29 @@ const saldo = "13"
 
 
 function Perfil() {
+
+const handleClick=(e)=>{
+    e.preventDefault()
+    const perfil={nome,apelido,psw}
+    console.log(perfil)
+    fetch("http://localhost:8080/api/users/gambler/update",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(perfil)}).then(()=>{
+    console.log("Alterações Gravadas")})
+}
+
+const handleClick=(ratioEuro,balance)=>{
+    e.preventDefault()
+    const carteira={ratioEuro,balance}
+    console.log(carteira)
+    fetch("http://localhost:8080/api/wallets/wallet",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(carteira)}).then(()=>{
+    console.log("Nova Carteira adicionada")})
+}
+
   return (
     <div className='perfil'>
       <div className='perfil-box'>
@@ -38,7 +61,7 @@ function Perfil() {
             <input type="txtP" placeholder="Palavra-passe" name="psw" required />
           </s1>
           <div className='save'>
-            <Button buttonSize={'btn--medium'}>Gravar Alterações</Button>
+            <Button buttonSize={'btn--medium'} onclick=(handleClick) >Gravar Alterações</Button>
           </div>
         </div>
         <h1> Informação das carteiras </h1>
@@ -48,7 +71,7 @@ function Perfil() {
           ))}
         </div>
         <div className='save'>
-          <Button buttonSize={'btn--medium'}>Nova Carteira</Button>
+          <Button buttonSize={'btn--medium'} onclick=(handleClick(wallet.ratioEuro,wallet.balance)) >Nova Carteira</Button>
         </div>
       </div>
     </div>
