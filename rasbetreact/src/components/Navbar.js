@@ -18,11 +18,11 @@ function Navbar({
         <div className='boletimbox'>
           <li className='nav-item'>
             <Link
-              to='/registo_Expert'
+              to='/admin_Options'
               className='nav-links'
               onClick={closeMobileMenu}
             >
-              Expert
+              TOOLS
             </Link>
           </li>
         </div>

@@ -50,7 +50,7 @@ export const Carteira = ({
                             Depositar
                         </Button>
                         <Button buttonStyle={"btn--bet"}
-                            buttonSize={'btn--flex'}> {/todo on click aumenta/}
+                            buttonSize={'btn--flex'}> {/*todo on click aumenta*/}
                             Cupão
                         </Button>
                     </div>

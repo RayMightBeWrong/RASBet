@@ -3,7 +3,8 @@ import './Login.css';
 import { Button } from '../Button';
 
 function Registo({
-    expertMode
+    expertMode,
+    userState
 }) {
     if (expertMode === "false") {
         return (
@@ -31,7 +32,7 @@ function Registo({
                 </div>
             </>
         );
-    } else {
+    } else if (expertMode === "true" && userState === "admin") {
         return (
             <>
                 <div className='registo'>
@@ -56,6 +57,7 @@ function Registo({
             </>
         );
     }
+    else return;
 }
 
 export default Registo;
