@@ -26,6 +26,11 @@ function AdminMenu({
                                 Criar nova coin
                             </Button>
                         </Link>
+                        <Link to='/admin_Options/consultaPerfil'>
+                            <Button buttonStyle="btn--inverted" buttonSize={'btn--flex'}>
+                                Consulta Perfil
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </>

@@ -7,6 +7,9 @@ import Perfil from './components/pages/Perfil';
 import Registo from './components/pages/Registo';
 import Sport from './components/pages/Sport';
 import AdminMenu from './components/pages/AdminMenu';
+import MenuCoins from './components/pages/MenuCoins';
+import MenuPromocoes from './components/pages/MenuPromocoes';
+import ConsultaPerfil from './components/pages/ConsultaPerfil';
 
 function App() {
   /*Possible userStates:
@@ -15,7 +18,7 @@ function App() {
     expert: expert logged in
     admin: admin logged in
   */
-  const [userState, setUserState] = useState('gambler');
+  const [userState, setUserState] = useState('admin');
 
 
   return (
@@ -33,6 +36,9 @@ function App() {
           <Route path='/registo' element={<Registo userState={userState} expertMode="false" />} />
           <Route path='/admin_Options' element={<AdminMenu userState={userState} />} />
           <Route path='/admin_Options/registo_Expert' element={<Registo userState={userState} expertMode="true" />} />
+          <Route path='/admin_Options/coins' element={<MenuCoins userState={userState} />} />
+          <Route path='/admin_Options/promocoes' element={<MenuPromocoes userState={userState} />} />
+          <Route path='/admin_Options/consultaPerfil' element={<ConsultaPerfil userState={userState} />} />
         </Routes>
       </Router>
     </>
