@@ -1,6 +1,7 @@
 package ras.adlrr.RASBet.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,23 @@ public class TransactionController {
     public ResponseEntity<List<Transaction>> getUserTransactions(@PathVariable("id") int gambler_id) {
         try {
             return ResponseEntity.ok().body(transactionService.getGamblerTransactions(gambler_id));
+        }catch (Exception e){
+            return new ResponseEntityBadRequest<List<Transaction>>().createBadRequest(e.getMessage());
+        }
+    }
+
+    @GetMapping(path = "/gambler/{id}/{direction}")
+    public ResponseEntity<List<Transaction>> getUserTransactions(@PathVariable("id") int gambler_id, @PathVariable("direction") String direction) {
+        try {
+            Sort.Direction sortDirection;
+            if(direction.equals("ASC"))
+                sortDirection = Sort.Direction.ASC;
+            else if (direction.equals("DESC"))
+                sortDirection = Sort.Direction.DESC;
+            else
+                throw new Exception("Sort direction must be \"ASC\" or \"DESC\"");
+
+            return ResponseEntity.ok().body(transactionService.getGamblerTransactions(gambler_id, sortDirection));
         }catch (Exception e){
             return new ResponseEntityBadRequest<List<Transaction>>().createBadRequest(e.getMessage());
         }

@@ -1,6 +1,7 @@
 package ras.adlrr.RASBet.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.*;
@@ -49,13 +50,24 @@ public class TransactionService implements ITransactionService{
 
     /**
      * @param gambler_id Identification of the gambler that made the transactions.
+     * @param direction Defines the order of the transactions, by date. If 'null', no order is imposed.
      * @return list of transactions of a gambler present in the repository.
+     * @throws Exception If the gambler does not exist.
+     */
+    public List<Transaction> getGamblerTransactions(int gambler_id, Sort.Direction direction) throws Exception {
+        if(!userService.gamblerExistsById(gambler_id))
+            throw new Exception("Gambler does not exist!");
+        return direction == null ? transactionRepository.findAllByGamblerId(gambler_id) :
+                transactionRepository.findAllByGamblerId(gambler_id, Sort.by(direction, "date"));
+    }
+
+    /**
+     * @param gambler_id Identification of the gambler that made the transactions.
+     * @return list of transactions of a gambler present in the repository.
+     * @throws Exception If the gambler does not exist.
      */
     public List<Transaction> getGamblerTransactions(int gambler_id) throws Exception {
-        Gambler gambler = userService.getGamblerById(gambler_id);
-        if(gambler == null)
-            throw new Exception("Gambler does not exist!");
-        return transactionRepository.findAllByGambler(gambler);
+        return getGamblerTransactions(gambler_id, null);
     }
 
     /**

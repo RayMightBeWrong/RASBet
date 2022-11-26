@@ -1,6 +1,7 @@
 package ras.adlrr.RASBet.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.model.Promotions.interfaces.IBoostOddPromotion;
 import ras.adlrr.RASBet.service.PromotionServices.ClientPromotionService;
@@ -135,8 +136,22 @@ public class BetService implements IBetService{
     }
 
     /**
+     * @param gambler_id Identification of the gambler that made the transactions.
+     * @param direction Defines the order of the bets, by date. If 'null', no order is imposed.
+     * @return list of transactions of a gambler present in the repository.
+     * @throws Exception If the gambler does not exist.
+     */
+    public List<Bet> getGamblerBets(int gambler_id, Sort.Direction direction) throws Exception {
+        if(!userService.gamblerExistsById(gambler_id))
+            throw new Exception("Gambler does not exist!");
+        return direction == null ? betRepository.findAllByGamblerId(gambler_id) :
+                betRepository.findAllByGamblerIdSortByDate(gambler_id, direction);
+    }
+
+    /**
      * @param gambler_id Identification of the gambler that made the bets
      * @return list of bets of a gambler present in the repository
+     * @throws Exception If the gambler does not exist.
      */
     public List<Bet> getGamblerBets(int gambler_id) throws Exception {
         if(!userService.gamblerExistsById(gambler_id))
