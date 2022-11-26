@@ -8,27 +8,23 @@ import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.*;
 import ras.adlrr.RASBet.model.Coin;
 import ras.adlrr.RASBet.model.Gambler;
-import ras.adlrr.RASBet.model.Promotions.interfaces.IBalancePromotion;
-import ras.adlrr.RASBet.model.Promotions.interfaces.IPromotion;
 import ras.adlrr.RASBet.model.Wallet;
-import ras.adlrr.RASBet.service.PromotionServices.ClientPromotionService;
-import ras.adlrr.RASBet.service.PromotionServices.PromotionService;
-import javax.transaction.Transactional;
 import ras.adlrr.RASBet.service.interfaces.ICoinService;
+import ras.adlrr.RASBet.service.interfaces.IGamblerService;
 import ras.adlrr.RASBet.service.interfaces.IWalletService;
 
 @Service
 public class WalletService implements IWalletService, ICoinService{
-    private final UserService userService;
+    private final IGamblerService gamblerService;
     private final WalletRepository walletRepository;
     private final CoinRepository coinRepository;
 
     @Autowired
     public WalletService(WalletRepository walletRepository, CoinRepository coinRepository,
-                         UserService userService){
+                         IGamblerService gamblerService){
         this.walletRepository = walletRepository;
         this.coinRepository = coinRepository;
-        this.userService = userService;
+        this.gamblerService = gamblerService;
     }
 
     // ---------- Coin Methods ----------
@@ -123,7 +119,7 @@ public class WalletService implements IWalletService, ICoinService{
             throw new Exception("Cannot create wallet for an invalid coin!");
 
         Gambler gambler = wallet.getGambler();
-        if(gambler == null || !userService.gamblerExistsById(gambler.getId()))
+        if(gambler == null || !gamblerService.gamblerExistsById(gambler.getId()))
             throw new Exception("Cannot create wallet for an invalid gambler!");
 
         return walletRepository.save(wallet);

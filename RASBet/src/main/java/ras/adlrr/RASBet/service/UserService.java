@@ -11,6 +11,9 @@ import ras.adlrr.RASBet.model.Expert;
 import ras.adlrr.RASBet.model.Gambler;
 import ras.adlrr.RASBet.model.Notification;
 import ras.adlrr.RASBet.model.User;
+import ras.adlrr.RASBet.service.interfaces.IAdminService;
+import ras.adlrr.RASBet.service.interfaces.IExpertService;
+import ras.adlrr.RASBet.service.interfaces.IGamblerService;
 import ras.adlrr.RASBet.service.interfaces.INotificationService;
 import ras.adlrr.RASBet.service.interfaces.IUserService;
 
@@ -21,7 +24,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class UserService implements IUserService{
+public class UserService implements IUserService, IAdminService, IGamblerService, IExpertService{
     private final GamblerRepository gamblerRepository;
     private final AdminRepository adminRepository;
     private final ExpertRepository expertRepository;

@@ -10,6 +10,7 @@ import ras.adlrr.RASBet.model.Promotions.interfaces.IBalancePromotion;
 import ras.adlrr.RASBet.model.Promotions.interfaces.IPromotion;
 import ras.adlrr.RASBet.service.PromotionServices.ClientPromotionService;
 import ras.adlrr.RASBet.service.PromotionServices.PromotionService;
+import ras.adlrr.RASBet.service.interfaces.IGamblerService;
 import ras.adlrr.RASBet.service.interfaces.INotificationService;
 import ras.adlrr.RASBet.service.interfaces.ITransactionService;
 
@@ -21,18 +22,18 @@ import java.util.List;
 @Service
 public class TransactionService implements ITransactionService{
     private final TransactionRepository transactionRepository;
-    private final UserService userService;
+    private final IGamblerService gamblerService;
     private final WalletService walletService;
     private final INotificationService notificationService;
     private final ClientPromotionService clientPromotionService;
     private final PromotionService promotionService;
 
     @Autowired
-    public TransactionService (TransactionRepository transactionRepository, UserService userService, 
+    public TransactionService (TransactionRepository transactionRepository, IGamblerService gamblerService, 
                                WalletService walletService, INotificationService notificationService,
                                ClientPromotionService clientPromotionService, PromotionService promotionService){
         this.transactionRepository = transactionRepository;
-        this.userService = userService;
+        this.gamblerService = gamblerService;
         this.walletService = walletService;
         this.notificationService = notificationService;
         this.clientPromotionService = clientPromotionService;
@@ -55,7 +56,7 @@ public class TransactionService implements ITransactionService{
      * @throws Exception If the gambler does not exist.
      */
     public List<Transaction> getGamblerTransactions(int gambler_id, Sort.Direction direction) throws Exception {
-        if(!userService.gamblerExistsById(gambler_id))
+        if(!gamblerService.gamblerExistsById(gambler_id))
             throw new Exception("Gambler does not exist!");
         return direction == null ? transactionRepository.findAllByGamblerId(gambler_id) :
                 transactionRepository.findAllByGamblerId(gambler_id, Sort.by(direction, "date"));
@@ -90,7 +91,7 @@ public class TransactionService implements ITransactionService{
 
         //Transaction must have a valid gambler associated
         Gambler gambler = t.getGambler();
-        if(gambler == null || !userService.gamblerExistsById(gambler.getId()))
+        if(gambler == null || !gamblerService.gamblerExistsById(gambler.getId()))
             throw new Exception("Cannot register a transaction to a non existent gambler!");
 
         //Transaction must have a valid coin associated
@@ -142,7 +143,7 @@ public class TransactionService implements ITransactionService{
 
         Transaction res = addTransaction(transaction);
 
-        String email = userService.getGamblerEmail(gambler.getId());
+        String email = gamblerService.getGamblerEmail(gambler.getId());
         String message = "A deposit has been made in your RASBet account.";
         String subject = "[RASBet] Deposit Made";
         Notification notification = new Notification(gambler.getId(), email, message, subject);
@@ -173,7 +174,7 @@ public class TransactionService implements ITransactionService{
 
         Transaction res = addTransaction(transaction);
 
-        String email = userService.getGamblerEmail(gambler.getId());
+        String email = gamblerService.getGamblerEmail(gambler.getId());
         String message = "A withdrawal has been made in your RASBet account.";
         String subject = "[RASBet] Withdrawal Made";
         Notification notification = new Notification(gambler.getId(), email, message, subject);
