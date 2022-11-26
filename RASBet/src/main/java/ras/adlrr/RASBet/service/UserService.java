@@ -9,7 +9,12 @@ import ras.adlrr.RASBet.dao.GamblerRepository;
 import ras.adlrr.RASBet.model.Admin;
 import ras.adlrr.RASBet.model.Expert;
 import ras.adlrr.RASBet.model.Gambler;
+import ras.adlrr.RASBet.model.Notification;
 import ras.adlrr.RASBet.model.User;
+import ras.adlrr.RASBet.service.interfaces.INotificationService;
+import ras.adlrr.RASBet.service.interfaces.IUserService;
+
+import java.time.ZoneId;
 import java.util.regex.*;
 
 import java.time.LocalDate;
@@ -20,12 +25,15 @@ public class UserService implements IUserService{
     private final GamblerRepository gamblerRepository;
     private final AdminRepository adminRepository;
     private final ExpertRepository expertRepository;
+    private final INotificationService notificationService;
 
     @Autowired
-    public UserService(GamblerRepository gamblerRepository, AdminRepository adminRepository, ExpertRepository expertRepository){
+    public UserService(GamblerRepository gamblerRepository, AdminRepository adminRepository, 
+                            ExpertRepository expertRepository, INotificationService notificationService){
         this.gamblerRepository = gamblerRepository;
         this.adminRepository = adminRepository;
         this.expertRepository = expertRepository;
+        this.notificationService = notificationService;
     }
 
 
@@ -49,6 +57,10 @@ public class UserService implements IUserService{
         return gamblerRepository.findByEmail(email).orElse(null);
     }
 
+    public String getGamblerEmail(int id) {
+        return gamblerRepository.getGamblerEmail(id).orElse(null);
+    }
+
     /**
      * Adds a gambler to the repository
      * @param gambler Gambler to be persisted
@@ -66,7 +78,13 @@ public class UserService implements IUserService{
         String attributesError = validateGamblerAttributes(gambler, null);
         if(attributesError != null)
             throw new Exception(attributesError);
-        return gamblerRepository.save(gambler);
+
+        Gambler res = gamblerRepository.save(gambler);
+        String message = "Congratulations! You just created an account at RASBet!";
+        String subject = "[RASBet] Created Account at RASBet";
+        Notification notification = new Notification(gambler.getId(), gambler.getEmail(), message, subject);
+        notificationService.addNotification(notification);
+        return res;
     }
 
     /**
@@ -142,7 +160,12 @@ public class UserService implements IUserService{
         if(error != null)
             throw new Exception(error);
 
-        return gamblerRepository.save(gambler);
+        Gambler res = gamblerRepository.save(gambler);
+        String message = "The present e-mail serves as confirmation that some information has been at your RASBet account.";
+        String subject = "[RASBet] Updated Information";
+        Notification notification = new Notification(gambler.getId(), gambler.getEmail(), message, subject);
+        notificationService.addNotification(notification);
+        return res;
     }
 
     /**
@@ -171,7 +194,7 @@ public class UserService implements IUserService{
             return "CC has to be a 8 digits number.";
         if(!Pattern.matches("^\\d{9}$", gambler.getNif().toString()))
             return "NIF has to be a 9 digits number.";
-        if(gambler.getDate_of_birth().isAfter(LocalDate.now().minusYears(18)))
+        if(gambler.getDate_of_birth().isAfter(LocalDate.now(ZoneId.of("UTC+00:00")).minusYears(18)))
             return "Minimum age of 18 is required!";
 
         return null;

@@ -11,6 +11,7 @@ import ras.adlrr.RASBet.service.UserService;
 import ras.adlrr.RASBet.service.WalletService;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,7 +125,7 @@ public class ClientPromotionService {
     }
 
     private String checkReferralPromoSignUpToConditions(int gambler_id, LocalDateTime begin_date, int minimum_of_referrals) {
-        if(referralService.getGamblerNrOfReferralsBetweenDates(gambler_id, begin_date, LocalDateTime.now()) >= minimum_of_referrals)
+        if(referralService.getGamblerNrOfReferralsBetweenDates(gambler_id, begin_date, LocalDateTime.now(ZoneId.of("UTC+00:00"))) >= minimum_of_referrals)
             return null;
         return "Gambler has not been referred enough times since the start of the promotion.";
     }

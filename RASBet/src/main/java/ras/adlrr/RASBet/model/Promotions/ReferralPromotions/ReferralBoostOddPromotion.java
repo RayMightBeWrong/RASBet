@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ras.adlrr.RASBet.model.Promotions.interfaces.IBoostOddPromotion;
+import ras.adlrr.RASBet.model.Promotions.interfaces.IReferralPromotion;
 import ras.adlrr.RASBet.model.Promotions.Promotion;
 
 import javax.persistence.Entity;
@@ -17,7 +19,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "referral_boost_odd_promotions")
-public class ReferralBoostOddPromotion extends Promotion {
+public class ReferralBoostOddPromotion extends Promotion implements IBoostOddPromotion, IReferralPromotion {
     private int number_of_referrals_needed;
     private float boost_percentage;
 
@@ -28,5 +30,15 @@ public class ReferralBoostOddPromotion extends Promotion {
         super(title, description, beginDate, expirationDate, nr_uses);
         this.number_of_referrals_needed = number_of_referrals_needed;
         this.boost_percentage = boost_percentage;
+    }
+
+    @Override
+    public float getBoostOddPercentage() {
+        return getBoost_percentage();
+    }
+
+    @Override
+    public void setBoostOddPercentage(float boost_percentage) {
+        setBoost_percentage(boost_percentage);
     }
 }
