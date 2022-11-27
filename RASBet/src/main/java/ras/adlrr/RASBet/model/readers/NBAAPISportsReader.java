@@ -20,6 +20,8 @@ public class NBAAPISportsReader extends APIGameReader{
     private String leagueID;
 
     public NBAAPISportsReader(String sport_id, int gamesToLoad){
+        ReadJSONBehaviour readMethod = new ReadJSONFromExternalAPI();
+        super.setReadMethod(readMethod);
         this.sport_id = sport_id;
         this.gamesToLoad = gamesToLoad;
         this.season = "2022-2023";
@@ -30,7 +32,7 @@ public class NBAAPISportsReader extends APIGameReader{
     public List<Game> getAPIGames() {
         String url = "https://v1.basketball.api-sports.io/games?league=" + this.leagueID + "&season=" + this.season;
         String response = super.readJSON(url, "jsons/nba.json", "b68a93e4291b512a0f3179eb9ee1bc2b");
-        //String response = readFromLocalFile("jsons/nba.json");
+
         JSONArray games = (JSONArray) (new JSONObject(response).get("response"));
         List<Game> res = new ArrayList<>();
 
@@ -88,8 +90,9 @@ public class NBAAPISportsReader extends APIGameReader{
         String url = "https://v1.basketball.api-sports.io/odds?league=" + this.leagueID + "&season=" + this.season + "&game=" + getGameExternalId(game);
         String path = "jsons/nba/odds_" + getGameExternalId(game) + ".json";
         String response = super.readJSON(url, path, "b68a93e4291b512a0f3179eb9ee1bc2b");
-        //String response = readFromLocalFile(path);
         List<Float> res = new ArrayList<>();
+        res.add(0, 1.1f);
+        res.add(1, 1.1f);
 
         JSONArray gameOdds = (JSONArray) (new JSONObject(response).get("response"));
         if(gameOdds.length() > 0){
@@ -116,10 +119,6 @@ public class NBAAPISportsReader extends APIGameReader{
                     }
                 }
             }
-        }
-        else{
-            float tmp = 1.1f;
-            res.add(tmp); res.add(tmp); 
         }
         
         return res;
