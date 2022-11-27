@@ -230,7 +230,6 @@ public class GameService implements IGameService, IParticipantService{
         }catch (Exception e){
             errorMsg = errorMsg + "Could not update NFL games" + " | ";
         }
-
         */
 
         try {

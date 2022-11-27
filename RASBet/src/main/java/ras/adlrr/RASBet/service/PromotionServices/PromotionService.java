@@ -8,20 +8,20 @@ import ras.adlrr.RASBet.model.Promotions.BoostOddPromotion;
 import ras.adlrr.RASBet.model.Promotions.Promotion;
 import ras.adlrr.RASBet.model.Promotions.ReferralPromotions.ReferralBalancePromotion;
 import ras.adlrr.RASBet.model.Promotions.ReferralPromotions.ReferralBoostOddPromotion;
-import ras.adlrr.RASBet.service.WalletService;
+import ras.adlrr.RASBet.service.interfaces.ICoinService;
+import ras.adlrr.RASBet.service.interfaces.Promotions.IPromotionService;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class PromotionService {
-
+public class PromotionService implements IPromotionService{
     private final PromotionRepository promotionRepository;
-    private final WalletService walletService;
+    private final ICoinService coinService;
 
-    public PromotionService(PromotionRepository promotionRepository, WalletService walletService) {
+    public PromotionService(PromotionRepository promotionRepository, ICoinService coinService) {
         this.promotionRepository = promotionRepository;
-        this.walletService = walletService;
+        this.coinService = coinService;
     }
 
     /**
@@ -150,7 +150,7 @@ public class PromotionService {
             return "Number of referrals needed to claim the promotion should be positive.";
         if(referralBalancePromotion.getValue_to_give() <= 0)
             return "Value should be positive.";
-        if(referralBalancePromotion.getCoin() == null || !walletService.coinExistsById(referralBalancePromotion.getCoin().getId()))
+        if(referralBalancePromotion.getCoin() == null || !coinService.coinExistsById(referralBalancePromotion.getCoin().getId()))
             return "A valid coin is needed.";
         return null;
     }

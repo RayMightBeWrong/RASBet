@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.GameChoiceRepository;
 import ras.adlrr.RASBet.model.Promotions.interfaces.IBoostOddPromotion;
 import ras.adlrr.RASBet.service.PromotionServices.ClientPromotionService;
-import ras.adlrr.RASBet.service.PromotionServices.PromotionService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -21,26 +20,33 @@ import ras.adlrr.RASBet.dao.BetRepository;
 import ras.adlrr.RASBet.model.*;
 import ras.adlrr.RASBet.service.interfaces.IBetService;
 import ras.adlrr.RASBet.service.interfaces.IGamblerService;
+import ras.adlrr.RASBet.service.interfaces.IGameService;
 import ras.adlrr.RASBet.service.interfaces.INotificationService;
+import ras.adlrr.RASBet.service.interfaces.IParticipantService;
+import ras.adlrr.RASBet.service.interfaces.ITransactionService;
+import ras.adlrr.RASBet.service.interfaces.IWalletService;
+import ras.adlrr.RASBet.service.interfaces.Promotions.IPromotionService;
+
 
 @Service
 public class BetService implements IBetService{
-    private final TransactionService transactionService;
-    private final WalletService walletService;
+    private final ITransactionService transactionService;
+    private final IWalletService walletService;
     private final IGamblerService gamblerService;
-    private final GameService gameService;
+    private final IGameService gameService;
+    private final IParticipantService participantService;
     private final ClientPromotionService clientPromotionService;
     private final BetRepository betRepository;
     private final GameChoiceRepository gameChoiceRepository;
-    private final PromotionService promotionService;
+    private final IPromotionService promotionService;
     private final INotificationService notificationService;
 
     @Autowired
-    public BetService(TransactionService transactionService, WalletService walletService,
+    public BetService(ITransactionService transactionService, IWalletService walletService,
                       BetRepository betRepository, IGamblerService gamblerService,
-                      GameService gameService, ClientPromotionService clientPromotionService,
-                      PromotionService promotionService, INotificationService notificationService,
-                      GameChoiceRepository gameChoiceRepository) {
+                      IGameService gameService, ClientPromotionService clientPromotionService,
+                      IPromotionService promotionService, INotificationService notificationService,
+                      GameChoiceRepository gameChoiceRepository, IParticipantService participantService) {
         this.transactionService = transactionService;
         this.walletService = walletService;
         this.betRepository = betRepository;
@@ -49,6 +55,7 @@ public class BetService implements IBetService{
         this.gameService = gameService;
         this.clientPromotionService = clientPromotionService;
         this.promotionService = promotionService;
+        this.participantService = participantService;
         this.notificationService = notificationService;
     }
 
@@ -93,7 +100,7 @@ public class BetService implements IBetService{
         validateGameChoices(gambler_id, gameChoices);
 
         //Sets the odd of the game choice to the current odd of the game participant
-        gameService.giveOddToGameChoices(gameChoices);
+        participantService.giveOddToGameChoices(gameChoices);
 
         //Checks if the transaction is performed using a wallet, and if the coin used by the wallet matches the one from the transaction,
         //In case the transaction is made using a wallet, performs the billing operation and updates the transaction information
@@ -323,7 +330,7 @@ public class BetService implements IBetService{
                 throw new Exception("Game with id " + game.getId() + " is not open for bets");
 
             Participant p = gc.getParticipant();
-            if(p == null || !gameService.participantExistsById(p.getId()))
+            if(p == null || !participantService.participantExistsById(p.getId()))
                 throw new Exception("One or more participants are invalid!");
 
             //Adds the game to list of games bet, to avoid betting twice in a game if the list of game choices

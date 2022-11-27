@@ -6,8 +6,10 @@ import ras.adlrr.RASBet.model.Promotions.ClaimedPromo;
 import ras.adlrr.RASBet.model.Promotions.Promotion;
 import ras.adlrr.RASBet.model.Promotions.ReferralPromotions.ReferralBalancePromotion;
 import ras.adlrr.RASBet.model.Promotions.ReferralPromotions.ReferralBoostOddPromotion;
-import ras.adlrr.RASBet.service.WalletService;
 import ras.adlrr.RASBet.service.interfaces.IGamblerService;
+import ras.adlrr.RASBet.service.interfaces.Promotions.IClientPromotionService;
+import ras.adlrr.RASBet.service.interfaces.Promotions.IPromotionService;
+import ras.adlrr.RASBet.service.interfaces.Promotions.IReferralService;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -15,16 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ClientPromotionService {
+public class ClientPromotionService implements IClientPromotionService{
     private final IGamblerService gamblerService;
-    private final WalletService walletService;
-    private final PromotionService promotionService;
-    private final ReferralService referralService;
+    private final IPromotionService promotionService;
+    private final IReferralService referralService;
     private final ClaimedPromoRepository claimedPromoRepository;
 
-    public ClientPromotionService(IGamblerService gamblerService, WalletService walletService, PromotionService promotionService, ReferralService referralService, ClaimedPromoRepository claimedPromoRepository) {
+    public ClientPromotionService(IGamblerService gamblerService, IPromotionService promotionService, IReferralService referralService, ClaimedPromoRepository claimedPromoRepository) {
         this.gamblerService = gamblerService;
-        this.walletService = walletService;
         this.promotionService = promotionService;
         this.referralService = referralService;
         this.claimedPromoRepository = claimedPromoRepository;

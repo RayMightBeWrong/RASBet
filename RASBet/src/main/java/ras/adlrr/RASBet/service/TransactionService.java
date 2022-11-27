@@ -9,6 +9,8 @@ import ras.adlrr.RASBet.model.Promotions.interfaces.IBalancePromotion;
 import ras.adlrr.RASBet.model.Promotions.interfaces.IPromotion;
 import ras.adlrr.RASBet.service.PromotionServices.ClientPromotionService;
 import ras.adlrr.RASBet.service.PromotionServices.PromotionService;
+import ras.adlrr.RASBet.service.interfaces.ICoinService;
+import ras.adlrr.RASBet.service.interfaces.IWalletService;
 import ras.adlrr.RASBet.service.interfaces.IGamblerService;
 import ras.adlrr.RASBet.service.interfaces.INotificationService;
 import ras.adlrr.RASBet.service.interfaces.ITransactionService;
@@ -22,18 +24,20 @@ import java.util.List;
 public class TransactionService implements ITransactionService{
     private final TransactionRepository transactionRepository;
     private final IGamblerService gamblerService;
-    private final WalletService walletService;
+    private final IWalletService walletService;
+    private final ICoinService coinService;
     private final INotificationService notificationService;
     private final ClientPromotionService clientPromotionService;
     private final PromotionService promotionService;
 
     @Autowired
     public TransactionService (TransactionRepository transactionRepository, IGamblerService gamblerService, 
-                               WalletService walletService, INotificationService notificationService,
+                               IWalletService walletService, ICoinService coinService, INotificationService notificationService,
                                ClientPromotionService clientPromotionService, PromotionService promotionService){
         this.transactionRepository = transactionRepository;
         this.gamblerService = gamblerService;
         this.walletService = walletService;
+        this.coinService = coinService;
         this.notificationService = notificationService;
         this.clientPromotionService = clientPromotionService;
         this.promotionService = promotionService;
@@ -95,7 +99,7 @@ public class TransactionService implements ITransactionService{
 
         //Transaction must have a valid coin associated
         Coin coin = t.getCoin();
-        if(coin == null || !walletService.coinExistsById(coin.getId()))
+        if(coin == null || !coinService.coinExistsById(coin.getId()))
             throw new Exception("Cannot register a transaction with a non existent coin!");
 
         //Transaction must have a valid value associated

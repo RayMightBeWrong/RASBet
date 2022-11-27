@@ -24,4 +24,6 @@ public interface IWalletService {
     public Integer findGamblerIdByWalletId(int wallet_id);
 
     public String getCoinIdFromWallet(int wallet_id);
+
+    public Wallet getWalletByGamblerIdAndCoinId(int gambler_id, String coin_id);
 }

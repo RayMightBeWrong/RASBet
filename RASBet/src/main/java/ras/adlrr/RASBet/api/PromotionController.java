@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Promotions.ClaimedPromo;
 import ras.adlrr.RASBet.model.Promotions.Promotion;
-import ras.adlrr.RASBet.service.PromotionServices.ClientPromotionService;
-import ras.adlrr.RASBet.service.PromotionServices.PromotionService;
+import ras.adlrr.RASBet.service.interfaces.Promotions.IClientPromotionService;
+import ras.adlrr.RASBet.service.interfaces.Promotions.IPromotionService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,11 +19,11 @@ import java.util.List;
 @CrossOrigin
 public class PromotionController {
 
-    private final PromotionService promotionService;
-    private final ClientPromotionService clientPromotionService;
+    private final IPromotionService promotionService;
+    private final IClientPromotionService clientPromotionService;
 
     @Autowired
-    public PromotionController(PromotionService promotionService, ClientPromotionService clientPromotionService) {
+    public PromotionController(IPromotionService promotionService, IClientPromotionService clientPromotionService) {
         this.promotionService = promotionService;
         this.clientPromotionService = clientPromotionService;
     }

@@ -3,12 +3,13 @@ package ras.adlrr.RASBet.service.PromotionServices;
 import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.ReferralRepository;
 import ras.adlrr.RASBet.model.Promotions.Referral;
+import ras.adlrr.RASBet.service.interfaces.Promotions.IReferralService;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Service
-public class ReferralService {
+public class ReferralService implements IReferralService{
 
     private final ReferralRepository referralRepository;
 
