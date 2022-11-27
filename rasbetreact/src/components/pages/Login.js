@@ -1,41 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Login.css';
 import { Link } from 'react-router-dom';
 import { Button } from '../Button';
 
 function Login() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
-  const handleClick = (e) => {
-    e.preventDefault()
-    const login = { email: "", psw: "" }
-    console.log(login)
-    fetch("http://localhost:8080/api/users", {
-      method: "POST",
+  const handleSubmit = event => {
+    console.log("yoooooooooo")
+    /*"localhost:8080/api/users?email=" + email + "&password=" + password*/
+
+    const requestOptions = {
+      method: 'GET',
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(login)
-    }).
-      then(() => {
-        console.log("Login da Conta")
-      })
+      redirect: 'follow'
+    };
+
+    fetch("localhost:8080/api/users/login?email=tiago@hotmail.com&password=tiago", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
   }
+
+
 
   return (
     <>
       <div className='login'>
         <div className='white-box'>
           <div className='container'>
-            <form action="/action_page.php" class="container-form">
+            <form class="container-form" onSubmit={handleSubmit}>
               <h1>BEM VINDO</h1>
 
-              <input type="txtL" placeholder="E-mail" name="email" required />
+              <input type="txtL" placeholder="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <input type="txtL" placeholder="Palavra-passe" value={password} onChange={(e) => setPassword(e.target.value)} required />
 
-              <input type="txtL" placeholder="Palavra-passe" name="psw" required />
               <Link to='/password_recovery' className='registerbutton'>
                 Esqueci-me da palavra-passe
               </Link>
-              <Button type="submit" buttonSize='btn--flex' onclick={() => handleClick} >Aceder</Button>
+              <Button type="submit" buttonSize='btn--flex'>Aceder</Button>
 
             </form>
+            <Button type="submit" buttonSize='btn--flex' onClick={handleSubmit}>Teste</Button>
             Não tem conta?
             <Link to='/registo' className='registerbutton'>
               Registe-se ja!
