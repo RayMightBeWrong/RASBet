@@ -14,7 +14,7 @@ public interface ISportService {
 
     public List<Sport> getListOfSports();
 
-    public List<Game> getGamesFromSport(String sport) throws Exception
-    ;
+    public List<Game> getGamesFromSport(String sport) throws Exception;
+    
     public boolean sportExistsById(String id);
 }

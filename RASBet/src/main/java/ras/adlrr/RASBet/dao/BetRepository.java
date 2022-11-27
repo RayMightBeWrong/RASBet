@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ras.adlrr.RASBet.model.Bet;
-import ras.adlrr.RASBet.model.GameChoice;
 
 import java.util.List;
 

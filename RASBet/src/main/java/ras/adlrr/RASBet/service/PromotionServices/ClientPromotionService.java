@@ -2,7 +2,6 @@ package ras.adlrr.RASBet.service.PromotionServices;
 
 import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.ClaimedPromoRepository;
-import ras.adlrr.RASBet.model.Promotions.BoostOddPromotion;
 import ras.adlrr.RASBet.model.Promotions.ClaimedPromo;
 import ras.adlrr.RASBet.model.Promotions.Promotion;
 import ras.adlrr.RASBet.model.Promotions.ReferralPromotions.ReferralBalancePromotion;

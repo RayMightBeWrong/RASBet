@@ -2,7 +2,6 @@ package ras.adlrr.RASBet.service.interfaces;
 
 import java.util.List;
 
-import ras.adlrr.RASBet.model.Coin;
 import ras.adlrr.RASBet.model.Wallet;
 
 public interface IWalletService {

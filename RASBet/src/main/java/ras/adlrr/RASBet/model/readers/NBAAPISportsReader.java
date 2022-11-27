@@ -118,7 +118,6 @@ public class NBAAPISportsReader extends APIGameReader{
             }
         }
         else{
-            // TODO - pôr null em vez de 1.1f
             float tmp = 1.1f;
             res.add(tmp); res.add(tmp); 
         }

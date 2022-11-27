@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Notification;
-import ras.adlrr.RASBet.service.interfaces.IEmailService;
 import ras.adlrr.RASBet.service.interfaces.INotificationService;
 
 @RequestMapping("/api/notifications")

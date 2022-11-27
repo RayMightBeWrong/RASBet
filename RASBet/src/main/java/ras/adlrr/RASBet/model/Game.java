@@ -144,7 +144,7 @@ public class Game {
                 idTeamOne = p.getId();
                 teamOne = p.getName();
             }
-            else{
+            else if (teamTwo.equals("")){
                 scoreT2 = p.getScore();
                 idTeamTwo = p.getId();
                 teamTwo = p.getName();
@@ -169,7 +169,7 @@ public class Game {
                 scoreT1 = p.getScore();
                 idTeamOne = p.getId();
             }
-            else{
+            else if (teamTwo.equals("")){
                 scoreT2 = p.getScore();
                 idTeamTwo = p.getId();
             }

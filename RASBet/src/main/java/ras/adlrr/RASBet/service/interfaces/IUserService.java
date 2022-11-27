@@ -1,8 +1,5 @@
 package ras.adlrr.RASBet.service.interfaces;
 
-import java.util.List;
-
-import ras.adlrr.RASBet.model.Gambler;
 import ras.adlrr.RASBet.model.User;
 
 public interface IUserService {

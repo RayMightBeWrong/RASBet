@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Coin;
 import ras.adlrr.RASBet.model.Wallet;
-import ras.adlrr.RASBet.service.WalletService;
 import ras.adlrr.RASBet.service.interfaces.ICoinService;
 import ras.adlrr.RASBet.service.interfaces.IWalletService;
 

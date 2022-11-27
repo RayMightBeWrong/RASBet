@@ -5,8 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ras.adlrr.RASBet.model.Bet;
-import ras.adlrr.RASBet.model.Gambler;
 import ras.adlrr.RASBet.model.Transaction;
 
 import java.util.List;
