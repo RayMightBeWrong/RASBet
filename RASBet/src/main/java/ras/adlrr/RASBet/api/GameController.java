@@ -70,6 +70,11 @@ public class GameController {
         return ResponseEntity.ok().body(gameService.getGames());
     }
 
+    @GetMapping(path = "/sorted")
+    public ResponseEntity<List<Game>> getGamesSorted() {
+        return ResponseEntity.ok().body(gameService.getGamesSorted());
+    }
+
     @PutMapping(path = "/{id}/state/close")
     public ResponseEntity closeGame(@PathVariable("id") int id){
         try {
@@ -129,6 +134,16 @@ public class GameController {
     public ResponseEntity editOddInParticipant(@PathVariable("pid") int participant_id, @PathVariable("odd") float odd){
         try{
             participantService.editOddInParticipant(participant_id, odd);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
+        }
+    }
+
+    @PutMapping("/participants/{pid}/score/{score}")
+    public ResponseEntity editScoreInParticipant(@PathVariable("pid") int participant_id, @PathVariable("score") int score){
+        try{
+            participantService.editScoreInParticipant(participant_id, score);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntityBadRequest().createBadRequest(e.getMessage());

@@ -1,5 +1,6 @@
 package ras.adlrr.RASBet.service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +38,26 @@ public class GameService implements IGameService, IParticipantService{
 
 
     /* **** Game Methods **** */
-    
-    public List<Game> getGames() {
+    public List<Game> getGames(){
         return gr.findAll();
+    }
+    
+    public List<Game> getGamesSorted(){
+        List<Game> games = gr.findAll();
+        
+        games.removeIf(g -> g.getState() != Game.OPEN);
+        Collections.sort(games, (g1, g2) -> {
+            LocalDateTime ldt1 = g1.getDate(), ldt2 = g2.getDate();
+            int diff = ldt1.compareTo(ldt2);
+            if(diff > 0)
+                return 1;
+            else if (diff < 0)
+                return -1;
+            else
+                return g1.getId() - g2.getId();
+        });
+
+        return games;
     }
 
     public List<Game> getOngoingGames(){
@@ -190,6 +208,19 @@ public class GameService implements IGameService, IParticipantService{
         Participant participant = pr.findById(participant_id).orElse(null);
         if (participant != null){
             participant.setOdd(odd);
+            pr.save(participant);
+        }
+        else
+            throw new Exception("Could not find participant!");
+    }
+
+    public void editScoreInParticipant(int participant_id, int score) throws Exception {
+        if (score < 0)
+            throw new Exception("Inserted odd is not valid!");
+
+        Participant participant = pr.findById(participant_id).orElse(null);
+        if (participant != null){
+            participant.setScore(score);
             pr.save(participant);
         }
         else
