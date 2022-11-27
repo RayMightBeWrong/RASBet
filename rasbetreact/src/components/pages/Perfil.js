@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './Perfil.css';
 import { Button } from '../Button';
 import { CarteiraSimplificada } from '../Carteira';
+import { PayMethod } from '../PayMethods'
 
 const carteira1 = { ratioEuro: "0.35", balance: "30" }
 const carteira2 = { ratioEuro: "1", balance: "700" }
@@ -11,28 +12,36 @@ const saldo = "13"
 
 
 function Perfil() {
+  const [open, setOpen] = useState(false);
+  const currency = []
+  
+  carteiras.forEach((elem) => (currency.push(elem.currency)))
 
-const handleClick=(e)=>{
+  const handleClick1 = (e) => {
     e.preventDefault()
-    const perfil={nome,apelido,psw}
+    const perfil = { nome: "", apelido: "", psw: "" }
     console.log(perfil)
-    fetch("http://localhost:8080/api/users/gambler/update",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify(perfil)}).then(()=>{
-    console.log("Alterações Gravadas")})
-}
+    fetch("http://localhost:8080/api/users/gambler/update", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(perfil)
+    }).then(() => {
+      console.log("Alterações Gravadas")
+    })
+  }
 
-const handleClick=(ratioEuro,balance)=>{
-    e.preventDefault()
-    const carteira={ratioEuro,balance}
+  const handleClick2 = (ratioEuro, balance) => {
+    //e.preventDefault()
+    const carteira = { ratioEuro, balance }
     console.log(carteira)
-    fetch("http://localhost:8080/api/wallets/wallet",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify(carteira)}).then(()=>{
-    console.log("Nova Carteira adicionada")})
-}
+    fetch("http://localhost:8080/api/wallets/wallet", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(carteira)
+    }).then(() => {
+      console.log("Nova Carteira adicionada")
+    })
+  }
 
   return (
     <div className='perfil'>
@@ -61,7 +70,7 @@ const handleClick=(ratioEuro,balance)=>{
             <input type="txtP" placeholder="Palavra-passe" name="psw" required />
           </s1>
           <div className='save'>
-            <Button buttonSize={'btn--medium'} onclick=(handleClick) >Gravar Alterações</Button>
+            <Button buttonSize={'btn--medium'} onclick={() => handleClick1()} >Gravar Alterações</Button>
           </div>
         </div>
         <h1> Informação das carteiras </h1>
@@ -71,10 +80,14 @@ const handleClick=(ratioEuro,balance)=>{
           ))}
         </div>
         <div className='save'>
-          <Button buttonSize={'btn--medium'} onclick=(handleClick(wallet.ratioEuro,wallet.balance)) >Nova Carteira</Button>
+          <Button buttonSize={'btn--medium'} onClick={() => setOpen(true)}>Nova Carteira</Button>
         </div>
+        {open ?
+          <PayMethod options={currency} closePopup={() => setOpen(false)} rBack={() => setOpen(false)} />
+          : null
+        }
       </div>
-    </div>
+    </div >
   );
 }
 

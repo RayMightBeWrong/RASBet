@@ -20,13 +20,14 @@ import java.util.stream.Collectors;
 import ras.adlrr.RASBet.dao.BetRepository;
 import ras.adlrr.RASBet.model.*;
 import ras.adlrr.RASBet.service.interfaces.IBetService;
+import ras.adlrr.RASBet.service.interfaces.IGamblerService;
 import ras.adlrr.RASBet.service.interfaces.INotificationService;
 
 @Service
 public class BetService implements IBetService{
     private final TransactionService transactionService;
     private final WalletService walletService;
-    private final UserService userService;
+    private final IGamblerService gamblerService;
     private final GameService gameService;
     private final ClientPromotionService clientPromotionService;
     private final BetRepository betRepository;
@@ -36,7 +37,7 @@ public class BetService implements IBetService{
 
     @Autowired
     public BetService(TransactionService transactionService, WalletService walletService,
-                      BetRepository betRepository, UserService userService,
+                      BetRepository betRepository, IGamblerService gamblerService,
                       GameService gameService, ClientPromotionService clientPromotionService,
                       PromotionService promotionService, INotificationService notificationService,
                       GameChoiceRepository gameChoiceRepository) {
@@ -44,7 +45,7 @@ public class BetService implements IBetService{
         this.walletService = walletService;
         this.betRepository = betRepository;
         this.gameChoiceRepository = gameChoiceRepository;
-        this.userService = userService;
+        this.gamblerService = gamblerService;
         this.gameService = gameService;
         this.clientPromotionService = clientPromotionService;
         this.promotionService = promotionService;
@@ -122,7 +123,7 @@ public class BetService implements IBetService{
         Bet res = betRepository.save(bet);
 
         //Sends notification
-        String email = userService.getGamblerEmail(gambler.getId());
+        String email = gamblerService.getGamblerEmail(gambler.getId());
         String message = "A bet has been made in your RASBet account.";
         String subject = "[RASBet] Bet Made";
         Notification notification = new Notification(gambler.getId(), email, message, subject);
@@ -149,7 +150,7 @@ public class BetService implements IBetService{
      * @throws Exception If the gambler does not exist.
      */
     public List<Bet> getGamblerBets(int gambler_id, Sort.Direction direction) throws Exception {
-        if(!userService.gamblerExistsById(gambler_id))
+        if(!gamblerService.gamblerExistsById(gambler_id))
             throw new Exception("Gambler does not exist!");
         return direction == null ? betRepository.findAllByGamblerId(gambler_id) :
                 betRepository.findAllByGamblerIdSortByDate(gambler_id, direction);
@@ -161,7 +162,7 @@ public class BetService implements IBetService{
      * @throws Exception If the gambler does not exist.
      */
     public List<Bet> getGamblerBets(int gambler_id) throws Exception {
-        if(!userService.gamblerExistsById(gambler_id))
+        if(!gamblerService.gamblerExistsById(gambler_id))
             throw new Exception("Gambler does not exist!");
         return betRepository.findAllByGamblerId(gambler_id);
     }
@@ -206,7 +207,7 @@ public class BetService implements IBetService{
 
             //Notifies the gambler of the lost bet
             Gambler gambler = wallet_withdraw.getGambler();
-            String email = userService.getGamblerEmail(gambler.getId());
+            String email = gamblerService.getGamblerEmail(gambler.getId());
             String message = "Unfortunately, it seems that you have lost a bet.";
             String subject = "[RASBet] Bet Lost";
             Notification notification = new Notification(gambler.getId(), email, message, subject);
@@ -230,7 +231,7 @@ public class BetService implements IBetService{
 
         //Notifies the gambler that he won the bet
         Gambler gambler = res.getGambler();
-        String email = userService.getGamblerEmail(gambler.getId());
+        String email = gamblerService.getGamblerEmail(gambler.getId());
         String message = "Congratulations! You just won a bet!";
         String subject = "[RASBet] Bet Won";
         Notification notification = new Notification(gambler.getId(), email, message, subject);

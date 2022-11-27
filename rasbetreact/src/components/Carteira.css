@@ -57,6 +57,10 @@
     justify-content: space-between;
 }
 
+.btn{
+    margin-left: 3px;
+}
+
 input[type=txtC]{
     border-radius: 5px;
     width: 100%;

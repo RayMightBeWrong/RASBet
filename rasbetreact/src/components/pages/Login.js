@@ -5,17 +5,19 @@ import { Button } from '../Button';
 
 function Login() {
 
-    const handleClick=(e)=>{
-        e.preventDefault()
-        const login={email,psw}
-        console.log(login)
-        fetch("http://localhost:8080/api/users",{
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body:JSON.stringify(login)}).
-        then(()=>{
-            console.log("Login da Conta")})
-    }
+  const handleClick = (e) => {
+    e.preventDefault()
+    const login = { email: "", psw: "" }
+    console.log(login)
+    fetch("http://localhost:8080/api/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(login)
+    }).
+      then(() => {
+        console.log("Login da Conta")
+      })
+  }
 
   return (
     <>
@@ -31,7 +33,7 @@ function Login() {
               <Link to='/password_recovery' className='registerbutton'>
                 Esqueci-me da palavra-passe
               </Link>
-              <Button type="submit" buttonSize='btn--flex' onclick=(handleClick) >Aceder</Button>
+              <Button type="submit" buttonSize='btn--flex' onclick={() => handleClick} >Aceder</Button>
 
             </form>
             Não tem conta?

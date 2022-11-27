@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.*;
-import ras.adlrr.RASBet.service.UserService;
+import ras.adlrr.RASBet.service.interfaces.IAdminService;
+import ras.adlrr.RASBet.service.interfaces.IExpertService;
+import ras.adlrr.RASBet.service.interfaces.IGamblerService;
 import ras.adlrr.RASBet.service.interfaces.IUserService;
 
 
@@ -18,10 +20,16 @@ import ras.adlrr.RASBet.service.interfaces.IUserService;
 @CrossOrigin
 public class UserController {
     private final IUserService userService;
+    private final IAdminService adminService;
+    private final IGamblerService gamblerService;
+    private final IExpertService expertService;
 
     @Autowired
-    public UserController(IUserService userService){
+    public UserController(IUserService userService, IAdminService adminService, IGamblerService gamblerService, IExpertService expertService){
         this.userService = userService;
+        this.adminService = adminService;
+        this.gamblerService = gamblerService;
+        this.expertService = expertService;
     }
 
 
@@ -29,7 +37,7 @@ public class UserController {
 
     @PostMapping("/gambler")
     public ResponseEntity<Gambler> addGambler(@RequestBody Gambler gambler){
-        try{ return ResponseEntity.ok().body(userService.addGambler(gambler)); }
+        try{ return ResponseEntity.ok().body(gamblerService.addGambler(gambler)); }
         catch (Exception e){
             return new ResponseEntityBadRequest<Gambler>().createBadRequest(e.getMessage());
         }
@@ -46,7 +54,7 @@ public class UserController {
                                                  @RequestParam(value = "address", required = false) String address,
                                                  @RequestParam(value = "postal_code", required = false) String postal_code,
                                                  @RequestParam(value = "occupation", required = false) String occupation){
-        try{ return ResponseEntity.ok().body(userService.updateGambler(gambler_id, name, email, password, phoneNumber,nationality, city, address, postal_code, occupation)); }
+        try{ return ResponseEntity.ok().body(gamblerService.updateGambler(gambler_id, name, email, password, phoneNumber,nationality, city, address, postal_code, occupation)); }
         catch (Exception e){
             return new ResponseEntityBadRequest<Gambler>().createBadRequest(e.getMessage());
         }
@@ -59,10 +67,10 @@ public class UserController {
 
         Gambler gambler = null;
         if(id != null)
-            gambler = userService.getGamblerById(id);
+            gambler = gamblerService.getGamblerById(id);
 
         if(gambler == null && email != null)
-            gambler = userService.getGamblerByEmail(email);
+            gambler = gamblerService.getGamblerByEmail(email);
 
         return ResponseEntity.ok().body(gambler);
     }
@@ -70,7 +78,7 @@ public class UserController {
     @DeleteMapping(path = "/gambler/{id}")
     public ResponseEntity removeGambler(@PathVariable int id){
         try {
-            userService.removeGambler(id);
+            gamblerService.removeGambler(id);
             return new ResponseEntity(HttpStatus.OK); }
         catch (Exception e){
             return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
@@ -79,14 +87,14 @@ public class UserController {
 
     @GetMapping("/gambler/all")
     public ResponseEntity<List<Gambler>> getListOfGamblers(){
-        return ResponseEntity.ok().body(userService.getListOfGamblers());
+        return ResponseEntity.ok().body(gamblerService.getListOfGamblers());
     }
 
     // ------------ Admin Methods ------------
 
     @PostMapping("/admin")
     public ResponseEntity<Admin> addAdmin(@RequestBody Admin admin){
-        try{ return ResponseEntity.ok().body(userService.addAdmin(admin)); }
+        try{ return ResponseEntity.ok().body(adminService.addAdmin(admin)); }
         catch (Exception e){
             return new ResponseEntityBadRequest<Admin>().createBadRequest(e.getMessage());
         }
@@ -99,10 +107,10 @@ public class UserController {
 
         Admin admin = null;
         if(id != null)
-            admin = userService.getAdminById(id);
+            admin = adminService.getAdminById(id);
 
         if(admin == null && email != null)
-            admin = userService.getAdminByEmail(email);
+            admin = adminService.getAdminByEmail(email);
 
         return ResponseEntity.ok().body(admin);
     }
@@ -110,7 +118,7 @@ public class UserController {
     @DeleteMapping(path = "/admin/{id}")
     public ResponseEntity removeAdmin(@PathVariable int id){
         try {
-            userService.removeAdmin(id);
+            adminService.removeAdmin(id);
             return new ResponseEntity(HttpStatus.OK); }
         catch (Exception e){
             return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
@@ -119,14 +127,14 @@ public class UserController {
 
     @GetMapping("/admin/all")
     public ResponseEntity<List<Admin>> getListOfAdmins(){
-        return ResponseEntity.ok().body(userService.getListOfAdmins());
+        return ResponseEntity.ok().body(adminService.getListOfAdmins());
     }
 
     // ------------ Expert Methods ------------
 
     @PostMapping("/expert")
     public ResponseEntity<Expert> addExpert(@RequestBody Expert expert){
-        try{ return ResponseEntity.ok().body(userService.addExpert(expert)); }
+        try{ return ResponseEntity.ok().body(expertService.addExpert(expert)); }
         catch (Exception e){
             return new ResponseEntityBadRequest<Expert>().createBadRequest(e.getMessage());
         }
@@ -139,10 +147,10 @@ public class UserController {
 
         Expert expert = null;
         if(id != null)
-            expert = userService.getExpertById(id);
+            expert = expertService.getExpertById(id);
 
         if(expert == null && email != null)
-            expert = userService.getExpertByEmail(email);
+            expert = expertService.getExpertByEmail(email);
 
         return ResponseEntity.ok().body(expert);
     }
@@ -150,7 +158,7 @@ public class UserController {
     @DeleteMapping(path = "/expert/{id}")
     public ResponseEntity removeExpert(@PathVariable int id){
         try {
-            userService.removeExpert(id);
+            expertService.removeExpert(id);
             return new ResponseEntity(HttpStatus.OK); }
         catch (Exception e){
             return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
@@ -159,7 +167,7 @@ public class UserController {
 
     @GetMapping("/expert/all")
     public ResponseEntity<List<Expert>> getListOfExperts(){
-        return ResponseEntity.ok().body(userService.getListOfExperts());
+        return ResponseEntity.ok().body(expertService.getListOfExperts());
     }
 
     // ------------ Shared Methods ------------

@@ -7,8 +7,8 @@ import ras.adlrr.RASBet.model.Promotions.ClaimedPromo;
 import ras.adlrr.RASBet.model.Promotions.Promotion;
 import ras.adlrr.RASBet.model.Promotions.ReferralPromotions.ReferralBalancePromotion;
 import ras.adlrr.RASBet.model.Promotions.ReferralPromotions.ReferralBoostOddPromotion;
-import ras.adlrr.RASBet.service.UserService;
 import ras.adlrr.RASBet.service.WalletService;
+import ras.adlrr.RASBet.service.interfaces.IGamblerService;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -17,14 +17,14 @@ import java.util.List;
 
 @Service
 public class ClientPromotionService {
-    private final UserService userService;
+    private final IGamblerService gamblerService;
     private final WalletService walletService;
     private final PromotionService promotionService;
     private final ReferralService referralService;
     private final ClaimedPromoRepository claimedPromoRepository;
 
-    public ClientPromotionService(UserService userService, WalletService walletService, PromotionService promotionService, ReferralService referralService, ClaimedPromoRepository claimedPromoRepository) {
-        this.userService = userService;
+    public ClientPromotionService(IGamblerService gamblerService, WalletService walletService, PromotionService promotionService, ReferralService referralService, ClaimedPromoRepository claimedPromoRepository) {
+        this.gamblerService = gamblerService;
         this.walletService = walletService;
         this.promotionService = promotionService;
         this.referralService = referralService;
@@ -103,7 +103,7 @@ public class ClientPromotionService {
      * @return
      */
     private String checkSignUpToConditions(int gambler_id, Promotion promotion) {
-        if(!userService.gamblerExistsById(gambler_id))
+        if(!gamblerService.gamblerExistsById(gambler_id))
             return "Gambler with id " + gambler_id + "does not exist!";
 
         //Check if the gambler already claimed the promotion

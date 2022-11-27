@@ -32,6 +32,26 @@
   transition: all 0.3s ease-out;
 }
 
+.btn--image {
+  background-color: white;
+  color: black;
+  width: 150px;
+  height: 90px;
+  display: flex;
+  border: 2px solid #dc7633;
+  transition: all 0.3s ease-out;
+}
+
+.btn--image--selected {
+  background-color: #dc7633;
+  color: black;
+  width: 150px;
+  height: 90px;
+  display: flex;
+  border: 2px solid #dc7633;
+  transition: all 0.1s ease-out;
+}
+
 .btn--bet {
   background-color: white;
   color: black;
@@ -73,6 +93,7 @@
   transition: 250ms;
 }
 
+.btn--image:hover,
 .btn--inverted:hover{
   transition: all 0.3s ease-out;
   background: #dc7633;
