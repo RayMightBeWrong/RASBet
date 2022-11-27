@@ -20,4 +20,6 @@ public interface ITransactionService {
     public Transaction withdraw(int wallet_id, float valueToWithdraw) throws Exception;
 
     public void removeTransaction(int id) throws Exception;
+
+    Transaction claimBalancePromotion(int wallet_id, String coupon) throws Exception;
 }

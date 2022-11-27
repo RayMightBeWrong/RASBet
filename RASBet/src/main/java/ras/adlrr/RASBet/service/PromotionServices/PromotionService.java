@@ -3,6 +3,7 @@ package ras.adlrr.RASBet.service.PromotionServices;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ras.adlrr.RASBet.dao.ClaimedPromoRepository;
 import ras.adlrr.RASBet.dao.PromotionRepository;
 import ras.adlrr.RASBet.model.Promotions.BoostOddPromotion;
 import ras.adlrr.RASBet.model.Promotions.Promotion;
@@ -11,17 +12,20 @@ import ras.adlrr.RASBet.model.Promotions.ReferralPromotions.ReferralBoostOddProm
 import ras.adlrr.RASBet.service.interfaces.ICoinService;
 import ras.adlrr.RASBet.service.interfaces.Promotions.IPromotionService;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class PromotionService implements IPromotionService{
     private final PromotionRepository promotionRepository;
+    private final ClaimedPromoRepository claimedPromoRepository;
     private final ICoinService coinService;
 
-    public PromotionService(PromotionRepository promotionRepository, ICoinService coinService) {
+    public PromotionService(PromotionRepository promotionRepository, ICoinService coinService, ClaimedPromoRepository claimedPromoRepository) {
         this.promotionRepository = promotionRepository;
         this.coinService = coinService;
+        this.claimedPromoRepository = claimedPromoRepository;
     }
 
     /**
@@ -54,9 +58,11 @@ public class PromotionService implements IPromotionService{
      * Remove promotion by id
      * @param promotion_id Identification of the promotion
      */
+    @Transactional
     public void removePromotion(int promotion_id) throws Exception{
         if(!promotionRepository.existsById(promotion_id))
             throw new Exception("Promotion does not exist!");
+        claimedPromoRepository.deleteAllByPromotionId(promotion_id);
         promotionRepository.deleteById(promotion_id);
     }
 
@@ -105,8 +111,8 @@ public class PromotionService implements IPromotionService{
      * @return all the promotions ordered by the start date or expiration date. A null value is returned if the argument "whichDate" is invalid.
      */
     public List<Promotion> getAllPromotionsOrderedByDate(String whichDate, Sort.Direction direction) throws Exception {
-        if(!whichDate.equals("begin_date") && !whichDate.equals("expiration_date"))
-            throw new Exception("Parameter \"which_date\" can either be \"begin_date\" or \"expiration_date\"");
+        if(!whichDate.equals("beginDate") && !whichDate.equals("expirationDate"))
+            throw new Exception("Parameter \"which_date\" can either be \"beginDate\" or \"expirationDate\"");
         return promotionRepository.findAll(Sort.by(direction, whichDate));
     }
 
@@ -186,12 +192,14 @@ public class PromotionService implements IPromotionService{
            return "Title cannot be null.";
         if(promotion.getDescription() == null)
            return "Description cannot be null.";
-        if(promotion.getBegin_date() == null)
+        if(promotion.getBeginDate() == null)
            return "Begin date cannot be null.";
-        if(promotion.getExpiration_date() != null && promotion.getBegin_date().isAfter(promotion.getExpiration_date()))
+        if(promotion.getExpirationDate() != null && promotion.getBeginDate().isAfter(promotion.getExpirationDate()))
            return "Begin date must be before the expiration date.";
         if(promotion.getNr_uses() <= 0)
            return "The number of times a promotion can be redeemed must be a positive.";
+        if(promotion.getCoupon() == null)
+            return "Coupon cannot be null!";
         if(promotionRepository.existsByCoupon(promotion.getCoupon()))
            return "Coupon already in use!";
         return null;

@@ -8,11 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.*;
-import ras.adlrr.RASBet.service.interfaces.IAdminService;
-import ras.adlrr.RASBet.service.interfaces.IExpertService;
-import ras.adlrr.RASBet.service.interfaces.IGamblerService;
-import ras.adlrr.RASBet.service.interfaces.IUserService;
-
+import ras.adlrr.RASBet.service.interfaces.*;
 
 
 @RequestMapping("/api/users")
@@ -23,21 +19,25 @@ public class UserController {
     private final IAdminService adminService;
     private final IGamblerService gamblerService;
     private final IExpertService expertService;
+    private final IUserReferralService userReferralService;
 
     @Autowired
-    public UserController(IUserService userService, IAdminService adminService, IGamblerService gamblerService, IExpertService expertService){
+    public UserController(IUserService userService, IAdminService adminService,
+                          IGamblerService gamblerService, IExpertService expertService,
+                          IUserReferralService userReferralService){
         this.userService = userService;
         this.adminService = adminService;
         this.gamblerService = gamblerService;
         this.expertService = expertService;
+        this.userReferralService = userReferralService;
     }
 
 
     // ------------ Gambler Methods ------------
 
     @PostMapping("/gambler")
-    public ResponseEntity<Gambler> addGambler(@RequestBody Gambler gambler){
-        try{ return ResponseEntity.ok().body(gamblerService.addGambler(gambler)); }
+    public ResponseEntity<Gambler> createGambler(@RequestParam(value = "referral", required = false) Integer id, @RequestBody Gambler gambler){
+        try{ return ResponseEntity.ok().body(userReferralService.createGambler(id, gambler)); }
         catch (Exception e){
             return new ResponseEntityBadRequest<Gambler>().createBadRequest(e.getMessage());
         }

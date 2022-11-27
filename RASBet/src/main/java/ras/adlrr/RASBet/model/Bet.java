@@ -28,7 +28,7 @@ public class Bet {
     @OneToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "id", updatable = false)
     @MapsId
-    @JsonIncludeProperties({"id","value"})
+    @JsonIncludeProperties({"id","value","date"})
     private Transaction transaction;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)

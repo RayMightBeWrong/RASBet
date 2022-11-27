@@ -38,18 +38,26 @@ public class ClaimedPromo {
         public int hashCode() {
             return Objects.hash(promotionId, gamblerId);
         }
+
+        @Override
+        public String toString() {
+            return "ClaimedPromoID{" +
+                    "promotionId=" + promotionId +
+                    ", gamblerId=" + gamblerId +
+                    '}';
+        }
     }
 
     @EmbeddedId
     private ClaimedPromoID id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "promotion_id", insertable = false, updatable = false, nullable = false)
+    @JoinColumn(name = "promotion_id", updatable = false, nullable = false)
     @MapsId("promotionId")
     private Promotion promotion;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "gambler_id", insertable = false, updatable = false, nullable = false)
+    @JoinColumn(name = "gambler_id", updatable = false, nullable = false)
     @MapsId("gamblerId")
     private Gambler gambler;
 
@@ -60,5 +68,15 @@ public class ClaimedPromo {
         this.promotion = new Promotion(); promotion.setId(promotionId);
         this.gambler = new Gambler(); gambler.setId(gamblerId);
         this.nr_uses_left = nr_uses_left;
+    }
+
+    @Override
+    public String toString() {
+        return "ClaimedPromo{" +
+                "id=" + id +
+                ", promotion=" + promotion +
+                ", gambler=" + gambler +
+                ", nr_uses_left=" + nr_uses_left +
+                '}';
     }
 }
