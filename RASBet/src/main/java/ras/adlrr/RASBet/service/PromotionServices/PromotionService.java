@@ -3,6 +3,7 @@ package ras.adlrr.RASBet.service.PromotionServices;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ras.adlrr.RASBet.dao.ClaimedPromoRepository;
 import ras.adlrr.RASBet.dao.PromotionRepository;
 import ras.adlrr.RASBet.model.Promotions.BoostOddPromotion;
 import ras.adlrr.RASBet.model.Promotions.Promotion;
@@ -11,17 +12,20 @@ import ras.adlrr.RASBet.model.Promotions.ReferralPromotions.ReferralBoostOddProm
 import ras.adlrr.RASBet.service.interfaces.ICoinService;
 import ras.adlrr.RASBet.service.interfaces.Promotions.IPromotionService;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class PromotionService implements IPromotionService{
     private final PromotionRepository promotionRepository;
+    private final ClaimedPromoRepository claimedPromoRepository;
     private final ICoinService coinService;
 
-    public PromotionService(PromotionRepository promotionRepository, ICoinService coinService) {
+    public PromotionService(PromotionRepository promotionRepository, ICoinService coinService, ClaimedPromoRepository claimedPromoRepository) {
         this.promotionRepository = promotionRepository;
         this.coinService = coinService;
+        this.claimedPromoRepository = claimedPromoRepository;
     }
 
     /**
@@ -54,9 +58,11 @@ public class PromotionService implements IPromotionService{
      * Remove promotion by id
      * @param promotion_id Identification of the promotion
      */
+    @Transactional
     public void removePromotion(int promotion_id) throws Exception{
         if(!promotionRepository.existsById(promotion_id))
             throw new Exception("Promotion does not exist!");
+        claimedPromoRepository.deleteAllByPromotionId(promotion_id);
         promotionRepository.deleteById(promotion_id);
     }
 
