@@ -247,11 +247,14 @@ public class BetService implements IBetService{
         return res;
     }
 
+    @Transactional
     @Override
     public List<Bet> getBetsByGameId(int game_id) throws Exception {
         if(!gameService.gameExistsById(game_id))
             throw new Exception("Game does not exist!");
-        return betRepository.getBetsByGameId(game_id);
+        return betRepository.getBetsIdsByGameId(game_id).stream()
+                                                        .map(id -> betRepository.findById(id).get())
+                                                        .collect(Collectors.toList());
     }
 
     @Override
