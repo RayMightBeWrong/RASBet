@@ -14,6 +14,7 @@ import java.time.ZoneId;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import ras.adlrr.RASBet.dao.BetRepository;
@@ -335,6 +336,17 @@ public class BetService implements IBetService{
             Participant p = gc.getParticipant();
             if(p == null || !participantService.participantExistsById(p.getId()))
                 throw new Exception("One or more participants are invalid!");
+
+            Set<Participant> participants = game.getParticipants();
+            boolean foundP = false;
+            for(Participant participant: participants){
+                if (participant.getId() == p.getId()){
+                    foundP = true;
+                    break;
+                }
+            }
+            if (!foundP)
+                throw new Exception("Partipant doesn't belong in game " + game.getTitle() + "!");
 
             //Adds the game to list of games bet, to avoid betting twice in a game if the list of game choices
             //given as parameter contains a bet to the same game
