@@ -160,7 +160,7 @@ public class GameService implements IGameService, IParticipantService{
             if(p == null)
                 throw new Exception("Participant cannot be null!");
             p.setId(0); // Certifica q n dá erro por ter sido mencionado um id
-            if(p.getOdd() < 1)
+            if(p.getOdd() < 1 && p.getOdd() != 0)
                 throw new Exception("Odds must be equal or higher to/than 1!");
         }
     }
@@ -261,8 +261,6 @@ public class GameService implements IGameService, IParticipantService{
         String errorMsg = "";
         Sport sport;
 
-
-
         /*
         try {
             Sport sport = sportService.findSportById("NFL");
@@ -274,7 +272,6 @@ public class GameService implements IGameService, IParticipantService{
         }catch (Exception e){
             errorMsg = errorMsg + "Error while updating NFL games" + " | ";
         }
-        */
 
         try {
             sport = sportService.findSportById("F1");
@@ -287,22 +284,11 @@ public class GameService implements IGameService, IParticipantService{
             errorMsg = errorMsg + "Error while updating F1 games. ";
         }
 
-        try {
-            sport = sportService.findSportById("Football");
-            if (sport != null){
-                APIGameReader reader = new FootballAPISportsReader(sport.getId());
-                List<Game> games = reader.getAPIGames();
-                addGames(games);
-            }
-        }catch (Exception e){
-            errorMsg = errorMsg + "Error while updating Football games. ";
-            e.printStackTrace();
-        }
 
         try {
             sport = sportService.findSportById("NBA");
             if (sport != null){
-                APIGameReader reader = new NBAAPISportsReader(sport.getId(), 10);
+                APIGameReader reader = new NBAAPISportsReader(sport.getId());
                 List<Game> games = reader.getAPIGames();
                 addGames(games);
             }
@@ -310,8 +296,86 @@ public class GameService implements IGameService, IParticipantService{
             errorMsg = errorMsg + "Error while updating NBA games. ";
             e.printStackTrace();
         }
+        */
+
+        try {
+            sport = sportService.findSportById("Football");
+            if (sport != null){
+                APIGameReader reader = new FootballAPISportsReader(sport.getId());
+                List<Game> games = reader.getAPIGames();
+                addGames(games);
+                updateOngoingGames(reader, "Football");                
+            }
+        }catch (Exception e){
+            errorMsg = errorMsg + "Error while updating Football games. ";
+            e.printStackTrace();
+        }
 
         if(!errorMsg.equals(""))
             throw new Exception(errorMsg);
+    }
+
+    private void updateOngoingGames(APIGameReader reader, String idSport) throws Exception{
+        updateGamesState(reader, idSport);
+        updateScores(reader, idSport);
+        updateOdds(reader, idSport); 
+    }
+
+    private void updateGamesState(APIGameReader reader, String idSport) throws Exception{
+        List<Game> games = getOngoinGamesFromSport("Football");
+        List<Game> gamesToUpdate  = reader.updateGamesState(games);
+
+        for(Game g: gamesToUpdate){
+            changeGameState(g.getId(), g.getState());
+        }
+    }
+
+    private void updateScores(APIGameReader reader, String idSport) throws Exception{
+        List<Game> gamesToUpdate = getOngoinGamesFromSport("Football");
+        Set<Participant> ps = reader.updateScores(gamesToUpdate);
+
+        for(Participant p: ps){
+            editScoreInParticipant(p.getId(), p.getScore());
+        }
+    }
+
+    private void updateOdds(APIGameReader reader, String idSport) throws Exception{
+        List<Game> gamesToUpdate = getGamesWithoutOddsFromSport("Football");
+        Set<Participant> ps = reader.getParticipantsUpdated(gamesToUpdate);
+        
+        for(Participant p: ps){
+            editOddInParticipant(p.getId(), p.getOdd());
+        }
+    }
+
+    private List<Game> getOngoinGamesFromSport(String idSport){
+        List<Game> res = getOngoingGames();
+        res.removeIf(g -> !g.getSport().getId().equals(idSport));
+        return res;
+    }
+
+    private List<Game> getGamesWithoutOddsFromSport(String idSport){
+        List<Game> games = getGamesSorted();
+        List<Game> res = new ArrayList<>();
+    
+        games.removeIf(g -> !g.getSport().getId().equals(idSport));
+        for(Game g: games){
+            Set<Participant> participants = g.getParticipants();
+
+            boolean noOdds = true;
+            for(Participant p: participants){
+                if(p.getOdd() != 0){
+                    noOdds = false;
+                    break;
+                }
+            }
+            if(noOdds){
+                Game tmp = getGame(g.getId());
+                if (tmp != null)
+                    res.add(tmp);
+            }
+        }        
+
+        return res;
     }
 }

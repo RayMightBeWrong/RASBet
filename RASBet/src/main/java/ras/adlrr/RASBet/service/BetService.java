@@ -27,6 +27,7 @@ import ras.adlrr.RASBet.service.interfaces.IParticipantService;
 import ras.adlrr.RASBet.service.interfaces.ITransactionService;
 import ras.adlrr.RASBet.service.interfaces.IWalletService;
 import ras.adlrr.RASBet.service.interfaces.Promotions.IPromotionService;
+import ras.adlrr.RASBet.service.interfaces.Promotions.IClientPromotionService;
 
 
 @Service
@@ -36,7 +37,7 @@ public class BetService implements IBetService{
     private final IGamblerService gamblerService;
     private final IGameService gameService;
     private final IParticipantService participantService;
-    private final ClientPromotionService clientPromotionService;
+    private final IClientPromotionService clientPromotionService;
     private final BetRepository betRepository;
     private final GameChoiceRepository gameChoiceRepository;
     private final IPromotionService promotionService;
@@ -45,7 +46,7 @@ public class BetService implements IBetService{
     @Autowired
     public BetService(ITransactionService transactionService, IWalletService walletService,
                       BetRepository betRepository, IGamblerService gamblerService,
-                      IGameService gameService, ClientPromotionService clientPromotionService,
+                      IGameService gameService, IClientPromotionService clientPromotionService,
                       IPromotionService promotionService, INotificationService notificationService,
                       GameChoiceRepository gameChoiceRepository, IParticipantService participantService) {
         this.transactionService = transactionService;

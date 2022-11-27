@@ -9,7 +9,6 @@ import ras.adlrr.RASBet.service.interfaces.IGameService;
 @Service
 @RequiredArgsConstructor
 public class BetGameService implements IBetGameService {
-
     private final IBetService betService;
     private final IGameService gameService;
 

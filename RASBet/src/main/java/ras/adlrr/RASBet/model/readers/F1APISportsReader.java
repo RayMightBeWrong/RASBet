@@ -112,4 +112,22 @@ public class F1APISportsReader extends APIGameReader{
         JSONObject competition = (JSONObject) nextRace.getJSONObject("competition");
         return (String) competition.getString("name");
     }
+
+    @Override
+    public Set<Participant> getParticipantsUpdated(List<Game> games) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Set<Participant> updateScores(List<Game> games) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<Game> updateGamesState(List<Game> games) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

@@ -7,10 +7,10 @@ import ras.adlrr.RASBet.dao.*;
 import ras.adlrr.RASBet.model.*;
 import ras.adlrr.RASBet.model.Promotions.interfaces.IBalancePromotion;
 import ras.adlrr.RASBet.model.Promotions.interfaces.IPromotion;
-import ras.adlrr.RASBet.service.PromotionServices.ClientPromotionService;
-import ras.adlrr.RASBet.service.PromotionServices.PromotionService;
 import ras.adlrr.RASBet.service.interfaces.ICoinService;
 import ras.adlrr.RASBet.service.interfaces.IWalletService;
+import ras.adlrr.RASBet.service.interfaces.Promotions.IClientPromotionService;
+import ras.adlrr.RASBet.service.interfaces.Promotions.IPromotionService;
 import ras.adlrr.RASBet.service.interfaces.IGamblerService;
 import ras.adlrr.RASBet.service.interfaces.INotificationService;
 import ras.adlrr.RASBet.service.interfaces.ITransactionService;
@@ -27,13 +27,13 @@ public class TransactionService implements ITransactionService{
     private final IWalletService walletService;
     private final ICoinService coinService;
     private final INotificationService notificationService;
-    private final ClientPromotionService clientPromotionService;
-    private final PromotionService promotionService;
+    private final IClientPromotionService clientPromotionService;
+    private final IPromotionService promotionService;
 
     @Autowired
     public TransactionService (TransactionRepository transactionRepository, IGamblerService gamblerService, 
                                IWalletService walletService, ICoinService coinService, INotificationService notificationService,
-                               ClientPromotionService clientPromotionService, PromotionService promotionService){
+                               IClientPromotionService clientPromotionService, IPromotionService promotionService){
         this.transactionRepository = transactionRepository;
         this.gamblerService = gamblerService;
         this.walletService = walletService;

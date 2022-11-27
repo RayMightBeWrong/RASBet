@@ -15,15 +15,14 @@ import ras.adlrr.RASBet.model.Participant;
 
 public class NBAAPISportsReader extends APIGameReader{
     private String sport_id;
-    private int gamesToLoad;
+    private int gamesToLoad = 10;
     private String season;
     private String leagueID;
 
-    public NBAAPISportsReader(String sport_id, int gamesToLoad){
+    public NBAAPISportsReader(String sport_id){
         ReadJSONBehaviour readMethod = new ReadJSONFromExternalAPI();
         super.setReadMethod(readMethod);
         this.sport_id = sport_id;
-        this.gamesToLoad = gamesToLoad;
         this.season = "2022-2023";
         this.leagueID = "12";
     }
@@ -141,4 +140,22 @@ public class NBAAPISportsReader extends APIGameReader{
 
         return ps;
     }
+
+    @Override
+    public Set<Participant> getParticipantsUpdated(List<Game> games) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Set<Participant> updateScores(List<Game> games) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+	@Override
+	public List<Game> updateGamesState(List<Game> games) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -112,4 +112,22 @@ public class NFLOddsAPIReader extends APIGameReader{
 
         return awayTeam + " @ " + homeTeam;
     }
+
+    @Override
+    public Set<Participant> getParticipantsUpdated(List<Game> games) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Set<Participant> updateScores(List<Game> games) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+	@Override
+	public List<Game> updateGamesState(List<Game> games) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
@@ -23,6 +24,12 @@ public abstract class APIGameReader {
     }
 
     public abstract List<Game> getAPIGames();
+
+    public abstract Set<Participant> getParticipantsUpdated(List<Game> games);
+
+    public abstract Set<Participant> updateScores(List<Game> games);
+
+    public abstract List<Game> updateGamesState(List<Game> games);
 
     public String readJSON(String urlString, String path, String keyAPI){
         return this.readMethod.readJSONfromHTTPRequest(urlString, path, keyAPI);
