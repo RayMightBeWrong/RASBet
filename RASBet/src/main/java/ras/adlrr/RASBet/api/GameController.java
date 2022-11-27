@@ -134,4 +134,14 @@ public class GameController {
             return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
         }
     }
+
+    @PutMapping("/participants/{pid}/score/{score}")
+    public ResponseEntity editScoreInParticipant(@PathVariable("pid") int participant_id, @PathVariable("score") int score){
+        try{
+            participantService.editScoreInParticipant(participant_id, score);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
+        }
+    }
 }

@@ -196,6 +196,19 @@ public class GameService implements IGameService, IParticipantService{
             throw new Exception("Could not find participant!");
     }
 
+    public void editScoreInParticipant(int participant_id, int score) throws Exception {
+        if (score < 0)
+            throw new Exception("Inserted odd is not valid!");
+
+        Participant participant = pr.findById(participant_id).orElse(null);
+        if (participant != null){
+            participant.setScore(score);
+            pr.save(participant);
+        }
+        else
+            throw new Exception("Could not find participant!");
+    }
+
     public boolean participantExistsById(int id) {
         return pr.existsById(id);
     }

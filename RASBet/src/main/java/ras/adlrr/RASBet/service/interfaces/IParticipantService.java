@@ -20,6 +20,8 @@ public interface IParticipantService {
 
     public void editOddInParticipant(int participant_id, float odd) throws Exception;
 
+    public void editScoreInParticipant(int participant_id, int score) throws Exception;
+
     public boolean participantExistsById(int id);
 
     public void giveOddToGameChoice(GameChoice gc);
