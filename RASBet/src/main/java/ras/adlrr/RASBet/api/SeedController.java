@@ -8,7 +8,9 @@ import ras.adlrr.RASBet.model.*;
 import ras.adlrr.RASBet.service.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/seed")
@@ -68,8 +70,10 @@ public class SeedController {
         F1 = sportService.addSport(F1);
         NBA = sportService.addSport(NBA);
 
+        gameService.addGame(new Game("EXTID", LocalDateTime.now().plusDays(2), Game.OPEN, "Alex BC vs Luis BC",
+                "Football", Set.of(new Participant("Alex BC", 1, 1000), new Participant("Luis BC", 1000, 0))));
         //Update games with football api
-        gameService.updateGamesVPN();
+        //gameService.updateGamesVPN();
         //gameService.updateGames();
     }
 }

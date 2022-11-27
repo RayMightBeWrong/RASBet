@@ -73,8 +73,10 @@ public class ClientPromotionService implements IClientPromotionService{
 
 
     public void claimPromotion(int gambler_id, int promotion_id) throws Exception {
-        ClaimedPromo claimedPromo = claimedPromoRepository.findById(new ClaimedPromo.ClaimedPromoID(gambler_id, promotion_id))
+        ClaimedPromo claimedPromo = claimedPromoRepository.findById(new ClaimedPromo.ClaimedPromoID(promotion_id, gambler_id))
                                                           .orElse(null);
+        System.out.println(claimedPromo);
+
         if(claimedPromo == null)
             claimedPromo = signUpToPromotion(gambler_id, promotion_id);
 
@@ -130,11 +132,11 @@ public class ClientPromotionService implements IClientPromotionService{
     }
 
     private String checkReferralBoostOddPromoSignUpToConditions(int gambler_id, ReferralBoostOddPromotion promotion) {
-        return checkReferralPromoSignUpToConditions(gambler_id, promotion.getBegin_date(), promotion.getNumber_of_referrals_needed());
+        return checkReferralPromoSignUpToConditions(gambler_id, promotion.getBeginDate(), promotion.getNumber_of_referrals_needed());
     }
 
     private String checkReferralBalancePromoSignUpToConditions(int gambler_id, ReferralBalancePromotion promotion) {
-        return checkReferralPromoSignUpToConditions(gambler_id, promotion.getBegin_date(), promotion.getNumber_of_referrals_needed());
+        return checkReferralPromoSignUpToConditions(gambler_id, promotion.getBeginDate(), promotion.getNumber_of_referrals_needed());
     }
 
 

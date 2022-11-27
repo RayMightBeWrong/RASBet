@@ -94,4 +94,14 @@ public class TransactionController {
             return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
         }
     }
+
+    @PutMapping(path = "/claimBalancePromotion")
+    public ResponseEntity claimBalancePromotion(@RequestParam("gambler_id") int gambler_id, @RequestParam("coupon") String coupon) {
+        try {
+            transactionService.claimBalancePromotion(gambler_id, coupon);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
+        }
+    }
 }

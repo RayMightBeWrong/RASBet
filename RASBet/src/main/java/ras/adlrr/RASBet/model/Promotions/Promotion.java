@@ -29,10 +29,10 @@ public class Promotion implements IPromotion {
     private String description;
 
     @Column(nullable = false, name = "begin_date")
-    private LocalDateTime begin_date;
+    private LocalDateTime beginDate;
 
     @Column(name = "expiration_date")
-    private LocalDateTime expiration_date;
+    private LocalDateTime expirationDate;
 
     private int nr_uses; //nr of uses allowed for the coupon generated
 
@@ -41,11 +41,12 @@ public class Promotion implements IPromotion {
 
     public Promotion(@JsonProperty("title") String title, @JsonProperty("description") String description,
                      @JsonProperty("begin_date") LocalDateTime begin_date, @JsonProperty("expiration_date") LocalDateTime expiration_date,
-                     @JsonProperty("nr_uses") int nr_uses) {
+                     @JsonProperty("nr_uses") int nr_uses, @JsonProperty("coupon") String coupon) {
         this.title = title;
         this.description = description;
-        this.begin_date = begin_date;
-        this.expiration_date = expiration_date;
+        this.beginDate = begin_date;
+        this.expirationDate = expiration_date;
         this.nr_uses = nr_uses;
+        this.coupon = coupon;
     }
 }

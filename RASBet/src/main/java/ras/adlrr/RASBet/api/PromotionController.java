@@ -6,8 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
+import ras.adlrr.RASBet.model.Promotions.BoostOddPromotion;
 import ras.adlrr.RASBet.model.Promotions.ClaimedPromo;
 import ras.adlrr.RASBet.model.Promotions.Promotion;
+import ras.adlrr.RASBet.model.Promotions.ReferralPromotions.ReferralBalancePromotion;
+import ras.adlrr.RASBet.model.Promotions.ReferralPromotions.ReferralBoostOddPromotion;
 import ras.adlrr.RASBet.service.interfaces.Promotions.IClientPromotionService;
 import ras.adlrr.RASBet.service.interfaces.Promotions.IPromotionService;
 
@@ -30,10 +33,28 @@ public class PromotionController {
 
     // ------------- Promotion Methods ------------- //
 
-    @PostMapping
-    public ResponseEntity<Promotion> createPromotion(@RequestBody Promotion promotion){
+    @PostMapping("/BoostOdd")
+    public ResponseEntity<Promotion> createBoostOddPromotion(@RequestBody BoostOddPromotion boostOddPromotion){
         try {
-            return ResponseEntity.ok().body(promotionService.createPromotion(promotion));
+            return ResponseEntity.ok().body(promotionService.createPromotion(boostOddPromotion));
+        } catch (Exception e){
+            return new ResponseEntityBadRequest<Promotion>().createBadRequest(e.getMessage());
+        }
+    }
+
+    @PostMapping("/ReferralBoostOdd")
+    public ResponseEntity<Promotion> createReferralBoostOddPromotion(@RequestBody ReferralBoostOddPromotion referralBoostOddPromotion){
+        try {
+            return ResponseEntity.ok().body(promotionService.createPromotion(referralBoostOddPromotion));
+        } catch (Exception e){
+            return new ResponseEntityBadRequest<Promotion>().createBadRequest(e.getMessage());
+        }
+    }
+
+    @PostMapping("/ReferralBalance")
+    public ResponseEntity<Promotion> createReferralBalancePromotion(@RequestBody ReferralBalancePromotion referralBalancePromotion){
+        try {
+            return ResponseEntity.ok().body(promotionService.createPromotion(referralBalancePromotion));
         } catch (Exception e){
             return new ResponseEntityBadRequest<Promotion>().createBadRequest(e.getMessage());
         }
@@ -102,9 +123,9 @@ public class PromotionController {
                                                                          @RequestParam(value = "end_date", required = false) LocalDateTime endDate){
         try {
             if(whichDate.equals("begin"))
-                whichDate = "begin_date";
+                whichDate = "beginDate";
             else if(whichDate.equals("end"))
-                whichDate = "expiration_date";
+                whichDate = "expirationDate";
             else
                 throw new Exception("Parameter 'which_date' must be 'begin' or 'end'");
 
@@ -128,6 +149,7 @@ public class PromotionController {
             return ResponseEntity.ok().body(promotions);
 
         } catch (Exception e){
+            e.printStackTrace();
             return new ResponseEntityBadRequest<List<Promotion>>().createBadRequest(e.getMessage());
         }
     }
@@ -158,26 +180,6 @@ public class PromotionController {
 
         } catch (Exception e){
             return new ResponseEntityBadRequest<List<Promotion>>().createBadRequest(e.getMessage());
-        }
-    }
-
-    @PutMapping(path = "/gambler/claimPromo")
-    public ResponseEntity claimPromotion(@RequestParam("gambler_id") int gambler_id, @RequestParam("promotion_id") int promotion_id) {
-        try {
-            clientPromotionService.claimPromotion(gambler_id, promotion_id);
-            return new ResponseEntity(HttpStatus.OK);
-        } catch (Exception e){
-            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
-        }
-    }
-
-    @PutMapping(path = "/gambler/claimPromoWithCoupon")
-    public ResponseEntity claimPromotionWithCoupon(@RequestParam("gambler_id") int gambler_id, @RequestParam("coupon") String coupon) {
-        try {
-            clientPromotionService.claimPromotionWithCoupon(gambler_id, coupon);
-            return new ResponseEntity(HttpStatus.OK);
-        } catch (Exception e){
-            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
         }
     }
 }

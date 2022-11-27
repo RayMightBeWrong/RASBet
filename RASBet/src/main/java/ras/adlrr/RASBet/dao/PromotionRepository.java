@@ -22,7 +22,7 @@ public interface PromotionRepository extends JpaRepository<Promotion,Integer> {
      * @param sort Specifies how to order the results
      * @return list of promotions which begin date (or expiration date, depending on the value of the parameter "which_date") is contained between dates.
      */
-    @Query("SELECT p FROM Promotion p WHERE CASE WHEN (:which_date = 'expiration_date') THEN p.expiration_date ELSE p.begin_date END BETWEEN :startDate AND :endDate")
+    @Query("SELECT p FROM Promotion p WHERE CASE WHEN (:which_date = 'expiration_date') THEN p.expirationDate ELSE p.beginDate END BETWEEN :startDate AND :endDate")
     List<Promotion> getPromotionsBetweenDatesOrderedByDate(@Param("which_date") String which_date,
                                                                @Param("startDate") LocalDateTime startDate,
                                                                @Param("endDate") LocalDateTime endDate,

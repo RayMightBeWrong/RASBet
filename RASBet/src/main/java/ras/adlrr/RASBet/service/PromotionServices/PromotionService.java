@@ -105,8 +105,8 @@ public class PromotionService implements IPromotionService{
      * @return all the promotions ordered by the start date or expiration date. A null value is returned if the argument "whichDate" is invalid.
      */
     public List<Promotion> getAllPromotionsOrderedByDate(String whichDate, Sort.Direction direction) throws Exception {
-        if(!whichDate.equals("begin_date") && !whichDate.equals("expiration_date"))
-            throw new Exception("Parameter \"which_date\" can either be \"begin_date\" or \"expiration_date\"");
+        if(!whichDate.equals("beginDate") && !whichDate.equals("expirationDate"))
+            throw new Exception("Parameter \"which_date\" can either be \"beginDate\" or \"expirationDate\"");
         return promotionRepository.findAll(Sort.by(direction, whichDate));
     }
 
@@ -186,12 +186,14 @@ public class PromotionService implements IPromotionService{
            return "Title cannot be null.";
         if(promotion.getDescription() == null)
            return "Description cannot be null.";
-        if(promotion.getBegin_date() == null)
+        if(promotion.getBeginDate() == null)
            return "Begin date cannot be null.";
-        if(promotion.getExpiration_date() != null && promotion.getBegin_date().isAfter(promotion.getExpiration_date()))
+        if(promotion.getExpirationDate() != null && promotion.getBeginDate().isAfter(promotion.getExpirationDate()))
            return "Begin date must be before the expiration date.";
         if(promotion.getNr_uses() <= 0)
            return "The number of times a promotion can be redeemed must be a positive.";
+        if(promotion.getCoupon() == null)
+            return "Coupon cannot be null!";
         if(promotionRepository.existsByCoupon(promotion.getCoupon()))
            return "Coupon already in use!";
         return null;

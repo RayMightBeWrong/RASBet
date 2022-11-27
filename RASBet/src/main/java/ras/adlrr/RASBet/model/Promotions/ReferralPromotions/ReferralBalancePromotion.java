@@ -10,10 +10,7 @@ import ras.adlrr.RASBet.model.Promotions.interfaces.IBalancePromotion;
 import ras.adlrr.RASBet.model.Promotions.interfaces.IReferralPromotion;
 import ras.adlrr.RASBet.model.Promotions.Promotion;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,15 +22,16 @@ import java.time.LocalDateTime;
 public class ReferralBalancePromotion extends Promotion implements IBalancePromotion, IReferralPromotion {
     private int number_of_referrals_needed;
     private float value_to_give;
-    @ManyToOne
-    @JoinColumn(name = "coin_id", updatable = false, insertable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "coin_id", updatable = false)
     private Coin coin;
 
     public ReferralBalancePromotion(@JsonProperty("title") String title, @JsonProperty("description") String description,
-                                    @JsonProperty("beginDate") LocalDateTime beginDate, @JsonProperty("expirationDate") LocalDateTime expirationDate,
-                                    @JsonProperty("nr_uses") int nr_uses, @JsonProperty("number_of_referrals_needed") int number_of_referrals_needed,
+                                    @JsonProperty("begin_date") LocalDateTime beginDate, @JsonProperty("expiration_date") LocalDateTime expirationDate,
+                                    @JsonProperty("nr_uses") int nr_uses, @JsonProperty("coupon") String coupon,
+                                    @JsonProperty("number_of_referrals_needed") int number_of_referrals_needed,
                                     @JsonProperty("value_to_give") float value_to_give, @JsonProperty("coin_id") String coin_id) {
-        super(title, description, beginDate, expirationDate, nr_uses);
+        super(title, description, beginDate, expirationDate, nr_uses, coupon);
         this.number_of_referrals_needed = number_of_referrals_needed;
         this.value_to_give = value_to_give;
         this.coin = new Coin(); this.coin.setId(coin_id);
