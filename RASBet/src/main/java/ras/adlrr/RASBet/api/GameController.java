@@ -70,6 +70,11 @@ public class GameController {
         return ResponseEntity.ok().body(gameService.getGames());
     }
 
+    @GetMapping(path = "/sorted")
+    public ResponseEntity<List<Game>> getGamesSorted() {
+        return ResponseEntity.ok().body(gameService.getGamesSorted());
+    }
+
     @PutMapping(path = "/{id}/state/close")
     public ResponseEntity closeGame(@PathVariable("id") int id){
         try {

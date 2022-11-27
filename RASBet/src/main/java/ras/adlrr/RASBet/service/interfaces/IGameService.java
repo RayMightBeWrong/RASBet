@@ -7,6 +7,8 @@ import ras.adlrr.RASBet.model.Game;
 public interface IGameService {
     public List<Game> getGames();
 
+    public List<Game> getGamesSorted();
+
     public List<Game> getOngoingGames();
 
     public void updateGamesVPN() throws Exception;
