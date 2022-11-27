@@ -39,17 +39,6 @@ public class GameController {
         }
     }
 
-    @PostMapping(path = "/updateVPN")
-    public ResponseEntity updateGamesVPN(){
-        try{ 
-            gameService.updateGamesVPN();
-            return new ResponseEntity(HttpStatus.OK);
-        }
-        catch (Exception e){
-            return new ResponseEntityBadRequest<Game>().createBadRequest(e.getMessage());
-        }
-    }
-
     @PostMapping(path = "/update")
     public ResponseEntity updateGames(){
         try{ 

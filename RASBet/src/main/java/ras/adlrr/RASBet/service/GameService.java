@@ -53,11 +53,21 @@ public class GameService implements IGameService, IParticipantService{
         return res;
     }
 
+    public void updateGames() throws Exception{
+        String error = "";
+        try { updateGamesNoVPN(); }
+        catch (Exception e){ error += e.getMessage(); }
+        //try{ updateGamesVPN(); }
+        //catch (Exception e){ error += e.getMessage() ; }
+        if(!error.equals(""))
+            throw new Exception(error);
+    }
+
     public void updateGamesVPN() throws Exception{
         getGamesFromAPIVPN();
     }
 
-    public void updateGames() throws Exception{
+    public void updateGamesNoVPN() throws Exception{
         getGamesFromAPI();
     }
 
@@ -210,15 +220,18 @@ public class GameService implements IGameService, IParticipantService{
             
             List<Game> games = reader.getAPIGames();
             if (games == null)
-                throw new Exception("Error occurred while reading request from external API");
+                throw new Exception("Error while updating football games (UCRAS). ");
             
             addGames(games);
         }
     }
 
     public void getGamesFromAPI() throws Exception{
-        String errorMsg = "| ";
+        String errorMsg = "";
         Sport sport;
+
+
+
         /*
         try {
             Sport sport = sportService.findSportById("NFL");
@@ -228,7 +241,7 @@ public class GameService implements IGameService, IParticipantService{
                 addGames(games);
             }
         }catch (Exception e){
-            errorMsg = errorMsg + "Could not update NFL games" + " | ";
+            errorMsg = errorMsg + "Error while updating NFL games" + " | ";
         }
         */
 
@@ -240,7 +253,7 @@ public class GameService implements IGameService, IParticipantService{
                 addGames(games);
             }
         }catch (Exception e){
-            errorMsg = errorMsg + "Could not update F1 games." + " | ";
+            errorMsg = errorMsg + "Error while updating F1 games. ";
         }
 
         try {
@@ -251,7 +264,8 @@ public class GameService implements IGameService, IParticipantService{
                 addGames(games);
             }
         }catch (Exception e){
-            errorMsg = errorMsg + "Could not update Football games" + " | ";
+            errorMsg = errorMsg + "Error while updating Football games. ";
+            e.printStackTrace();
         }
 
         try {
@@ -262,10 +276,11 @@ public class GameService implements IGameService, IParticipantService{
                 addGames(games);
             }
         }catch (Exception e){
-            errorMsg = errorMsg + "Could not update NBA games" + " | ";
+            errorMsg = errorMsg + "Error while updating NBA games. ";
+            e.printStackTrace();
         }
 
-        if(!errorMsg.equals("| "))
+        if(!errorMsg.equals(""))
             throw new Exception(errorMsg);
     }
 }

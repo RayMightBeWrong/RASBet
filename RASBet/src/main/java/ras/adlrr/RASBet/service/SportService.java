@@ -32,9 +32,11 @@ public class SportService implements ISportService{
     public Sport addSport(Sport sport) throws Exception {
         if(sportRepository.existsById(sport.getId()))
             throw new Exception("Sport already exists!");
-
+        if(sport.getType() != Sport.WITH_DRAW &&
+           sport.getType() != Sport.WITHOUT_DRAW &&
+           sport.getType() != Sport.RACE)
+            throw new Exception("Not a valid type of sport.");
         sportRepository.save(sport);
-        
         return sport;
     }
 

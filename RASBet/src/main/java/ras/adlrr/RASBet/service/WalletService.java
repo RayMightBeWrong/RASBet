@@ -47,6 +47,8 @@ public class WalletService implements IWalletService, ICoinService{
     public Coin addCoin(Coin coin) throws Exception {
         if(coin.getRatio_EUR() <= 0)
             throw new Exception("The ratio cannot be 0 or negative.");
+        if(coinExistsById(coin.getId()))
+            throw new Exception("A coin with the given id already exists.");
         return coinRepository.save(coin);
     }
 
