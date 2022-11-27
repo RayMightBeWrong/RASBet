@@ -3,6 +3,7 @@ package ras.adlrr.RASBet.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import ras.adlrr.RASBet.dao.NotificationRepository;
@@ -25,6 +26,7 @@ public class NotificationService implements INotificationService{
         return nr.findById(id).orElse(null);
     }
 
+    @Async
     public Notification addNotification(Notification notification) throws Exception{
         if(notification == null)
             throw new Exception("Null Notification!");

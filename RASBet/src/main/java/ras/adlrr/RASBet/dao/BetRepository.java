@@ -32,8 +32,14 @@ public interface BetRepository extends JpaRepository<Bet, Integer> {
             "ORDER BY b.transaction.date ASC")
     List<Bet> findAllByGamblerIdSortDescendingByDate(@Param("gambler_id") int gambler_id);
 
-    @Query(value = "select gc.* from (select * from transactions where transactions.gambler_id = :gambler_id) as t" +
-                   "inner join bets b on t.id = b.id" +
-                   "inner join game_choices gc on b.id = gc.bet_id", nativeQuery = true)
-    List<GameChoice> findGamblerGameChoices(@Param("gambler_id") int gambler_id);
+    @Query(value = "SELECT b.* FROM " +
+                                    "bets AS b " +
+                                    "INNER JOIN " +
+                                    "(SELECT gc.bet_id FROM game_choices gc WHERE gc.game_id = :game_id) AS game_bet_ids " +
+                                        "ON b.id = game_bet_ids.bet_id", nativeQuery = true)
+    List<Bet> getBetsByGameId(@Param("game_id") int game_id);
+
+    @Query(value = "SELECT gc.bet_id FROM game_choices gc WHERE gc.game_id = :game_id", nativeQuery = true)
+    List<Integer> getBetsIdsByGameId(@Param("game_id") int game_id);
+
 }

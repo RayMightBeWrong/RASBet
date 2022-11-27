@@ -1,6 +1,5 @@
 package ras.adlrr.RASBet.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -8,11 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ras.adlrr.RASBet.model.Promotions.Promotion;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,14 +35,15 @@ public class Bet {
     @JoinColumn(name = "bet_id", nullable = false)
     private List<GameChoice> gameChoices;
 
-    private String coupon;
+    private String coupon = null;
 
     @JsonProperty("state")
-    private int state = STATE_OPEN;
+    private int state = STATE_PENDING;
 
-    public static final int STATE_OPEN = 1;
-    public static final int STATE_CLOSED = 2;
-    public static final int STATE_CANCELED = 3;
+    public static final int STATE_PENDING = 1;
+    public static final int STATE_WON = 2;
+    public static final int STATE_LOST = 3;
+    public static final int STATE_CANCELED = 4;
 
     public Bet(@JsonProperty("gambler_id") int gambler_id, @JsonProperty("wallet_id") Integer wallet_id,
                @JsonProperty("value") float value, @JsonProperty("coin_id") String coin_id,

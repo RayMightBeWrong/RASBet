@@ -9,6 +9,7 @@ import ras.adlrr.RASBet.model.Gambler;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 @Entity
@@ -26,6 +27,19 @@ public class Referral {
     public static class ReferralID implements Serializable {
         private int referredId;
         private int referrerId;
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ReferralID that = (ReferralID) o;
+            return referredId == that.referredId && referrerId == that.referrerId;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(referredId, referrerId);
+        }
     }
 
     @EmbeddedId

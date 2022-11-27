@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
+import ras.adlrr.RASBet.service.BetGameService;
+import ras.adlrr.RASBet.service.interfaces.IBetGameService;
 import ras.adlrr.RASBet.service.interfaces.IGameService;
 import ras.adlrr.RASBet.service.interfaces.IParticipantService;
 
@@ -18,12 +20,14 @@ import java.util.Set;
 public class GameController {
     private final IGameService gameService;
     private final IParticipantService participantService;
+    private final IBetGameService betGameService;
 
     /* **** Game Methods **** */
     @Autowired
-    public GameController(IGameService gameService, IParticipantService participantService){
+    public GameController(IGameService gameService, IParticipantService participantService, IBetGameService betGameService){
         this.gameService = gameService;
         this.participantService = participantService;
+        this.betGameService = betGameService;
     }
 
     @PostMapping
@@ -81,7 +85,7 @@ public class GameController {
     @PutMapping(path = "/{id}/state/close")
     public ResponseEntity closeGame(@PathVariable("id") int id){
         try {
-            gameService.closeGame(id);
+            betGameService.closeGameAndWithdrawBets(id);
             return new ResponseEntity(HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntityBadRequest().createBadRequest(e.getMessage());

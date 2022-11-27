@@ -8,6 +8,7 @@ import ras.adlrr.RASBet.model.Gambler;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
@@ -24,6 +25,19 @@ public class ClaimedPromo {
     public static class ClaimedPromoID implements Serializable {
         private int promotionId;
         private int gamblerId;
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ClaimedPromoID that = (ClaimedPromoID) o;
+            return promotionId == that.promotionId && gamblerId == that.gamblerId;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(promotionId, gamblerId);
+        }
     }
 
     @EmbeddedId

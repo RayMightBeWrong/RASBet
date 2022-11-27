@@ -8,12 +8,7 @@ import org.springframework.stereotype.Service;
 import ras.adlrr.RASBet.dao.*;
 import ras.adlrr.RASBet.model.Coin;
 import ras.adlrr.RASBet.model.Gambler;
-import ras.adlrr.RASBet.model.Promotions.interfaces.IBalancePromotion;
-import ras.adlrr.RASBet.model.Promotions.interfaces.IPromotion;
 import ras.adlrr.RASBet.model.Wallet;
-import ras.adlrr.RASBet.service.PromotionServices.ClientPromotionService;
-import ras.adlrr.RASBet.service.PromotionServices.PromotionService;
-import javax.transaction.Transactional;
 import ras.adlrr.RASBet.service.interfaces.ICoinService;
 import ras.adlrr.RASBet.service.interfaces.IWalletService;
 
@@ -100,6 +95,10 @@ public class WalletService implements IWalletService, ICoinService{
         return walletRepository.findAllByGamblerId(gambler_id);
     }
 
+    public Wallet getWalletByGamblerIdAndCoinId(int gambler_id, String coin_id){
+        return walletRepository.getByGamblerIdAndCoinId(gambler_id, coin_id);
+    }
+
     /**
      * @return list of wallets present in the repository
      */
@@ -125,6 +124,9 @@ public class WalletService implements IWalletService, ICoinService{
         Gambler gambler = wallet.getGambler();
         if(gambler == null || !userService.gamblerExistsById(gambler.getId()))
             throw new Exception("Cannot create wallet for an invalid gambler!");
+
+        if(walletRepository.hasWalletWithCoin(gambler.getId(), coin.getId()))
+            throw new Exception("Gambler already has a wallet that uses this coin.");
 
         return walletRepository.save(wallet);
     }

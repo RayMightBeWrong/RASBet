@@ -37,9 +37,9 @@ public class BetController {
     }
 
     @PutMapping(path = "/withdraw")
-    public ResponseEntity<Transaction> withdrawBetWinnings(@RequestParam("bet_id") int bet_id, @RequestParam("wallet_id") int wallet_id){
+    public ResponseEntity<Transaction> withdrawBetWinnings(@RequestParam("bet_id") int bet_id){
         try {
-            return ResponseEntity.ok().body(betService.withdrawBetWinnings(bet_id, wallet_id));
+            return ResponseEntity.ok().body(betService.closeBetAndWithdrawWinnings(bet_id));
         }catch (Exception e){
             return new ResponseEntityBadRequest<Transaction>().createBadRequest(e.getMessage());
         }

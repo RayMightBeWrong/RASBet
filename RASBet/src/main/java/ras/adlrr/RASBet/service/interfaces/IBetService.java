@@ -7,15 +7,19 @@ import ras.adlrr.RASBet.model.Bet;
 import ras.adlrr.RASBet.model.Transaction;
 
 public interface IBetService {
-    public Bet getBet(int id);
+    Bet getBet(int id);
 
-    public Bet addBet(Bet bet) throws Exception;
+    Bet addBet(Bet bet) throws Exception;
 
-    public void removeBet(int betID) throws Exception;
+    void removeBet(int betID) throws Exception;
 
-    public List<Bet> getGamblerBets(int gambler_id) throws Exception;
+    List<Bet> getGamblerBets(int gambler_id) throws Exception;
 
     List<Bet> getGamblerBets(int gambler_id, Sort.Direction direction) throws Exception;
 
-    public Transaction withdrawBetWinnings(int bet_id, int wallet_id) throws Exception;
+    Transaction closeBetAndWithdrawWinnings(int bet_id) throws Exception;
+
+    List<Bet> getBetsByGameId(int game_id) throws Exception;
+
+    List<Integer> getBetsIdsByGameId(int game_id) throws Exception;
 }
