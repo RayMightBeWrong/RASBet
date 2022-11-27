@@ -7,21 +7,24 @@ function Registo({
     userState
 }) {
 
-    const handleClick = (e) => {
+    const handleSubmit = event => {
+        event.preventDefault()
         if (expertMode === "false") {
-            e.preventDefault()
-            const registo = { email: "", psw: "", dataNascimento: "", nif: "" }
+            const registo = {
+                name: "Tiago Martins", password: "tiago", email: "tiago@hotmail.com", cc: 30557672,
+                nationality: "Portuguese", nif: 238788888, city: "Braga", address: "Rua", phone_number: 961324242,
+                occupation: "Student", date_of_birth: "2001-07-29", postal_code: "4705-651"
+            }
             console.log(registo)
             fetch("http://localhost:8080/api/users/gambler", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(registo)
-            }).then(() => {
-                console.log("Nova Conta Registada")
-            })
+            }).then(
+                res => console.log('An error occurred.', res)
+            )
         }
         else {
-            e.preventDefault()
             const registo = { email: "", psw: "" }
             console.log(registo)
             fetch("http://localhost:8080/api/users/expert", {
@@ -33,13 +36,15 @@ function Registo({
             })
         }
     }
+
+
     if (expertMode === "false") {
         return (
             <>
                 <div className='registo'>
                     <div className='white-box'>
                         <div className='container'>
-                            <form action="/action_page.php" class="container-form">
+                            <form class="container-form" onSubmit={handleSubmit}>
                                 <h1>Registo</h1>
 
                                 <input type="txtL" placeholder="E-mail" name="email" required />
@@ -47,7 +52,7 @@ function Registo({
                                 <input type="txtL" placeholder="Data de Nascimento" name="dataNascimento" required />
                                 <input type="txtL" placeholder="NIF" name="nif" required />
 
-                                <Button type="submit" buttonSize='btn--flex' onclick={() => handleClick}>Concluir</Button>
+                                <Button buttonSize='btn--flex' type="submit">Concluir</Button>
 
                             </form>
                         </div>
@@ -65,14 +70,13 @@ function Registo({
                 <div className='registo'>
                     <div className='white-box'>
                         <div className='container'>
-                            <form action="/action_page.php" class="container-form">
+                            <form class="container-form" onSubmit={handleSubmit}>
                                 <h1>Registo</h1>
 
                                 <input type="txtL" placeholder="E-mail" name="email" required />
                                 <input type="txtL" placeholder="Palavra-passe" name="psw" required />
 
-                                <Button type="submit" buttonSize='btn--flex' onclick={() => handleClick}>Concluir</Button>
-
+                                <Button buttonSize='btn--flex' type="submit">Concluir</Button>
                             </form>
                         </div>
                         <img className='imagem'
