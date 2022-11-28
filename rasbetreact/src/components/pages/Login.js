@@ -1,25 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import './Login.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../Button';
 
-function Login() {
+function Login({
+  setUserState
+}) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const navigate = useNavigate();
 
   const handleSubmit = event => {
-    console.log("yoooooooooo")
-    /*"localhost:8080/api/users?email=" + email + "&password=" + password*/
-
+    event.preventDefault()
     const requestOptions = {
       method: 'GET',
-      headers: { "Content-Type": "application/json" },
-      redirect: 'follow'
-    };
+      headers: { "Content-Type": "application/json" }
+    }
 
-    fetch("localhost:8080/api/users/login?email=tiago@hotmail.com&password=tiago", requestOptions)
+    fetch("http://localhost:8080/api/users?email=" + email + "&password=" + password, requestOptions)
       .then(response => response.text())
-      .then(result => console.log(result))
+      .then(result => {
+        switch (result) {
+          case '0':
+            console.log("Gambler Logged in")
+            setUserState("gambler")
+            navigate("/")
+            break;
+          case '1':
+            console.log("Admin Logged in")
+            setUserState("admin")
+            navigate("/")
+            break;
+          case '2':
+            console.log("Expert Logged in")
+            setUserState("expert")
+            navigate("/")
+            break;
+          default:
+            console.log("Error logging in")
+            setUserState("loggedOff")
+        }
+      })
       .catch(error => console.log('error', error));
   }
 
@@ -30,7 +51,7 @@ function Login() {
       <div className='login'>
         <div className='white-box'>
           <div className='container'>
-            <form class="container-form" onSubmit={handleSubmit}>
+            <form className="container-form" onSubmit={handleSubmit}>
               <h1>BEM VINDO</h1>
 
               <input type="txtL" placeholder="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -42,7 +63,6 @@ function Login() {
               <Button type="submit" buttonSize='btn--flex'>Aceder</Button>
 
             </form>
-            <Button type="submit" buttonSize='btn--flex' onClick={handleSubmit}>Teste</Button>
             Não tem conta?
             <Link to='/registo' className='registerbutton'>
               Registe-se ja!

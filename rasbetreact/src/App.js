@@ -19,20 +19,20 @@ function App() {
     expert: expert logged in
     admin: admin logged in
   */
-  const [userState, setUserState] = useState('admin');
+  const [userState, setUserState] = useState('loggedOff');
 
 
   return (
     <>
       <Router>
-        <Navbar userState={userState} />
+        <Navbar userState={userState} setUserState={setUserState} />
         <Routes>
           <Route path="/" element={<Sport sportType="any" userState={userState} />} />
           <Route path='/futebol' element={<Sport sportType="futebol" userState={userState} />} />
           <Route path='/basquetebol' element={<Sport sportType="basquetebol" userState={userState} />} />
           <Route path='/tenis' element={<Sport sportType="tenis" userState={userState} />} />
           <Route path='/motogp' element={<Sport sportType="motogp" userState={userState} />} />
-          <Route path='/login' element={<Login />} />
+          <Route path='/login' element={<Login setUserState={setUserState} />} />
           <Route path='/perfil' element={<Perfil />} />
           <Route path='/historico' element={<Historico />} />
           <Route path='/registo' element={<Registo userState={userState} expertMode="false" />} />
