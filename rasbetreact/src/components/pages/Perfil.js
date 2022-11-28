@@ -3,6 +3,7 @@ import './Perfil.css';
 import { Button } from '../Button';
 import { CarteiraSimplificada } from '../Carteira';
 import { PayMethod } from '../PayMethods'
+import { Link } from 'react-router-dom';
 
 const carteira1 = { ratioEuro: "0.35", balance: "30" }
 const carteira2 = { ratioEuro: "1", balance: "700" }
@@ -81,6 +82,11 @@ function Perfil() {
         </div>
         <div className='save'>
           <Button buttonSize={'btn--medium'} onClick={() => setOpen(true)}>Nova Carteira</Button>
+          <Link to='/historico' className='registerbutton'>
+            <Button buttonSize={'btn--medium'} buttonStyle={'btn--inverted'} onClick={() => setOpen(true)}>
+              Consultar Historico
+            </Button>
+          </Link>
         </div>
         {open ?
           <PayMethod options={currency} closePopup={() => setOpen(false)} rBack={() => setOpen(false)} />

@@ -51,10 +51,6 @@
     padding: 30px;
 }
 
-input{
-    max-width: 250px;
-}
-
 select{
     border: 1px solid #f1f1f1;
     background: #f1f1f1;
@@ -70,6 +66,7 @@ select:hover{
 }
 
 input[type="txtPM"]{
+    max-width: 250px;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
     padding: 15px;

@@ -10,6 +10,7 @@ import AdminMenu from './components/pages/AdminMenu';
 import MenuCoins from './components/pages/MenuCoins';
 import MenuPromocoes from './components/pages/MenuPromocoes';
 import ConsultaPerfil from './components/pages/ConsultaPerfil';
+import Historico from './components/pages/Historico';
 
 function App() {
   /*Possible userStates:
@@ -33,6 +34,7 @@ function App() {
           <Route path='/motogp' element={<Sport sportType="motogp" userState={userState} />} />
           <Route path='/login' element={<Login />} />
           <Route path='/perfil' element={<Perfil />} />
+          <Route path='/historico' element={<Historico />} />
           <Route path='/registo' element={<Registo userState={userState} expertMode="false" />} />
           <Route path='/admin_Options' element={<AdminMenu userState={userState} />} />
           <Route path='/admin_Options/registo_Expert' element={<Registo userState={userState} expertMode="true" />} />
