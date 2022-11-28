@@ -13,7 +13,7 @@ import java.util.List;
 
 @RequestMapping("/api/transactions")
 @RestController
-@CrossOrigin
+@CrossOrigin//(origins = "http://localhost:8080")
 public class TransactionController {
     private final ITransactionService transactionService;
 
