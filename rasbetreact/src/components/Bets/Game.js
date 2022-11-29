@@ -61,7 +61,7 @@ export const Game = ({
                 <div className='bets'>
                     {participants.map(dic => (
                         <div key={dic.id}>
-                            <Button buttonStyle={locked.fechada && locked.bet == dic.name ? "btn--bet-clicked" : "btn--bet"}
+                            <Button buttonStyle={locked.fechada && locked.bet === dic.name ? "btn--bet-clicked" : "btn--bet"}
                                 buttonSize={'btn--flex'} onClick={() => handleClick(dic.name, dic.odd)}>
                                 <div>{dic.name}</div>
                                 <div>{dic.odd}</div>

@@ -7,11 +7,12 @@ function Sport({
 }) {
 
     const [jogos, setJogos] = useState([])
-    const requestOptions = {
-        method: 'GET',
-        headers: { "Content-Type": "application/json" }
-    }
+
     useEffect(() => {
+        const requestOptions = {
+            method: 'GET',
+            headers: { "Content-Type": "application/json" }
+        }
         fetch("http://localhost:8080/api/games/", requestOptions)
             .then(res => res.json())
             .then((result) => {
