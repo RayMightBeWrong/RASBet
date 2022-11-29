@@ -12,7 +12,8 @@ public class ResponseEntityBadRequest<T> {
 
     public ResponseEntity<T> createBadRequest(String error){
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Error", error);
+        headers.add("x-error", error);
+        headers.setAccessControlExposeHeaders(List.of("*"));
         return new ResponseEntity<T>(headers, HttpStatus.BAD_REQUEST);
     }
 }

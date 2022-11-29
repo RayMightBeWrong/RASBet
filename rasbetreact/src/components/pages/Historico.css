@@ -1,0 +1,82 @@
+.historico {
+    background-color: #f1f1f1;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 850px;
+}
+
+.historico-box {
+    background-color: white;
+    color: #003915;
+    padding: 30px;
+    border-radius: 25px;
+    width: 100%;
+    height: 100%;
+    max-width: 1300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contentMod{
+    display: flex;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    width: 100%;
+}
+.contentMod > h2{
+    margin-right: 15px;
+}
+
+.selectHist{
+    border: 1px solid #f1f1f1;
+    background: #f1f1f1;
+    padding: 3px;
+    margin-right: 15px;
+}
+
+
+.transaction{
+    width: 100%;
+}
+
+.transaction-box{
+    background-color: white;
+    width: 100%;
+    display: block;
+    min-width: 950px;
+}
+
+.hist-body-columns{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.hist-body-item{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.hist-body-item > h3{
+    margin-bottom: 20px;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border-top: 5px solid green ;
+    border-bottom: 5px solid green;
+}
+
+.hist-body-item > h4{
+    padding: 10px 20px;
+    border-bottom: 1px solid green ;
+    border-top: 1px solid green ;
+}
+
+@media only screen and (max-width: 1069px){
+    .transaction {
+        overflow-x: scroll;
+    }
+}

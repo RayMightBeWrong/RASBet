@@ -16,6 +16,7 @@ import java.util.Set;
 
 @RequestMapping("/api/games")
 @RestController
+@CrossOrigin
 public class GameController {
     private final IGameService gameService;
     private final IParticipantService participantService;

@@ -20,6 +20,10 @@ function Registo({
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(registo)
+            }, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(registo)
             }).then(
                 res => console.log('An error occurred.', res)
             )

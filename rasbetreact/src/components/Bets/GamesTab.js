@@ -18,7 +18,6 @@ export const GamesTab = ({
     const [bets, setBets] = useState([]);
 
     function BoletimLock() {
-        console.log("gamblerrrrr")
         if (userState === 'gambler') {
             return (
                 <div className='boletimbox'>

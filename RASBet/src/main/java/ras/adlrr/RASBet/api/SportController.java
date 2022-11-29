@@ -13,6 +13,7 @@ import java.util.List;
 
 @RequestMapping("/api/sports")
 @RestController
+@CrossOrigin
 public class SportController {
     private final ISportService sportService;
 

@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom';
 import './Navbar.css';
 
 function Navbar({
-  userState
+  userState,
+  setUserState
 }) {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
-
+  const [loggedIn, setloggedIn] = useState(false);
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
 
@@ -31,6 +32,61 @@ function Navbar({
     else return;
   }
 
+  function logButtonMobile() {
+    if (userState === 'loggedOff') {
+      return (
+
+        <Link
+          to='/login'
+          className='nav-links-mobile'
+          onClick={closeMobileMenu}
+        >
+          Log In
+        </Link>
+      )
+    }
+    else
+      return (
+        <Link
+          to='/'
+          className='nav-links-mobile'
+          onClick={function (event) { closeMobileMenu(); setUserState("loggedOff") }}
+        >
+          Log Off
+        </Link>
+      )
+  }
+
+
+  /*
+  if (userState === 'loggedOff') {
+      setLogButton(
+        <>
+          {button && <Link to='/login' ><Button buttonStyle='btn--outline'>Log In</Button> </Link>}
+        </>
+      )
+    }
+    else {
+      setLogButton(
+        <>
+          {button && <Link to='/'><Button buttonStyle='btn--outline' onClick={setUserState("loggedOff")}>Log Off</Button> </Link>}
+        </>
+      )
+    }
+  */
+  const logButtonLogic = () => {
+    if (userState === 'loggedOff') {
+      setloggedIn(false)
+    }
+    else {
+      setloggedIn(true)
+    }
+  }
+
+  const handleLogOffClick = () => {
+    setUserState("loggedOff")
+  }
+
   const showButton = () => {
     if (window.innerWidth <= 1250) {
       setButton(false);
@@ -42,6 +98,10 @@ function Navbar({
   useEffect(() => {
     showButton();
   }, []);
+
+  useEffect(() => {
+    logButtonLogic();
+  }, [userState]);
 
   window.addEventListener('resize', showButton);
 
@@ -111,16 +171,11 @@ function Navbar({
             </li>
             {adminOptions()}
             <li>
-              <Link
-                to='/login'
-                className='nav-links-mobile'
-                onClick={closeMobileMenu}
-              >
-                Log In
-              </Link>
+              {logButtonMobile()}
             </li>
           </ul>
-          {button && <Link to='/login' ><Button buttonStyle='btn--outline'>Log In</Button> </Link>}
+          {!loggedIn && button && <Link to='/login' ><Button buttonStyle='btn--outline'>Log In</Button> </Link>}
+          {loggedIn && button && <Link to='/'><Button buttonStyle='btn--outline' onClick={handleLogOffClick}>Log Off</Button> </Link>}
         </div>
       </nav>
     </>
