@@ -27,21 +27,25 @@ export const Game = ({
     const handleClick = (name, odd) => {
         if (userState === 'gambler') {
             if (locked.fechada && locked.bet === name) {
-                setLock({ fechada: false, bet: "" });
-                removeBet(title);
+                console.log("remover beeett")
+                setLock({ fechada: false, bet: "" })
+                removeBet(title)
             } else if (locked.fechada && locked.bet !== name) {
-                setLock({ fechada: true, bet: name });
+                console.log("change beeett")
+                setLock({ fechada: true, bet: name })
                 changeBet(title, name, odd)
             } else if (!locked.fechada) {
-                setLock({ fechada: true, bet: name });
-                addBet(title, name, odd);
+                console.log("add beeett")
+                setLock({ fechada: true, bet: name })
+                console.log("Locked bet =" + locked.bet)
+                addBet(title, name, odd)
             }
         }
         else if (userState === 'expert') {
             console.log("yoooooooooooooooo");
-            setOddPopUp({ activated: true, bet: name });
+            setOddPopUp({ activated: true, bet: name })
         }
-    };
+    }
 
     return (
         <>
@@ -57,8 +61,8 @@ export const Game = ({
                 <div className='bets'>
                     {participants.map(dic => (
                         <div key={dic.id}>
-                            <Button buttonStyle={locked.fechada && locked.bet === dic.name ? "btn--bet-clicked" : "btn--bet"}
-                                buttonSize={'btn--flex'} onClick={() => handleClick(dic.bet, dic.odd)}>
+                            <Button buttonStyle={locked.fechada && locked.bet == dic.name ? "btn--bet-clicked" : "btn--bet"}
+                                buttonSize={'btn--flex'} onClick={() => handleClick(dic.name, dic.odd)}>
                                 <div>{dic.name}</div>
                                 <div>{dic.odd}</div>
                             </Button>

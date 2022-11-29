@@ -5,10 +5,6 @@ import './GamesTab.css';
 
 const SPORTS = ['any', 'futebol', 'basquetebol', 'tenis', 'motogp'];
 
-const bet1 = { title: "Benfica - Sporting", winner: "Benfica", cota: "1.4" }
-const bet2 = { title: "Benfica - Sporting", winner: "Benfica", cota: "1.4" }
-const bet3 = { title: "Benfica - Sporting", winner: "Benfica", cota: "1.4" }
-
 export const GamesTab = ({
     sport,
     games,
