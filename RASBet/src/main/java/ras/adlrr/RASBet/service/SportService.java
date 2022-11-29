@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import ras.adlrr.RASBet.dao.GameRepository;
 import ras.adlrr.RASBet.dao.SportRepository;
-import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Sport;
 import ras.adlrr.RASBet.service.interfaces.ISportService;
 
@@ -14,12 +13,10 @@ import java.util.List;
 @Service
 public class SportService implements ISportService{
     private final SportRepository sportRepository;
-    private final GameRepository gameRepository;
 
     @Autowired
     public SportService(SportRepository sportRepository, GameRepository gameRepository){
         this.sportRepository = sportRepository;
-        this.gameRepository = gameRepository;
     }
 
 
@@ -66,18 +63,6 @@ public class SportService implements ISportService{
      */
     public List<Sport> getListOfSports() {
         return sportRepository.findAll();
-    }
-
-    /**
-     * @param sport Identification of the sport
-     * @return list of games of a sport present in the repository
-     */
-    public List<Game> getGamesFromSport(String sport) throws Exception {
-        Sport s = sportRepository.findById(sport).orElse(null);
-        if(s == null)
-            throw new Exception("Sport not found!");
-
-        return gameRepository.findAllBySportId(s.getId());
     }
 
     /**

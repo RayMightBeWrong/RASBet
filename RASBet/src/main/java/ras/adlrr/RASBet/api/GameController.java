@@ -76,6 +76,16 @@ public class GameController {
         return ResponseEntity.ok().body(gameService.getGamesSorted());
     }
 
+    @GetMapping("/{sport}")
+    public ResponseEntity<List<Game>> getGamesFromSport(@PathVariable("sport") String sport) {
+        try{
+            return ResponseEntity.ok().body(gameService.getGamesFromSport(sport));
+        }
+        catch (Exception e){
+            return new ResponseEntityBadRequest<List<Game>>().createBadRequest(e.getMessage());
+        }
+    }
+
     @PutMapping(path = "/{id}/state/close")
     public ResponseEntity closeGame(@PathVariable("id") int id){
         try {

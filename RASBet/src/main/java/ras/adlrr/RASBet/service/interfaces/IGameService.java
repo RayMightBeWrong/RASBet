@@ -11,6 +11,8 @@ public interface IGameService {
 
     public List<Game> getOngoingGames();
 
+    public List<Game> getGamesFromSport(String sport);
+
     public void updateGamesVPN() throws Exception;
 
     public void updateGames() throws Exception;

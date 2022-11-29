@@ -7,15 +7,13 @@ import { PopupNewOdd } from './PopupNewOdd';
 
 export const Game = ({
     title,
-    time,
-    betsArray,
-    odsArray,
+    date,
+    participants,
     addBet,
     removeBet,
     changeBet,
     userState
 }) => {
-
     const [locked, setLock] = useState({
         fechada: false,
         bet: ""
@@ -26,29 +24,29 @@ export const Game = ({
         bet: ""
     });
 
-    const handleClick = (bet, odd) => {
+    const handleClick = (name, odd) => {
         if (userState === 'gambler') {
-            if (locked.fechada && locked.bet == bet) {
-                setLock({ fechada: false, bet: "" });
-                removeBet(title);
-            } else if (locked.fechada && locked.bet != bet) {
-                setLock({ fechada: true, bet: bet });
-                changeBet(title, bet, odd)
+            if (locked.fechada && locked.bet === name) {
+                console.log("remover beeett")
+                setLock({ fechada: false, bet: "" })
+                removeBet(title)
+            } else if (locked.fechada && locked.bet !== name) {
+                console.log("change beeett")
+                setLock({ fechada: true, bet: name })
+                changeBet(title, name, odd)
             } else if (!locked.fechada) {
-                setLock({ fechada: true, bet: bet });
-                addBet(title, bet, odd);
+                console.log("add beeett")
+                setLock({ fechada: true, bet: name })
+                console.log("Locked bet =" + locked.bet)
+                addBet(title, name, odd)
             }
         }
         else if (userState === 'expert') {
             console.log("yoooooooooooooooo");
-            setOddPopUp({ activated: true, bet: bet });
+            setOddPopUp({ activated: true, bet: name })
         }
-    };
-
-    const dicionario = [];
-    for (let i = 0; i < betsArray.length; i++) {
-        dicionario[i] = { bet: betsArray[i], odd: odsArray[i], count: i }
     }
+
     return (
         <>
             {oddPopUp.activated ?
@@ -58,14 +56,14 @@ export const Game = ({
             <div className='game'>
                 <div className='title-hour'>
                     <div className='title'>{title}</div>
-                    <div className='time'>{time}</div>
+                    <div className='date'>{date}</div>
                 </div>
                 <div className='bets'>
-                    {dicionario.map(dic => (
-                        <div key={dic.count}>
-                            <Button buttonStyle={locked.fechada && locked.bet == dic.bet ? "btn--bet-clicked" : "btn--bet"}
-                                buttonSize={'btn--flex'} onClick={() => handleClick(dic.bet, dic.odd)}>
-                                <div>{dic.bet}</div>
+                    {participants.map(dic => (
+                        <div key={dic.id}>
+                            <Button buttonStyle={locked.fechada && locked.bet == dic.name ? "btn--bet-clicked" : "btn--bet"}
+                                buttonSize={'btn--flex'} onClick={() => handleClick(dic.name, dic.odd)}>
+                                <div>{dic.name}</div>
                                 <div>{dic.odd}</div>
                             </Button>
                         </div>

@@ -5,10 +5,6 @@ import './GamesTab.css';
 
 const SPORTS = ['any', 'futebol', 'basquetebol', 'tenis', 'motogp'];
 
-const bet1 = { title: "Benfica - Sporting", winner: "Benfica", cota: "1.4" }
-const bet2 = { title: "Benfica - Sporting", winner: "Benfica", cota: "1.4" }
-const bet3 = { title: "Benfica - Sporting", winner: "Benfica", cota: "1.4" }
-
 export const GamesTab = ({
     sport,
     games,
@@ -76,13 +72,14 @@ export const GamesTab = ({
             filtredGames.push(game)
         }
     })
+
     if (filtredGames.length !== 0) {
         return (
             <>
                 <div className='gamestab'>
                     <div className='bets-tab'>
                         {filtredGames.map(game => (
-                            <div><Game title={game.title} time={game.time} betsArray={game.betsArray} odsArray={game.odsArray}
+                            <div><Game title={game.title} date={game.date} participants={game.participants}
                                 removeBet={removeBet} addBet={addBet} changeBet={changeBet} userState={userState} /></div>
                         ))}
                     </div>
