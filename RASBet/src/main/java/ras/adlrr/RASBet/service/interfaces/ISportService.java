@@ -13,8 +13,6 @@ public interface ISportService {
     public void removeSport(String id) throws Exception;
 
     public List<Sport> getListOfSports();
-
-    public List<Game> getGamesFromSport(String sport) throws Exception;
     
     public boolean sportExistsById(String id);
 }

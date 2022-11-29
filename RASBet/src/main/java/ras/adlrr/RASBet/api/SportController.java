@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
-import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Sport;
 import ras.adlrr.RASBet.service.interfaces.ISportService;
 
@@ -51,15 +50,5 @@ public class SportController {
     @GetMapping
     public ResponseEntity<List<Sport>> getListOfSports() {
         return new ResponseEntity<>(sportService.getListOfSports(),HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}/games")
-    public ResponseEntity<List<Game>> getGamesFromSport(@PathVariable("id") String id) {
-        try{
-            return ResponseEntity.ok().body(sportService.getGamesFromSport(id));
-        }
-        catch (Exception e){
-            return new ResponseEntityBadRequest<List<Game>>().createBadRequest(e.getMessage());
-        }
     }
 }

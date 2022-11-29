@@ -151,6 +151,17 @@ public class GameService implements IGameService, IParticipantService{
         return gr.existsById(id);
     }
 
+    /**
+     * @param sport Identification of the sport
+     * @return list of games of a sport present in the repository
+     */
+    public List<Game> getGamesFromSport(String sport){
+        List<Game> res = getGames();
+        res.removeIf(g -> !g.getSport().getId().equals(sport));
+        return res;
+    }
+
+
     /* **** Participants Methods **** */
     private void validateParticipants(Collection<Participant> participants) throws Exception {
         if(participants == null || participants.stream().noneMatch(Objects::nonNull))
