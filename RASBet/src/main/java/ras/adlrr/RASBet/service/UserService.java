@@ -2,7 +2,6 @@ package ras.adlrr.RASBet.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.dao.AdminRepository;
 import ras.adlrr.RASBet.dao.ExpertRepository;
 import ras.adlrr.RASBet.dao.GamblerRepository;
@@ -18,6 +17,7 @@ import ras.adlrr.RASBet.service.interfaces.INotificationService;
 import ras.adlrr.RASBet.service.interfaces.IUserService;
 
 import java.time.ZoneId;
+import java.util.Map;
 import java.util.regex.*;
 
 import java.time.LocalDate;
@@ -373,23 +373,31 @@ public class UserService implements IUserService, IAdminService, IGamblerService
     }
 
     /**
-     * Tries to find a match to the credentials given. If successful returns the type of user.
+     * Tries to find a match to the credentials given. If successful returns a map with user_id and the type of user.
+     * Note: type of user -> (0 - Gambler, 1 - Admin, 2 - Expert)
      * @param email Represents the user
      * @param password Private key, needed to log in
-     * @return integer representing the type of the user (0 - Gambler, 1 - Admin, 2 - Expert) or -1 in case the credentials are wrong
+     * @return null if the credentials do not have a match. Otherwise, returns a map with user_id and the type of user.
      */
-    public int logIn(String email,String password){
-        int retValue = -1;
+    public Map<String, Integer> logIn(String email, String password){
+        int type = -1;
+
         User user = this.getUserByEmail(email);
-        if(user!=null && user.getPassword().equals(password)){
+        System.out.println(user);
+        if(user != null && user.getPassword().equals(password)){
             if (user instanceof Gambler)
-                retValue = 0;
+                type = 0;
             else if (user instanceof Admin)
-                retValue = 1;
+                type = 1;
             else if (user instanceof Expert)
-                retValue = 2;
+                type = 2;
+
+            var map = Map.of("user_id", user.getId(), "type", type);
+            System.out.println(map);
+            return map;
         }
-        return retValue;
+
+        return null;
     }
 
     /**

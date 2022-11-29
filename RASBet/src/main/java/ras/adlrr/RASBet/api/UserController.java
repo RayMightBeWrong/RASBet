@@ -1,6 +1,8 @@
 package ras.adlrr.RASBet.api;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -180,7 +182,7 @@ public class UserController {
      * @return            -1 unsuccessful logIn, 0 Gambler, 1 Admin, 2 Expert
      */
     @GetMapping
-    public int logIn(@RequestParam("email") String email, @RequestParam("password") String password){
+    public Map<String, Integer> logIn(@RequestParam("email") String email, @RequestParam("password") String password){
         return userService.logIn(email,password);
     }
 
