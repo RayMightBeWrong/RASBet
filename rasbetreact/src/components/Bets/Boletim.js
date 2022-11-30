@@ -9,7 +9,8 @@ const carteira2 = { ratioEuro: "1", balance: "700" }
 const carteiras = [carteira1, carteira2]
 
 export const Boletim = ({
-    bets
+    bets,
+    userId
 }) => {
     const [value, setValue] = useState('');
     const [tipoAposta, setTipoAposta] = useState("Simples");
@@ -86,7 +87,7 @@ export const Boletim = ({
                         </Button>
                         {open ?
 
-                            < CarteirasPopUp carteiras={carteiras} closePopup={() => setOpen(false)} valormin={value} />
+                            < CarteirasPopUp userId={userId} carteiras={carteiras} closePopup={() => setOpen(false)} valormin={value} />
                             : null
                         }
                     </div>

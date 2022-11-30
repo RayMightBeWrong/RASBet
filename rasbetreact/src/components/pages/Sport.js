@@ -3,7 +3,8 @@ import { GamesTab } from '../Bets/GamesTab'
 
 function Sport({
     sportType,
-    userState
+    userState,
+    userId
 }) {
 
     const [jogos, setJogos] = useState([])
@@ -17,14 +18,13 @@ function Sport({
             .then(res => res.json())
             .then((result) => {
                 setJogos(result)
-            }
-            )
+            })
     }, [])
 
     return (
         <>
             <div>
-                <GamesTab games={jogos} sport={sportType} userState={userState} />
+                <GamesTab games={jogos} sport={sportType} userState={userState} userId={userId} />
             </div>
         </>
     );

@@ -4,7 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../Button';
 
 function Login({
-  setUserState
+  setUserState,
+  setUserId
 }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -18,30 +19,31 @@ function Login({
     }
 
     fetch("http://localhost:8080/api/users?email=" + email + "&password=" + password, requestOptions)
-      .then(response => response.text())
+      .then(res => res.json())
       .then(result => {
-        switch (result) {
-          case '0':
-            console.log("Gambler Logged in")
+        setUserId(result.user_id)
+        switch (result.type) {
+          case 0:
+            alert("Gambler Logged in")
             setUserState("gambler")
             navigate("/")
             break;
-          case '1':
-            console.log("Admin Logged in")
+          case 1:
+            alert("Admin Logged in")
             setUserState("admin")
             navigate("/")
             break;
-          case '2':
-            console.log("Expert Logged in")
+          case 2:
+            alert("Expert Logged in")
             setUserState("expert")
             navigate("/")
             break;
           default:
-            console.log("Error logging in")
+            alert("Error logging in")
             setUserState("loggedOff")
         }
       })
-      .catch(error => console.log('error', error));
+      .catch(error => alert("Error logging in"));
   }
 
 
