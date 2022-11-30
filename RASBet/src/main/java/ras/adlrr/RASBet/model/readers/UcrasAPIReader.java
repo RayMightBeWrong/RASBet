@@ -23,7 +23,7 @@ public class UcrasAPIReader extends APIGameReader{
     }
 
     public List<Game> getAPIGames(){
-        String json = super.readJSON("http://ucras.di.uminho.pt/v1/games/", null, null);
+        String json = super.readJSON("http://ucras.di.uminho.pt/v1/games/", "jsons/ucras.json", null);
 
         if (json.equals(""))
             return null;
@@ -88,6 +88,7 @@ public class UcrasAPIReader extends APIGameReader{
     }
 
     public int getGameState(){
+        if
         return Game.OPEN;
     }
 
@@ -103,19 +104,25 @@ public class UcrasAPIReader extends APIGameReader{
     }
 
     @Override
-    public Set<Participant> getParticipantsUpdated(List<Game> games) {
+    public Set<Participant> updateOdds(List<Game> games) {
+        games.removeIf(g -> g.getExtID().length() > 8);
+
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public Set<Participant> updateScores(List<Game> games) {
+        games.removeIf(g -> g.getExtID().length() > 8);
+
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public List<Game> updateGamesState(List<Game> games) {
+        games.removeIf(g -> g.getExtID().length() > 8);
+
         // TODO Auto-generated method stub
         return null;
     }
