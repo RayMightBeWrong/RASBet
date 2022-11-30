@@ -53,9 +53,6 @@ public abstract class APIGameReader {
     }
 
 
-
-
-
     public interface ReadJSONBehaviour{
         public String readJSONfromHTTPRequest(String urlString, String path, String keyAPI);
     }

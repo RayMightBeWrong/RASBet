@@ -2,7 +2,6 @@ package ras.adlrr.RASBet.service.interfaces;
 
 import java.util.List;
 
-import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Sport;
 
 public interface ISportService {

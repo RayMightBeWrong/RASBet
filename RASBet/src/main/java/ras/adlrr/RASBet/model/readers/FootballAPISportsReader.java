@@ -15,7 +15,7 @@ import ras.adlrr.RASBet.model.Participant;
 
 public class FootballAPISportsReader extends APIGameReader{
     private String sport_id;
-    private int gamesToLoad = 0;
+    private int gamesToLoad = 10;
     private String response;
 
     public FootballAPISportsReader(String sport_id){
@@ -43,7 +43,7 @@ public class FootballAPISportsReader extends APIGameReader{
         List<Game> res = new ArrayList<>();
 
         int added = 0;
-        for(int i = 0; i < games.length() ; i++){
+        for(int i = 0; i < games.length() && added < gamesToLoad; i++){
             JSONObject obj = (JSONObject) games.get(i);
             JSONObject fixture = (JSONObject) obj.get("fixture");
             JSONObject status = (JSONObject) fixture.get("status");
@@ -76,7 +76,7 @@ public class FootballAPISportsReader extends APIGameReader{
     public List<Float> getOdds(String extID, String idLeague){
         String url = "https://v3.football.api-sports.io/odds?season=2022&bet=1&fixture=" + extID + "&league=" + idLeague;
 
-        String fixtureResponse = super.readJSON(url, "jsons/football/" + idLeague + "_" + extID, "b68a93e4291b512a0f3179eb9ee1bc2b");
+        String fixtureResponse = super.readJSON(url, "jsons/football/" + idLeague + "_" + extID + ".json", "b68a93e4291b512a0f3179eb9ee1bc2b");
         //String fixtureResponse = "";
         //try {
         //    fixtureResponse = super.readFromLocalFile("jsons/football/" + idLeague + "_" + getGameExternalId(game));
@@ -100,7 +100,7 @@ public class FootballAPISportsReader extends APIGameReader{
             }
         }
         else{
-            float tmp = 0.0f;
+            float tmp = 1.0f;
             res.add(tmp); res.add(tmp); res.add(tmp); 
         }
 

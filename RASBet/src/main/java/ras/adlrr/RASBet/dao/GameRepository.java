@@ -24,4 +24,6 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
 
     @Query("SELECT g FROM Game g LEFT JOIN FETCH g.gameChoices LEFT JOIN FETCH g.participants WHERE g.id = :game_id")
     Optional<Game> loadGameById(@Param("game_id") int game_id);
+
+    boolean existsByExtID(String extID);
 }
