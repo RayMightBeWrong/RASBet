@@ -8,7 +8,8 @@ const SPORTS = ['any', 'futebol', 'basquetebol', 'tenis', 'motogp'];
 export const GamesTab = ({
     sport,
     games,
-    userState
+    userState,
+    userId
 }) => {
 
     const [bets, setBets] = useState([]);
@@ -17,7 +18,7 @@ export const GamesTab = ({
         if (userState === 'gambler') {
             return (
                 <div className='boletimbox'>
-                    <div><Boletim bets={bets} /></div>
+                    <div><Boletim bets={bets} userId={userId} /></div>
                 </div>
             );
         }

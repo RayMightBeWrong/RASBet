@@ -6,7 +6,7 @@ import { PayMethod } from "./PayMethods"
 
 
 export const Carteira = ({
-    ratioEuro,
+    coinId,
     balance,
     verificaCarteira,
     addToBalance,
@@ -75,7 +75,7 @@ export const Carteira = ({
         <>
             <div className='carteira'>
                 <div className='carteira-header'>
-                    <div>Ratio euro: {ratioEuro}</div>
+                    <div>{coinId}</div>
                     <div>Balance: {balance}</div>
                 </div>
                 <div className='carteira-body'>
@@ -123,7 +123,7 @@ export const CarteiraSimplificada = ({
 }) => {
 
     const [value, setValue] = useState('');
-    const [open, setOpen] = useState(false); 
+    const [open, setOpen] = useState(false);
 
     const handleChange = event => {
         const result = event.target.value.replace(/\D/g, '');
@@ -190,7 +190,7 @@ export const CarteiraSimplificada = ({
                             Depositar
                         </Button>
                         {open ?
-                            <PayMethod  options={["nao sei qual é"]} closePopup={() => setOpen(false)} rBack={() => setOpen(false)} />
+                            <PayMethod options={["nao sei qual é"]} closePopup={() => setOpen(false)} rBack={() => setOpen(false)} />
                             : null
                         }
                     </div>

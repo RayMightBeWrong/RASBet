@@ -5,36 +5,17 @@ import { Button } from './Button';
 
 
 export const Moeda = ({
-    ratioEuro,
-    balance,
-    verificaCarteira
+    id,
+    ratio_EUR
 }) => {
-
-
-    const [value, setValue] = useState('');
-
-    const handleChange = event => {
-        const result = event.target.value.replace(/\D/g, '');
-
-        setValue(result);
-    };
-
-    const handleClick = (balance) => {
-        console.log("entrar");
-        console.log(verificaCarteira);
-        console.log("meio");
-        verificaCarteira(balance);
-        console.log("sair");
-    };
-
     return (
         <>
             <div className='moeda'>
                 <div className='moeda-header'>
-                    <div>Ratio euro: {ratioEuro}</div>
-                    <div>Balance: {balance}</div>
+                    <div>{id}</div>
+                    <div>Ratio euro: {ratio_EUR}</div>
                 </div>
             </div>
         </>
-    );
-};
+    )
+}
