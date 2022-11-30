@@ -25,7 +25,7 @@ public abstract class APIGameReader {
 
     public abstract List<Game> getAPIGames();
 
-    public abstract Set<Participant> getParticipantsUpdated(List<Game> games);
+    public abstract Set<Participant> updateOdds(List<Game> games);
 
     public abstract Set<Participant> updateScores(List<Game> games);
 
@@ -80,7 +80,7 @@ public abstract class APIGameReader {
                 return sb.toString();
             }
             catch (Exception e){
-               return "";
+                return "";
             }
         }
     }
@@ -90,9 +90,11 @@ public abstract class APIGameReader {
             HttpResponse<String> response = Unirest.get(url)
                                                 .header("x-rapidapi-key", keyAPI)
                                                 .header("x-rapidapi-host", "v3.football.api-sports.io").asString();
+
             try {
                 Files.write( Paths.get(path), response.getBody().getBytes());
             } catch (Exception e) {
+                e.printStackTrace();
                 // ignore
             }
     

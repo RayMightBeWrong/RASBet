@@ -16,6 +16,8 @@ import ras.adlrr.RASBet.model.APIGameReader;
 public class F1APISportsReader extends APIGameReader{
     private String sport_id;
     private String season = "2022";
+    private int racesToLoad = 3;
+    private String response;
  
     public F1APISportsReader(String sport_id){
         ReadJSONBehaviour readMethod = new ReadJSONFromExternalAPI();
@@ -25,16 +27,36 @@ public class F1APISportsReader extends APIGameReader{
 
     @Override
     public List<Game> getAPIGames() {
-        String url = "https://v1.formula-1.api-sports.io/races?next=1&type=Race&season=" + season;
-        String stringResponse = super.readJSON(url, "jsons/f1_nextrace.json", url);
-        JSONArray response = (JSONArray) (new JSONObject(stringResponse).get("response"));
-        
-        if (response.length() > 0){
-            JSONObject nextRace = (JSONObject) response.get(0);
-            List<Game> res = new ArrayList<>();
+        String url = "https://v1.formula-1.api-sports.io/races?type=Race&season=" + season;
+        //this.response = super.readJSON(url, "jsons/f1.json", "b68a93e4291b512a0f3179eb9ee1bc2b");
+        response = "";
+        try {
+            response = super.readFromLocalFile("jsons/f1.json");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-            Game g = new Game(getRaceExternalId(nextRace), getGameDate(nextRace), getGameState(), getName(nextRace), getSportID(), getDrivers(nextRace));
-            res.add(g);
+        JSONArray races = (JSONArray) (new JSONObject(this.response).get("response"));
+        List<Game> res = new ArrayList<>();
+        
+        if (races.length() > 0){
+            int added = 0;
+            for(int i = 0; i < races.length() && added < racesToLoad; i++){
+                JSONObject obj = (JSONObject) races.get(i);
+                int status = getGameState(obj);
+
+                if (status == Game.OPEN && added < this.racesToLoad){
+                    String extID = getGameExternalId(obj);
+                    Game g = new Game(extID, getGameDate(obj), status, getName(obj), getSportID(), getDrivers(extID));
+                    res.add(g);
+                    added++;
+                }
+            }
+            
+            //JSONObject nextRace = (JSONObject) response.get(0);
+
+            //Game g = new Game(getGameExternalId(nextRace), getGameDate(nextRace), getGameState(), getName(nextRace), getSportID(), getDrivers(nextRace));
+            //res.add(g);
 
             return res;
         }
@@ -42,31 +64,41 @@ public class F1APISportsReader extends APIGameReader{
             return new ArrayList<>();
     }
     
-    public String getRaceExternalId(JSONObject nextRace){
-        return nextRace.get("id").toString();
+    public String getGameExternalId(JSONObject race){
+        return race.get("id").toString();
     }
 
     public LocalDateTime getGameDate(JSONObject nextRace) {
         String date = (String) nextRace.get("date");
-
         ZonedDateTime zdt = ZonedDateTime.parse(date);
         LocalDateTime dateTime = zdt.toLocalDateTime();
+
         return dateTime;
     }
 
-    public Set<Participant> getDrivers(JSONObject nextRace){
-        String url = "https://v1.formula-1.api-sports.io/rankings/races?race=" + getRaceExternalId(nextRace);
-        String stringResponse = super.readJSON(url, "jsons/f1_nextracegrid.json", "b68a93e4291b512a0f3179eb9ee1bc2b");
-        JSONArray driversResponse = (JSONArray) (new JSONObject(stringResponse).get("response"));
+    public Set<Participant> getDrivers(String extID){
+        String url = "https://v1.formula-1.api-sports.io/rankings/races?race=" + extID;
+        //String stringResponse = super.readJSON(url, "jsons/f1/race_" + extID + ".json", "b68a93e4291b512a0f3179eb9ee1bc2b");
 
+        String stringResponse = "";
+        try {
+            stringResponse = super.readFromLocalFile("jsons/f1/race_" + extID + ".json");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        JSONArray driversResponse = (JSONArray) (new JSONObject(stringResponse).get("response"));
         Set<Participant> res = new HashSet<>();
         
         if (driversResponse.length() > 0){
             for (int i = 0; i < driversResponse.length(); i++){
                 JSONObject driverObj = (JSONObject) driversResponse.get(i);
                 JSONObject driverAttributes = (JSONObject) driverObj.get("driver");
+                int position = (int) driverObj.get("position");
 
-                Participant driver = new Participant((String) driverAttributes.get("name"), 0, i + 1);
+                System.out.println(driverAttributes.get("name") + ": " + position);
+
+                Participant driver = new Participant((String) driverAttributes.get("name"), 1.0f, position);
                 res.add(driver);
             }
         }
@@ -89,7 +121,7 @@ public class F1APISportsReader extends APIGameReader{
                     JSONObject driverObj = (JSONObject) response.get(i);
                     JSONObject driverAttributes = (JSONObject) driverObj.get("driver");
 
-                    Participant driver = new Participant((String) driverAttributes.get("name"), 1.01f, i + 1);
+                    Participant driver = new Participant((String) driverAttributes.get("name"), 1.0f, i + 1);
                     res.add(driver);
                 }
             }
@@ -104,30 +136,74 @@ public class F1APISportsReader extends APIGameReader{
         return this.sport_id;
     }
 
-    public int getGameState(){
-        return Game.OPEN;
+    public int getGameState(JSONObject race){
+        String status = (String) race.get("status");
+
+        if (status.equals("Scheduled") || status.equals("Postponed") || status.equals("Live"))
+            return Game.OPEN;
+        else
+            return Game.CLOSED;
     }
 
-    public String getName(JSONObject nextRace){
-        JSONObject competition = (JSONObject) nextRace.getJSONObject("competition");
+    public String getName(JSONObject race){
+        JSONObject competition = (JSONObject) race.getJSONObject("competition");
         return (String) competition.getString("name");
     }
 
     @Override
-    public Set<Participant> getParticipantsUpdated(List<Game> games) {
-        // TODO Auto-generated method stub
-        return null;
+    public Set<Participant> updateOdds(List<Game> games) {
+        return new HashSet<>();
+    }
+
+    public void updateParticipantsScores(Set<Participant> participants, String game) {
+        Set<Participant> drivers = getDrivers(game);
+
+        for(Participant p1: participants){
+            for(Participant p2: drivers){
+                if (p1.getName().equals(p2.getName())){
+                    p1.setScore(p2.getScore());
+                }
+            }
+        }
     }
 
     @Override
     public Set<Participant> updateScores(List<Game> games) {
-        // TODO Auto-generated method stub
-        return null;
+        Set<Participant> res = new HashSet<>();
+
+        for(Game g: games){
+            Set<Participant> ps = g.getParticipants();
+            updateParticipantsScores(ps, g.getExtID());
+
+            for(Participant p: ps)
+                res.add(p);
+        }
+
+        return res;
     }
 
     @Override
     public List<Game> updateGamesState(List<Game> games) {
-        // TODO Auto-generated method stub
-        return null;
+        List<Game> res = new ArrayList<>();
+        JSONArray gamesArray = (JSONArray) (new JSONObject(response).get("response"));
+
+        for(int i = 0; i < gamesArray.length() ; i++){
+            JSONObject obj = (JSONObject) gamesArray.get(i);
+
+            for (int j = 0; j < games.size(); j++){
+                if (getGameExternalId(obj).equals(games.get(j).getExtID())){
+                    Game g = games.get(j);
+                    
+                    if (g.getState() != getGameState(obj)){
+                        g.setState(getGameState(obj));
+                        res.add(g);
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        return res;
     }
 }

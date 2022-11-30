@@ -35,7 +35,6 @@ public class FootballAPISportsReader extends APIGameReader{
         response = "";
         try {
             response = super.readFromLocalFile("jsons/jogos_wc.json");
-            System.out.println(response);
         } catch (Exception e) {
             e.printStackTrace();
         }*/
@@ -125,8 +124,7 @@ public class FootballAPISportsReader extends APIGameReader{
         return ps;
     }
 
-    public Set<Participant> updateParticipantsOdds(Set<Participant> participants, String home, String away, String game, String idLeague) {
-        Set<Participant> ps = new HashSet<>();
+    public void updateParticipantsOdds(Set<Participant> participants, String home, String away, String game, String idLeague) {
         List<Float> odds = getOdds(game, idLeague);
 
         for(Participant p: participants){
@@ -140,8 +138,6 @@ public class FootballAPISportsReader extends APIGameReader{
                 p.setOdd(odds.get(1));
             }
         }
-
-        return ps;
     }
 
     public String getSportID() {
@@ -170,7 +166,7 @@ public class FootballAPISportsReader extends APIGameReader{
         return homeTeam + " vs " + awayTeam;
     }
 
-    public Set<Participant> getParticipantsUpdated(List<Game> games){
+    public Set<Participant> updateOdds(List<Game> games){
         Set<Participant> res = new HashSet<>();
 
         for(Game g: games){

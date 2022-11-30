@@ -9,14 +9,13 @@ import java.util.Set;
 
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
-import lombok.val;
 import ras.adlrr.RASBet.model.APIGameReader;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 
 public class NBAAPISportsReader extends APIGameReader{
     private String sport_id;
-    private int gamesToLoad = 0;
+    private int gamesToLoad = 10;
     private String season;
     private String leagueID;
     private String response;
@@ -181,7 +180,7 @@ public class NBAAPISportsReader extends APIGameReader{
     }
 
     @Override
-    public Set<Participant> getParticipantsUpdated(List<Game> games) {
+    public Set<Participant> updateOdds(List<Game> games) {
         Set<Participant> res = new HashSet<>();
 
         for(Game g: games){
@@ -214,16 +213,16 @@ public class NBAAPISportsReader extends APIGameReader{
                     String away = extractTeamFromGameName(g.getTitle(), false);
 
                     JSONObject scores = (JSONObject) obj.get("scores");
+                    JSONObject home_score = (JSONObject) scores.get("home");
+                    JSONObject away_score = (JSONObject) scores.get("away");
 
-                    if (scores.get("home") != null){
+                    if (home_score.get("total") != null){
                         for(Participant p: ps){
                             if (p.getName().equals(home)){
-                                JSONObject home_score = (JSONObject) scores.get("home");
                                 int total_home = (int) home_score.get("total");
                                 p.setScore(total_home);
                             }
                             else if (p.getName().equals(away)){
-                                JSONObject away_score = (JSONObject) scores.get("away");
                                 int total_away = (int) away_score.get("total");
                                 p.setScore(total_away);
                             }
