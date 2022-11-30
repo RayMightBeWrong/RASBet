@@ -40,20 +40,11 @@ export const Boletim = ({
         if (bets.length <= 1) {
             setTipoAposta("Simples")
         } else setTipoAposta("Múltipla")
-    });
+    }, [value, bets]);
 
-    const handleClick = (bets) => {
+    const handleClick = () => {
+        console.log("setopentrue")
         setOpen(true)
-        /*e.preventDefault()*/
-        /*const boletim = { bets.value, bets.tipoAposta, bets.finalWin, bets.open, bets.cupao }*/
-        const boletim = ""
-        /*console.log(boletim) */
-        fetch("http://localhost:8080/api/bets", { //TODO
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(boletim)
-        }).
-            then(() => { console.log("Boletim Submetido") })
     }
 
     return (
@@ -90,11 +81,12 @@ export const Boletim = ({
                         </div>
                         <Button buttonStyle={"btn--bet"}
                             buttonSize={'btn--flex'}
-                            onclick={() => handleClick(bets)}>
+                            onClick={() => handleClick()}>
                             Submeter
                         </Button>
                         {open ?
-                            <CarteirasPopUp carteiras={carteiras} closePopup={() => setOpen(false)} valormin={value} />
+
+                            < CarteirasPopUp carteiras={carteiras} closePopup={() => setOpen(false)} valormin={value} />
                             : null
                         }
                     </div>

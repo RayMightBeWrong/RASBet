@@ -1,13 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import "./CarteirasPopUp.css";
 import { Carteira } from './Carteira';
 import { Button } from './Button';
 
 export const CarteirasPopUp = ({
-    carteiras,
     valormin,
     closePopup
 }) => {
+
+    const [carteiras, setCarteiras] = useState([]);
+
+    useEffect(() => {
+        const requestOptions = {
+            method: 'GET',
+            headers: { "Content-Type": "application/json" }
+        }
+        fetch("http://localhost:8080/api/wallets/gambler/2", requestOptions)
+            .then(res => res.json())
+            .then((result) => {
+                setCarteiras(result)
+            }
+            )
+    }, [])
+
 
     const handleClick = (e) => {
         e.preventDefault()
@@ -17,8 +32,8 @@ export const CarteirasPopUp = ({
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(carteira)
-        }).
-            then(() => { console.log("Nova Carteira Criada") })
+        })
+            .then(() => { console.log("Nova Carteira Criada") })
     }
 
     const verificaCarteira = (valor) => {
@@ -31,7 +46,6 @@ export const CarteirasPopUp = ({
     }
     return (
         <>
-            {console.log("entrar")}
             < div className="carteirasPopUp-container" >
                 < div className="carteirasPopUp-body" >
                     <h1> Seleção de carteiras </h1>
@@ -46,7 +60,6 @@ export const CarteirasPopUp = ({
 
                 </div>
             </div >
-            {console.log("sair")}
         </>
     );
 };
