@@ -77,6 +77,14 @@ public abstract class APIGameReader {
                 }
     
                 scanner.close();
+
+                try {
+                    Files.write( Paths.get(path), sb.toString().getBytes());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // ignore
+                }
+
                 return sb.toString();
             }
             catch (Exception e){

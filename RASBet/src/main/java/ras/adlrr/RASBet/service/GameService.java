@@ -16,7 +16,7 @@ import ras.adlrr.RASBet.model.Sport;
 import ras.adlrr.RASBet.model.readers.F1APISportsReader;
 import ras.adlrr.RASBet.model.readers.FootballAPISportsReader;
 import ras.adlrr.RASBet.model.readers.NBAAPISportsReader;
-import ras.adlrr.RASBet.model.readers.NFLOddsAPIReader;
+import ras.adlrr.RASBet.model.readers.NFLAPISportsReader;
 import ras.adlrr.RASBet.model.readers.UcrasAPIReader;
 import ras.adlrr.RASBet.service.interfaces.IGameService;
 import ras.adlrr.RASBet.service.interfaces.IParticipantService;
@@ -73,10 +73,10 @@ public class GameService implements IGameService, IParticipantService{
 
     public void updateGames() throws Exception{
         String error = "";
-        try { updateGamesNoVPN(); }
-        catch (Exception e){ error += e.getMessage(); }
-        //try{ updateGamesVPN(); }
-        //catch (Exception e){ error += e.getMessage() ; }
+        //try { updateGamesNoVPN(); }
+        //catch (Exception e){ error += e.getMessage(); }
+        try{ updateGamesVPN(); }
+        catch (Exception e){ error += e.getMessage() ; }
         if(!error.equals(""))
             throw new Exception(error);
     }
@@ -267,6 +267,7 @@ public class GameService implements IGameService, IParticipantService{
                 throw new Exception("Error while updating football games (UCRAS). ");
             
             addGames(games);
+            //updateOngoingGames(reader, "Football");
         }
     }
 
@@ -274,18 +275,19 @@ public class GameService implements IGameService, IParticipantService{
         String errorMsg = "";
         Sport sport;
 
-        /*
         try {
-            Sport sport = sportService.findSportById("NFL");
+            sport = sportService.findSportById("NFL");
             if (sport != null){
-                APIGameReader reader = new NFLOddsAPIReader(sport.getId());
+                APIGameReader reader = new NFLAPISportsReader(sport.getId());
                 List<Game> games = reader.getAPIGames();
                 addGames(games);
+                updateOngoingGames(reader, "NFL");
             }
         }catch (Exception e){
             errorMsg = errorMsg + "Error while updating NFL games" + " | ";
-        }
+        } 
 
+        /*
 
         try {
             sport = sportService.findSportById("F1");
@@ -293,12 +295,11 @@ public class GameService implements IGameService, IParticipantService{
                 APIGameReader reader = new F1APISportsReader(sport.getId());
                 List<Game> games = reader.getAPIGames();
                 addGames(games);
+                updateOngoingGames(reader, "F1");
             }
         }catch (Exception e){
             errorMsg = errorMsg + "Error while updating F1 games. ";
         }
-        */
-
 
         try {
             sport = sportService.findSportById("NBA");
@@ -313,7 +314,6 @@ public class GameService implements IGameService, IParticipantService{
             e.printStackTrace();
         }
 
-        /*
         try {
             sport = sportService.findSportById("Football");
             if (sport != null){
@@ -334,9 +334,9 @@ public class GameService implements IGameService, IParticipantService{
     }
 
     private void updateOngoingGames(APIGameReader reader, String idSport) throws Exception{
-        updateOdds(reader, idSport); 
         updateScores(reader, idSport);
         updateGamesState(reader, idSport);
+        updateOdds(reader, idSport);
     }
 
     private void updateGamesState(APIGameReader reader, String idSport) throws Exception{
@@ -359,7 +359,7 @@ public class GameService implements IGameService, IParticipantService{
 
     private void updateOdds(APIGameReader reader, String idSport) throws Exception{
         List<Game> gamesToUpdate = getGamesWithoutOddsFromSport(idSport);
-        Set<Participant> ps = reader.getParticipantsUpdated(gamesToUpdate);
+        Set<Participant> ps = reader.updateOdds(gamesToUpdate);
 
         for(Participant p: ps){
             editOddInParticipant(p.getId(), p.getOdd());
@@ -373,10 +373,9 @@ public class GameService implements IGameService, IParticipantService{
     }
 
     private List<Game> getGamesWithoutOddsFromSport(String idSport){
-        List<Game> games = getGamesSorted();
+        List<Game> games = getOngoinGamesFromSport(idSport);
         List<Game> res = new ArrayList<>();
     
-        games.removeIf(g -> !g.getSport().getId().equals(idSport));
         for(Game g: games){
             Set<Participant> participants = g.getParticipants();
 
