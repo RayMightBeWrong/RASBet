@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import "./PayMethods.css"
 import { Button } from "./Button";
-import { UseOutsideClick } from "./UseOutsideClick";
 
 export const PayMethod = ({
     options,
     closePopup,
     rBack
 }) => {
-
-    const ref = UseOutsideClick(rBack);
     const [value, setValue] = useState('');
     const [selected, setSelected] = useState(0);
 
@@ -28,10 +25,11 @@ export const PayMethod = ({
 
     return (
         <div className="payMethod-container">
-            < div className="payMethod-body" ref={ref}>
+            < div className="payMethod-body">
                 <h1>Pagamento</h1>
                 <div className="metodo-pagamento">
                     <h2>Metodo de pagamento:</h2>
+                    <Button buttonStyle={'btn--flex'} onClick={rBack}> X </Button >
                     <div className="botton-payMethod">
                         <Button onClick={() => handleClick(1)} buttonStyle={(selected === 1) ? 'btn--image--selected' : 'btn--image'}>
                             <img className='imagem-payMethod' src={'images/mbway.png'} alt={''}/>
