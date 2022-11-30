@@ -59,7 +59,7 @@ export const CarteirasPopUp = ({
                 < div className="carteirasPopUp-body" >
                     <h1> Seleção de carteiras </h1>
                     {carteiras.map(wallet => (
-                        <div><Carteira coinId={wallet.coin.id} balance={wallet.balance} verificaCarteira={() => verificaCarteira()} /></div>
+                        <div><Carteira wallet_id={wallet.id} coinId={wallet.coin.id} balance={wallet.balance} verificaCarteira={() => verificaCarteira()} /></div>
                     ))}
 
                     <Button buttonStyle={"btn--bet"} onClick={() => handleClick()}>

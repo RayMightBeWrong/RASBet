@@ -8,68 +8,37 @@ import { PayMethod } from "./PayMethods"
 export const Carteira = ({
     coinId,
     balance,
+    wallet_id,
     verificaCarteira,
-    addToBalance,
-    removeFromBalance
-    //walletIDs
 }) => {
-
-    const [wallet, setWallet] = useState({
-        depositar: false,
-        levantar: false,
-        wallet_id: "",
-        gambler_id: "",
-        coupon: ""
-    });
-
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState('')
 
     const handleChange = event => {
-        const result = event.target.value.replace(/\D/g, '');
+        const result = event.target.value.replace(/\D/g, '')
 
-        setValue(result);
-    };
+        setValue(result)
+    }
 
-    const handleClick = (wallet_id, value, gambler_id, coupon) => {
-        if (wallet.wallet_id == wallet_id && wallet.depositar == false && wallet.levantar == true) {
-            setWallet({ depositar: false, levantar: true, wallet_id: wallet_id, gambler_id: "", coupon: "" })
-            removeFromBalance(wallet_id, value)
-            const levantar = { wallet_id, value }
-            console.log(levantar)
-            fetch("http://localhost:8080/api/transactions/withdraw", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(levantar)
-            }).then(() => {
-                console.log("Levantamento")
-            })
-        } else if (wallet.wallet_id == wallet_id && wallet.depositar == true && wallet.levantar == false) {
-            setWallet({ depositar: true, levantar: false, wallet_id: wallet_id, gambler_id: "", coupon: "" })
-            addToBalance(wallet_id, value)
-            const deposito = { wallet_id, value }
-            console.log(deposito)
-            fetch("http://localhost:8080/api/transactions/deposit", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(deposito)
-            }).then(() => {
-                console.log("Depósito")
-            })
+    const depositarDinheiro = () => {
+        console.log("yooo")
+        const requestOptions = {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" }
         }
-        else if (wallet.coupon == coupon && wallet.gambler_id == gambler_id) {
-            setWallet({ depositar: false, levantar: false, wallet_id: "", gambler_id: gambler_id, coupon: coupon })
-            /*claimPromotionWithCoupon(gambler_id, coupon) TODO*/
-            const coupon = { wallet_id, value }
-            console.log(coupon)
-            fetch("http://localhost:8080/api/promotions/gambler/claimPromoWithCoupon", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(coupon)
-            }).then(() => {
-                console.log("Coupon")
+        fetch("http://localhost:8080/api/transactions/deposit?wallet_id=" + wallet_id + "&value=" + value, requestOptions)
+            .then(res => {
+                if (res.status !== 200) {
+                    var errorMsg;
+                    if ((errorMsg = res.headers.get("x-error")) == null)
+                        errorMsg = "Error occured"
+                    alert(errorMsg)
+                }
+                else {
+                    alert("Deposito bem sucedido")
+                }
             })
-        }
-    };
+            .catch(_ => alert("Error occured"))
+    }
 
     return (
         <>
@@ -92,7 +61,8 @@ export const Carteira = ({
                         </Button>
                         <Button buttonStyle={"btn--bet"}
                             buttonSize={'btn--flex'}
-                            /*onclick={() => handleClick(wallet_id, value, gambler_id, coupon)} */> {/*todo on click aumenta*/}
+                            onClick={() => depositarDinheiro()}
+                        > {/*todo on click aumenta*/}
                             Depositar
                         </Button>
                         <Button buttonStyle={"btn--bet"}
@@ -105,7 +75,7 @@ export const Carteira = ({
                 <div>
                     <Button buttonStyle={"btn"}
                         buttonSize={'btn--flex'}
-                        onClick={() => handleClick(balance)}>
+                        /*onClick={() => handleClick(balance)}*/>
                         x
                     </Button>
                 </div>
