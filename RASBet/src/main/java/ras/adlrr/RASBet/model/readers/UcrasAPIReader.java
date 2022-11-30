@@ -115,25 +115,7 @@ public class UcrasAPIReader extends APIGameReader{
 
     @Override
     public Set<Participant> updateOdds(List<Game> games) {
-        games.removeIf(g -> g.getExtID().length() < 8);
-        Set<Participant> res = new HashSet<>();
-        JSONArray gamesArray = (JSONArray) new JSONArray(response);
-
-        for(int i = 0; i < gamesArray.length() ; i++){
-            JSONObject obj = (JSONObject) gamesArray.get(i);
-
-            for (int j = 0; j < games.size(); j++){
-                if (getGameExternalId(obj).equals(games.get(j).getExtID())){
-                    Game g = games.get(j);
-                    Set<Participant> ps = getGameParticipants(obj);
-
-                    for(Participant p: ps)
-                        res.add(p);
-                }
-            }
-        }
-
-        return res;
+        return new HashSet<>();
     }
 
     @Override
