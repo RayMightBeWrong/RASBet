@@ -15,6 +15,7 @@ import ras.adlrr.RASBet.model.Participant;
 
 public class UcrasAPIReader extends APIGameReader{
     private String sport_id;
+    private String response;
 
     public UcrasAPIReader(String sport_id){
         ReadJSONBehaviour readMethod = new ReadJSONBasic();
@@ -23,7 +24,14 @@ public class UcrasAPIReader extends APIGameReader{
     }
 
     public List<Game> getAPIGames(){
-        String json = super.readJSON("http://ucras.di.uminho.pt/v1/games/", "jsons/ucras.json", null);
+        //String json = super.readJSON("http://ucras.di.uminho.pt/v1/games/", "jsons/ucras.json", null);
+        String json = "";
+        try {
+            json = super.readFromLocalFile("jsons/ucras.json");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        response = json;
 
         if (json.equals(""))
             return null;
@@ -33,7 +41,7 @@ public class UcrasAPIReader extends APIGameReader{
         JSONArray ja = new JSONArray(json);
         for(int i = 0; i < ja.length(); i++){
             JSONObject jo = (JSONObject) ja.get(i);
-            Game g = new Game(getGameExternalId(jo), getGameDate(jo), getGameState(), makeName(jo), getSportID(), getGameParticipants(jo));
+            Game g = new Game(getGameExternalId(jo), getGameDate(jo), getGameState(jo), makeName(jo), getSportID(), getGameParticipants(jo));
             res.add(g);
         }
 
@@ -62,7 +70,7 @@ public class UcrasAPIReader extends APIGameReader{
         JSONObject markets2 = (JSONObject) markets.get(0);
         JSONArray outcomes = (JSONArray) markets2.get("outcomes");
 
-        float drawOdd = 0, homeOdd = 0, awayOdd = 0;
+        float drawOdd = 1.0f, homeOdd = 1.0f, awayOdd = 1.0f;
         for (int j = 0; j < outcomes.length(); j++){
             JSONObject obj = (JSONObject) outcomes.get(j);
             Number odd = (Number) obj.get("price");
@@ -80,16 +88,18 @@ public class UcrasAPIReader extends APIGameReader{
         Participant away = new Participant(awayTeam, awayOdd, 0);
         Participant draw = new Participant("draw", drawOdd, 0);
 
-
         Set<Participant> ps = new HashSet<>();
         ps.add(home); ps.add(away); ps.add(draw);
-
         return ps;
     }
 
-    public int getGameState(){
-        if
-        return Game.OPEN;
+    public int getGameState(JSONObject jo){
+        Boolean completed = (Boolean) jo.get("completed");
+        
+        if (completed)
+            return Game.CLOSED;
+        else
+            return Game.OPEN;
     }
 
     public String getSportID(){
@@ -105,25 +115,110 @@ public class UcrasAPIReader extends APIGameReader{
 
     @Override
     public Set<Participant> updateOdds(List<Game> games) {
-        games.removeIf(g -> g.getExtID().length() > 8);
+        games.removeIf(g -> g.getExtID().length() < 8);
+        Set<Participant> res = new HashSet<>();
+        JSONArray gamesArray = (JSONArray) new JSONArray(response);
 
-        // TODO Auto-generated method stub
-        return null;
+        for(int i = 0; i < gamesArray.length() ; i++){
+            JSONObject obj = (JSONObject) gamesArray.get(i);
+
+            for (int j = 0; j < games.size(); j++){
+                if (getGameExternalId(obj).equals(games.get(j).getExtID())){
+                    Game g = games.get(j);
+                    Set<Participant> ps = getGameParticipants(obj);
+
+                    for(Participant p: ps)
+                        res.add(p);
+                }
+            }
+        }
+
+        return res;
     }
 
     @Override
     public Set<Participant> updateScores(List<Game> games) {
-        games.removeIf(g -> g.getExtID().length() > 8);
+        games.removeIf(g -> g.getExtID().length() < 8);
+        Set<Participant> res = new HashSet<>();
+        JSONArray gamesArray = (JSONArray) new JSONArray(response);
 
-        // TODO Auto-generated method stub
-        return null;
+        for(int i = 0; i < gamesArray.length() ; i++){
+            JSONObject obj = (JSONObject) gamesArray.get(i);
+
+            for (int j = 0; j < games.size(); j++){
+                if (getGameExternalId(obj).equals(games.get(j).getExtID())){
+                    Game g = games.get(j);
+                    Set<Participant> ps = g.getParticipants();
+                    String home = extractTeamFromGameName(g.getTitle(), true);
+                    String away = extractTeamFromGameName(g.getTitle(), false);
+
+                    String score = (String) obj.get("scores");
+
+                    if (score != null){
+                        for(Participant p: ps){
+                            if (p.getName().equals(home)){
+                                int goals = extractScore(score, true);
+                                p.setScore(goals);
+                            }
+                            else if (p.getName().equals(away)){
+                                int goals = extractScore(score, false);
+                                p.setScore(goals);
+                            }
+                            res.add(p);
+                        }
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        return res;
     }
+
 
     @Override
     public List<Game> updateGamesState(List<Game> games) {
-        games.removeIf(g -> g.getExtID().length() > 8);
+        games.removeIf(g -> g.getExtID().length() < 8);
+        List<Game> res = new ArrayList<>();
+        JSONArray gamesArray = (JSONArray) new JSONArray(response);
 
-        // TODO Auto-generated method stub
-        return null;
+        for(int i = 0; i < gamesArray.length() ; i++){
+            JSONObject obj = (JSONObject) gamesArray.get(i);
+
+            for (int j = 0; j < games.size(); j++){
+                if (getGameExternalId(obj).equals(games.get(j).getExtID())){
+                    Game g = games.get(j);
+                    System.out.println(g.getExtID() + " " + g.getState() + " " + getGameState(obj));
+                    
+
+                    if (g.getState() != getGameState(obj)){
+                        g.setState(getGameState(obj));
+                        res.add(g);
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        return res;
     }
+
+    private String extractTeamFromGameName(String name, boolean home){
+        String[] teams = name.split(" vs ");
+        if (home)
+            return teams[0];
+        else
+            return teams[1];
+    }
+
+    private int extractScore(String score, boolean home){
+        String[] scores = score.split("x");
+        if (home)
+            return Integer.parseInt(scores[0]);
+        else
+            return Integer.parseInt(scores[1]);
+    }
+
 }
