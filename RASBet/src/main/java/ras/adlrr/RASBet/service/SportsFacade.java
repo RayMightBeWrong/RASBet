@@ -131,7 +131,7 @@ public class SportsFacade implements ISportService, IGameService, IParticipantSe
      * @param sport_id Identification of the sport
      * @return list of games of a sport present in the repository
      */
-    public List<Game> getGamesFromSport(String sport_id){
+    public Set<Game> getGamesFromSport(String sport_id){
         return gameService.getGamesFromSport(sport_id);
     }
 

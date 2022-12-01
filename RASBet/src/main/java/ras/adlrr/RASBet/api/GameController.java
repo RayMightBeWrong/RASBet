@@ -80,12 +80,12 @@ public class GameController {
     }
 
     @GetMapping("/sport/{sport}")
-    public ResponseEntity<List<Game>> getGamesFromSport(@PathVariable("sport") String sport) {
+    public ResponseEntity<Set<Game>> getGamesFromSport(@PathVariable("sport") String sport) {
         try{
             return ResponseEntity.ok().body(gameService.getGamesFromSport(sport));
         }
         catch (Exception e){
-            return new ResponseEntityBadRequest<List<Game>>().createBadRequest(e.getMessage());
+            return new ResponseEntityBadRequest<Set<Game>>().createBadRequest(e.getMessage());
         }
     }
 

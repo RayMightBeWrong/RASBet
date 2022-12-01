@@ -160,7 +160,7 @@ public class GameService implements IGameService, IParticipantService {
      * @param sport_id Identification of the sport
      * @return list of games of a sport present in the repository
      */
-    public List<Game> getGamesFromSport(String sport_id){
+    public Set<Game> getGamesFromSport(String sport_id){
         return gr.loadAllBySportId(sport_id);
     }
 

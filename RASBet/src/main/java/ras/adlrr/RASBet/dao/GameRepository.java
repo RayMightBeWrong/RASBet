@@ -2,6 +2,7 @@ package ras.adlrr.RASBet.dao;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +18,7 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
     List<Game> findAllBySportId(@Param("sport_id") String sport_id);
 
     @Query("SELECT g FROM Game g LEFT JOIN FETCH g.participants WHERE g.sport.id = :sport_id")
-    List<Game> loadAllBySportId(@Param("sport_id") String sport_id);
+    Set<Game> loadAllBySportId(@Param("sport_id") String sport_id);
 
     //Get game with participants
     @Query("SELECT g FROM Game g LEFT JOIN FETCH g.participants WHERE g.id = :game_id")

@@ -1,6 +1,7 @@
 package ras.adlrr.RASBet.service.interfaces.sports;
 
 import java.util.List;
+import java.util.Set;
 
 import ras.adlrr.RASBet.model.Game;
 
@@ -11,7 +12,7 @@ public interface IGameService {
 
     public List<Game> getOngoingGames();
 
-    public List<Game> getGamesFromSport(String sport);
+    public Set<Game> getGamesFromSport(String sport);
 
     public List<Game> updateGames() throws Exception;
 
