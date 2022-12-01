@@ -66,12 +66,12 @@ public class GameService implements IGameService, IParticipantService {
 
         try { res = updateGamesNoVPN(); }
         catch (Exception e){ error += e.getMessage(); }
-        //try{ 
-        //    List<Game> toAdd = updateGamesVPN(); 
-        //    for(Game g: toAdd)
-        //        res.add(g);
-        //}
-        //catch (Exception e){ error += e.getMessage() ; }
+        try{ 
+            List<Game> toAdd = updateGamesVPN(); 
+            for(Game g: toAdd)
+                res.add(g);
+        }
+        catch (Exception e){ error += e.getMessage() ; }
        
         if(!error.equals(""))
             throw new Exception(error);
