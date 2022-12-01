@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "./MoedasPopUp.css";
-import { Moeda } from "./Moeda.js"
-import { Button } from './Button';
+import { NewWallet } from "./NewWallet";
 
 export const MoedasPopUp = ({
     closePopup,
@@ -9,6 +8,7 @@ export const MoedasPopUp = ({
 }) => {
 
     const [moedas, setMoedas] = useState([]);
+    const [selected, setSelected] = useState([]);
 
     useEffect(() => {
         const requestOptions = {
@@ -16,10 +16,25 @@ export const MoedasPopUp = ({
             headers: { "Content-Type": "application/json" }
         }
         fetch("http://localhost:8080/api/wallets/coin/", requestOptions)
+        .then(res => res.json())
+        .then((curr) => { console.log(curr);
+            fetch("http://localhost:8080/api/wallets/gambler/" + userId, requestOptions)
             .then(res => res.json())
-            .then((result) => {
-                setMoedas(result)
+            .then((gw) => {
+                let flag
+                let currLeft = []
+                curr.forEach(c => {
+                    flag = false
+                    gw.forEach(w => {
+                        if (w.coin.id === c.id) flag = true
+                    })
+                    if (!flag) 
+                        currLeft.push(c)
+                })
+                setMoedas(currLeft)
             })
+            .catch(err => console.log(err))
+        })
     }, [])
 
 
@@ -50,17 +65,12 @@ export const MoedasPopUp = ({
 
     return (
         <>
-            < div className="moedasPopUp-container" >
-                < div className="moedasPopUp-body" >
-                    <h1> Seleção de moedas </h1>
-                    {moedas.map(moeda => (
-                        <div><Button onClick={() => criaCarteira(moeda.id)}><Moeda id={moeda.id} ratio_EUR={moeda.ratio_EUR} /></Button></div>
-                    ))}
-
-                    <button onClick={() => closePopup()}>Fechar menu das moedas</button >
-
-                </div>
-            </div >
+            <NewWallet 
+                options={moedas}
+                setSelected={setSelected}
+                create={() => criaCarteira(selected)}
+                rBack={closePopup}
+            />
         </>
     );
 };

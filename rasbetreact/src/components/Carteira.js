@@ -9,6 +9,8 @@ export const Carteira = ({
     wallet_id,
     verificaCarteira
 }) => {
+
+    const [open, setOpen] = useState(false);
     const [rerender, setRerender] = useState(true);
     const [value, setValue] = useState('0')
     const [wallet, setWallet] = useState({
@@ -22,64 +24,38 @@ export const Carteira = ({
             method: 'GET',
         }
         fetch("http://localhost:8080/api/wallets/wallet/" + wallet_id, requestOptions)
-            .then(res => res.json())
-            .then((result) => {
-                setWallet({
-                    wallet_id: result.id,
-                    balance: result.balance,
-                    coinId: result.coin.id
-                })
+        .then(res => res.json())
+        .then((result) => {
+            setWallet({
+                wallet_id: result.id,
+                balance: result.balance,
+                coinId: result.coin.id
             })
+        })
 
     }, [wallet_id, rerender])
-
-    const handleChange = event => {
-        const result = event.target.value.replace(/\D/g, '')
-        setValue(result)
-    }
-
-    const levantarDinheiro = () => {
-        const requestOptions = {
-            method: "PUT"
-        }
-        fetch("http://localhost:8080/api/transactions/withdraw?wallet_id=" + wallet_id + "&value=" + value, requestOptions)
-            .then(res => {
-                if (res.status !== 200) {
-                    let errorMsg;
-                    if ((errorMsg = res.headers.get("x-error")) == null)
-                        errorMsg = "Error occured"
-                    alert(errorMsg)
-                }
-                else {
-                    alert("Levantamento bem sucedido")
-                }
-            })
-            .then(() => {
-                setRerender(!rerender)
-            })
-            .catch(_ => alert("Error occured"))
-    }
 
     const depositarDinheiro = () => {
         const requestOptions = {
             method: "PUT"
         }
         fetch("http://localhost:8080/api/transactions/deposit?wallet_id=" + wallet_id + "&value=" + value, requestOptions)
-            .then(res => {
-                if (res.status !== 200) {
-                    let errorMsg;
-                    if ((errorMsg = res.headers.get("x-error")) == null)
-                        errorMsg = "Error occured"
-                    alert(errorMsg)
-                }
-                else {
-                    alert("Deposito bem sucedido")
-                }
-            })
-            .then(() => {
-                setRerender(!rerender)
-            })
-            .catch(_ => alert("Error occured"))
+        .then(res => {
+            if (res.status !== 200) {
+                let errorMsg;
+                if ((errorMsg = res.headers.get("x-error")) == null)
+                    errorMsg = "Error occured"
+                alert(errorMsg)
+            }
+            else {
+                alert("Deposito bem sucedido")
+                setOpen(false)
+            }
+        })
+        .then(() => {
+            setRerender(!rerender)
+        })
+        .catch(_ => alert("Error occured"))
     }
 
     return (
@@ -90,41 +66,52 @@ export const Carteira = ({
                     <div>Balance: {wallet.balance}</div>
                 </div>
                 <div className='carteira-body'>
-                    <div className='carteira-transferencia'>
-                        <input type="text"
-                            required
-                            placeholder="Quantia de dinheiro"
-                            value={value}
-                            onChange={handleChange} />
-                        <Button buttonStyle={"btn--bet"}
-                            buttonSize={'btn--flex'}
-                            onClick={() => levantarDinheiro()}>
-                            Levantar
-                        </Button>
-                        <Button buttonStyle={"btn--bet"}
-                            buttonSize={'btn--flex'}
-                            onClick={() => depositarDinheiro()}
-                        >
-                            Depositar
-                        </Button>
-                        <Button buttonStyle={"btn--bet"}
-                            buttonSize={'btn--flex'}
-                            /*onclick={() => handleClick(wallet_id, value, gambler_id, coupon)} */> {/*todo on click aumenta*/}
-                            Cupão
-                        </Button>
-                    </div>
-                </div >
-                <div>
+                    <Button buttonStyle={"btn--inverted"}
+                        buttonSize={'btn--medium'}
+                        onClick={() => setOpen(true)}
+                    >
+                        Depositar
+                    </Button>
                     <Button buttonStyle={"btn"}
-                        buttonSize={'btn--flex'}
+                        buttonSize={'btn--medium'}
                         onClick={() => verificaCarteira()}>
-                        x
+                        Submeter
                     </Button>
                 </div>
+                {open?
+                    <PayMethod 
+                        option={wallet.coinId}
+                        hasDeposit={true} 
+                        hasWithdraw={false}
+                        setSelected={()=>""}
+                        setVal={setValue}
+                        deposit={() => depositarDinheiro()}
+                        rBack={() => setOpen(false)}
+                    />
+                    : null
+                }
             </div >
         </>
     );
 };
+
+/* 
+<div className='carteira-transferencia'>
+    <input type="text"
+        required
+        placeholder="Quantia de dinheiro"
+        value={value}
+        onChange={handleChange} />
+    <Button buttonStyle={"btn--bet"}
+        buttonSize={'btn--flex'}
+        onClick={() => depositarDinheiro()}
+    >
+        Depositar
+    </Button>
+</div>
+ */
+
+
 
 export const CarteiraSimplificada = ({
     ratioEuro,

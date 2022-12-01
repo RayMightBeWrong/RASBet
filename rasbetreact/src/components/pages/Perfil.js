@@ -112,7 +112,7 @@ function Perfil({
           </div>
           <div className='informacoes-perfil-content'>
             <h3>Nova palavra-passe:</h3>
-            <input type="txtP" placeholder="Passeword" value={psw} onChange={(e) => setPsw(e.target.value)}  required />
+            <input type="txtP" placeholder="Password" value={psw} onChange={(e) => setPsw(e.target.value)}  required />
           </div>
           <div className='save'>
             <Button buttonSize={'btn--medium'} onClick={() => handleClick()} >Gravar Alterações</Button>

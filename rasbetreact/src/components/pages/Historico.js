@@ -22,10 +22,7 @@ function getTrans(sorce){
         datas.push(dh[0])
         horas.push(dh[1])
         desc.push(e.description);
-        if (e.description === "Bet expenses" || e.description === "Withdraw")
-            val.push('-' + e.value + ' (' + e.coin.id + ')')
-        else
-            val.push('+' + e.value + ' (' + e.coin.id + ')')
+        val.push(e.value + ' (' + e.coin.id + ')')
         fin.push(e.balance_after_mov + ' (' + e.coin.id + ')');
     });
     sorce.map(e=>e.date.split('.')[0].split('T')[1]);
@@ -47,10 +44,7 @@ function getBets(sorce){
         datas.push(dh[0])
         horas.push(dh[1])
         desc.push(e.description);
-        if (e.description === "Bet expenses" || e.description === "Withdraw")
-            val.push('-' + e.value + ' (' + e.coin.id + ')')
-        else
-            val.push('+' + e.value + ' (' + e.coin.id + ')')
+        val.push(e.value + ' (' + e.coin.id + ')')
         fin.push(e.balance_after_mov + ' (' + e.coin.id + ')');
     });
     sorce.map(e=>e.date.split('.')[0].split('T')[1]);

@@ -12,7 +12,7 @@ export const Boletim = ({
     bets,
     userId
 }) => {
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState('0.00');
     const [tipoAposta, setTipoAposta] = useState("Simples");
     const [finalWin, setFinalWin] = useState(0);
     const [open, setOpen] = useState(false);
@@ -23,9 +23,8 @@ export const Boletim = ({
     };
 
     const handleChange = event => {
-        const result = event.target.value.replace(/\D/g, '');
-
-        setValue(result);
+        const result = ("000"+event.target.value.replace(/\D/g, '')).match(/(000|00[123456789]|0[123456789]\d|[123456789]\d*)$/g).toString();
+        setValue(result.slice(0,-2) + '.' + result.slice(-2));
     };
 
     useEffect(() => {

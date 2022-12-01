@@ -21,7 +21,25 @@
     align-items: center;
     border-radius: 15px;
     background: white;
+    padding: 10px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.pmAline{
+    width: 50px;
+}
+
+.payMethods-close-button{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.payMethods-close-button > h1{
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.payMethods-close-button > button{
+    margin-bottom: 15px;
 }
 
 .metodo-pagamento{
@@ -65,15 +83,26 @@ select:hover{
     outline: none;
 }
 
+.txtPM2{
+    max-width: min-content;
+    padding: 12px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: none;
+    color: black;
+    background: #f1f1f1;
+}
+
 input[type="txtPM"]{
     max-width: 250px;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
-    padding: 15px;
+    padding-left: 15px;
+    padding-right: 3px;
     border: none;
     background: #f1f1f1;
-    border-right: 1px  lightgray ;
 }
+
 
 input[type="txtPM"]:focus,
 input[type="txtPM"]:hover{

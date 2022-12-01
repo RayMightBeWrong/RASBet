@@ -3,6 +3,7 @@ import "./CarteirasPopUp.css";
 import { Carteira } from './Carteira';
 import { Button } from './Button';
 import { MoedasPopUp } from './MoedasPopUp';
+import "./PayMethods.css"
 
 export const CarteirasPopUp = ({
     valormin,
@@ -57,34 +58,41 @@ export const CarteirasPopUp = ({
             body: JSON.stringify(bet)
         }
         fetch("http://localhost:8080/api/bets/", requestOptions)
-            .then(res => {
-                if (res.status !== 200) {
-                    let errorMsg;
-                    if ((errorMsg = res.headers.get("x-error")) == null)
-                        errorMsg = "Error occured"
-                    alert(errorMsg)
-                }
-                else {
-                    alert("Bet criada")
-                    closePopup()
-                }
-            })
-            .catch(_ => alert("Error occured"))
+        .then(res => {
+            if (res.status !== 200) {
+                let errorMsg;
+                if ((errorMsg = res.headers.get("x-error")) == null)
+                    errorMsg = "Error occured"
+                alert(errorMsg)
+            }
+            else {
+                alert("Bet criada")
+                closePopup()
+            }
+        })
+        .catch(_ => alert("Error occured"))
     }
     return (
         <>
             < div className="carteirasPopUp-container" >
                 < div className="carteirasPopUp-body" >
-                    <h1> Seleção de carteiras </h1>
-                    <div> Aposta do valor de {valormin}</div>
-                    {carteiras.map(wallet => (
-                        <div key={wallet.id}><Carteira wallet_id={wallet.id} verificaCarteira={() => verificaCarteira(wallet.id, wallet.coin.id)} /></div>
-                    ))}
-
-                    <Button buttonStyle={"btn--bet"} onClick={() => handleClick()}>
+                    <div className="payMethods-close-button">
+                        <div className="pmAline"> </div>
+                        <h1> Seleção de carteiras </h1>
+                        <Button buttonStyle={'btn--flex'} onClick={closePopup}> X </Button >
+                    </div>
+                    
+                    <h3> Aposta do valor de {valormin}</h3>
+                    <div className='carteirasPopUp-list'>
+                        {carteiras.map(wallet => (
+                            <div key={wallet.id}>
+                                <Carteira wallet_id={wallet.id} verificaCarteira={() => verificaCarteira(wallet.id, wallet.coin.id)} />
+                            </div>
+                        ))}
+                    </div>
+                    <Button buttonStyle={"btn--inverted"} onClick={() => handleClick()}>
                         Criar carteira
                     </Button>
-                    <button onClick={closePopup}>Fechar menu das carteiras</button >
                     {open ?
                         < MoedasPopUp userId={userId} closePopup={() => setOpen(false)} />
                         : null
