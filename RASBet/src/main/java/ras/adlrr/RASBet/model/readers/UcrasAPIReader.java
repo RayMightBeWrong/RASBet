@@ -171,8 +171,6 @@ public class UcrasAPIReader extends APIGameReader{
             for (int j = 0; j < games.size(); j++){
                 if (getGameExternalId(obj).equals(games.get(j).getExtID())){
                     Game g = games.get(j);
-                    System.out.println(g.getExtID() + " " + g.getState() + " " + getGameState(obj));
-                    
 
                     if (g.getState() != getGameState(obj)){
                         g.setState(getGameState(obj));

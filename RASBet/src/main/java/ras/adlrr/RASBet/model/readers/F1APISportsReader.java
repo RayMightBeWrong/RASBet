@@ -155,7 +155,7 @@ public class F1APISportsReader extends APIGameReader{
         Set<Participant> drivers = getDrivers(game);
 
         for(Participant p1: participants){
-            for(Participant p2: drivers){
+                for(Participant p2: drivers){
                 if (p1.getName().equals(p2.getName())){
                     p1.setScore(p2.getScore());
                 }
@@ -182,7 +182,7 @@ public class F1APISportsReader extends APIGameReader{
     public List<Game> updateGamesState(List<Game> games) {
         List<Game> res = new ArrayList<>();
         JSONArray gamesArray = (JSONArray) (new JSONObject(response).get("response"));
-
+        
         for(int i = 0; i < gamesArray.length() ; i++){
             JSONObject obj = (JSONObject) gamesArray.get(i);
 

@@ -66,12 +66,12 @@ public class GameService implements IGameService, IParticipantService {
 
         try { res = updateGamesNoVPN(); }
         catch (Exception e){ error += e.getMessage(); }
-        try{ 
-            List<Game> toAdd = updateGamesVPN(); 
-            for(Game g: toAdd)
-                res.add(g);
-        }
-        catch (Exception e){ error += e.getMessage() ; }
+        //try{ 
+        //    List<Game> toAdd = updateGamesVPN(); 
+        //    for(Game g: toAdd)
+        //        res.add(g);
+        //}
+        //catch (Exception e){ error += e.getMessage() ; }
        
         if(!error.equals(""))
             throw new Exception(error);
@@ -113,8 +113,11 @@ public class GameService implements IGameService, IParticipantService {
     }
 
     public void addGames(List<Game> games) throws Exception{
-        for (int i = 0; i < games.size(); i++)
-            addGame(games.get(i));
+        for (int i = 0; i < games.size(); i++){
+            Game g = games.get(i);
+            if (!gameExistsByExtID(g.getExtID()))
+                addGame(games.get(i));
+        }
     }
 
     public void removeGame(int id) throws Exception {
@@ -287,7 +290,7 @@ public class GameService implements IGameService, IParticipantService {
             }
         }catch (Exception e){
             errorMsg = errorMsg + "Error while updating NFL games" + " | ";
-        } 
+        }
 
         try {
             sport = sportService.findSportById("F1");
@@ -300,6 +303,7 @@ public class GameService implements IGameService, IParticipantService {
                     res.add(g);
             }
         }catch (Exception e){
+            e.printStackTrace();
             errorMsg = errorMsg + "Error while updating F1 games. ";
         }
 
@@ -354,7 +358,7 @@ public class GameService implements IGameService, IParticipantService {
     }
 
     private void updateScores(APIGameReader reader, String idSport) throws Exception{
-        List<Game> gamesToUpdate = getOngoinGamesFromSport("Football");
+        List<Game> gamesToUpdate = getOngoinGamesFromSport(idSport);
         Set<Participant> ps = reader.updateScores(gamesToUpdate);
 
         for(Participant p: ps){
@@ -363,7 +367,7 @@ public class GameService implements IGameService, IParticipantService {
     }
 
     private void updateOdds(APIGameReader reader, String idSport) throws Exception{
-        List<Game> gamesToUpdate = getGamesWithoutOddsFromSport("Football");
+        List<Game> gamesToUpdate = getGamesWithoutOddsFromSport(idSport);
         Set<Participant> ps = reader.updateOdds(gamesToUpdate);
 
         for(Participant p: ps){
