@@ -34,6 +34,13 @@
   font-size: 1.8rem;
 }
 
+.icon {
+  width: 100%;
+  text-align: left;
+  border-radius: 5px;
+  height: 5vh;
+}
+
 .nav-menu {
   display: grid;
   grid-template-columns: repeat(6, auto);
