@@ -1,18 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import './Perfil.css';
 import { Button } from '../Button';
-import { CarteiraSimplificada } from '../Carteira';
-import { PayMethod } from '../PayMethods'
-import { Link } from 'react-router-dom';
-import { render } from '@testing-library/react';
+import { InfoCarteiras } from '../InfoCarteiras';
 
 
 function Perfil({
   userId
 }) {
-  const [open, setOpen] = useState(-1);
-  const [selected, setSelected] = useState("");
-  const [value, setValue] = useState(0);
 
   const [currentName, setCurrentName] = useState("");
   const [name, setName] = useState("");
@@ -26,8 +20,6 @@ function Perfil({
   const [postal_code, setPostal_code] = useState("");
 
 
-  const [currency,setCurrency] = useState([])
-  const [gamblerWallets,setGamblerWallets] = useState([])
 
   const handleClick = () =>{
     let requestOptions = {
@@ -60,145 +52,11 @@ function Perfil({
     .catch(err => alert(err))
   }
 
-
- const HandlePayment = (isDeposit) =>{
-    if (value !== 0) {
-      setOpen(-1)
-      let listC = open===0 ? currency : [gamblerWallets[open-1].coin.id];
-      let sel = selected
-      let idWallet
-    
-      if (sel === "") 
-        sel = listC[0]
-        gamblerWallets.map(elem => {
-          if (elem.coin.id === sel) idWallet = elem.id
-        })
-        console.log(sel, idWallet, value, isDeposit)
-
-      if (!isDeposit && open===0)
-        alert("Operação Impossível")
-      else if (!isDeposit) {
-
-        let requestOptions = {
-          method: 'PUT',
-          headers: { "Access-Control-Allow-Origin": "*" }
-        }
-        let s = "http://localhost:8080/api/transactions/withdraw?wallet_id=" + idWallet + "&value=" + value
-        console.log(s);
-        fetch(s, requestOptions)
-        .then(res => {
-          if (res.status !== 200) {
-            var errorMsg;
-            if ((errorMsg = res.headers.get("x-error")) == null)
-              errorMsg = "Error occured"
-            alert(errorMsg)
-          }
-          else {
-            alert("Operação realizada com sucesso")
-          }
-        })
-        .catch(err => alert(err))
-
-      }else if (isDeposit && open===0){
-        let newWallet = {"coin_id": sel,"gambler_id": userId}
-        
-        fetch("http://localhost:8080/api/wallets/wallet/", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(newWallet)
-        }).then(() => {
-          console.log("Nova Carteira Criada")
-        })
-
-        // let requestOptions = {
-        //   method: 'GET',
-        //   headers: { "Content-Type": "application/json" }
-        // }
-        // fetch("http://localhost:8080/api/wallets/coin/", requestOptions)
-        // .then(res => res.json())
-        // .then((curr) => {
-        //   fetch("http://localhost:8080/api/wallets/gambler/" + userId, requestOptions)
-        //   .then(res => res.json())
-        //   .then((gw) => {
-        //     let flag
-        //     let currLeft = []
-        //     curr.forEach(c => {
-        //       flag = false
-        //       gw.forEach(w => {
-        //         if (w.coin.id === c.id) { 
-        //           w.coin["ratio_EUR"] = c.ratio_EUR
-        //           flag = true
-        //         }
-        //       })
-        //       if (!flag) 
-        //         currLeft.push(c.id)
-        //     })
-        //     console.log("gambler wallets:",gw,"\ncurrency:", currLeft)
-        //     setGamblerWallets(gw)
-        //     setCurrency(currLeft)
-        //   })
-        // })
-      
-      } else {
-
-        let requestOptions = {
-          method: 'PUT',
-          headers: { "Access-Control-Allow-Origin": "*" }
-        }
-        let s = "http://localhost:8080/api/transactions/deposit?wallet_id=" + idWallet + "&value=" + value
-        console.log(s);
-        fetch(s, requestOptions)
-        .then(res => {
-          if (res.status !== 200) {
-            var errorMsg;
-            if ((errorMsg = res.headers.get("x-error")) == null)
-              errorMsg = "Error occured"
-            alert(errorMsg)
-          }
-          else {
-            alert("Operação realizada com sucesso")
-          }
-        })
-        .catch(err => alert(err))
-
-      }
-    }
-    setSelected("")
-    setValue(0)
-  }
-
-
   useEffect(() => {
-    
     let requestOptions = {
       method: 'GET',
       headers: { "Content-Type": "application/json" }
     }
-    fetch("http://localhost:8080/api/wallets/coin/", requestOptions)
-    .then(res => res.json())
-    .then((curr) => {
-      fetch("http://localhost:8080/api/wallets/gambler/" + userId, requestOptions)
-      .then(res => res.json())
-      .then((gw) => {
-        let flag
-        let currLeft = []
-        curr.forEach(c => {
-          flag = false
-          gw.forEach(w => {
-            if (w.coin.id === c.id) { 
-              w.coin["ratio_EUR"] = c.ratio_EUR
-              flag = true
-            }
-          })
-          if (!flag) 
-            currLeft.push(c.id)
-        })
-        console.log("gambler wallets:",gw,"\ncurrency:", currLeft)
-        setGamblerWallets(gw)
-        setCurrency(currLeft)
-      })
-    })
-
     fetch("http://localhost:8080/api/users/gambler?id=" + userId, requestOptions)
     .then(res => res.json())
     .then((result) => {
@@ -214,8 +72,6 @@ function Perfil({
       setPostal_code(result.postal_code)
     })
   }, [userId])
-
-
 
   return (
     <div className='perfil'>
@@ -262,29 +118,7 @@ function Perfil({
             <Button buttonSize={'btn--medium'} onClick={() => handleClick()} >Gravar Alterações</Button>
           </div>
         </div>
-        <h1> Informação das carteiras </h1>
-        {gamblerWallets.map(wallet => (
-          <div className='carteiras-body' key={wallet.id}>
-            <CarteiraSimplificada ratioEuro={wallet.coin.ratio_EUR} balance={wallet.balance} coin={wallet.coin.id} setOpen={() => setOpen(wallet.id)}/>
-          </div>
-        ))}
-        <div className='save'>
-          {currency.length !== 0 ?
-              <Button buttonSize={'btn--medium'} onClick={() => setOpen(0)}>Nova Carteira</Button>
-            :
-              null
-          }
-          <Link to='/historico' className='registerbutton'>
-            <Button buttonSize={'btn--medium'} buttonStyle={'btn--inverted'} onClick={() => setOpen(true)}>
-              Consultar Historico
-            </Button>
-          </Link>
-        </div>
-        {open !== -1 ?
-            <PayMethod options={open===0 ? currency : [gamblerWallets[open-1].coin.id]} setSelected={setSelected} setVal={setValue} deposit={() => HandlePayment(true)} withdraw={() => HandlePayment(false)} rBack={() => setOpen(-1)} />
-          :
-            null
-        }
+          <InfoCarteiras userId={userId}/>
       </div>
     </div >
   );
