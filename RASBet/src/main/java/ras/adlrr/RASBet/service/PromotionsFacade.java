@@ -160,9 +160,9 @@ public class PromotionsFacade implements IPromotionService, IClientPromotionServ
      */
     public void addReferral(int referredId, int referrerId) throws Exception{
         if(!gamblerService.gamblerExistsById(referredId))
-            throw new Exception("Gambler with id " + referredId + "does not exist!");
+            throw new Exception("Gambler with id " + referredId + " does not exist!");
         if(!gamblerService.gamblerExistsById(referrerId))
-            throw new Exception("Gambler with id " + referrerId + "does not exist!");
+            throw new Exception("Gambler with id " + referrerId + " does not exist!");
         referralService.addReferral(referredId, referrerId);
     }
 
