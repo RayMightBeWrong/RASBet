@@ -65,7 +65,7 @@ export const GamesTab = ({
                 <div className='gamestab'>
                     <div className='bets-tab'>
                         {games.map(game => (
-                            <div><Game id={game.id} title={game.title} date={game.date} participants={game.participants}
+                            <div key={game.id}><Game id={game.id} title={game.title} date={game.date} participants={game.participants}
                                 removeBet={removeBet} addBet={addBet} changeBet={changeBet} userState={userState} /></div>
                         ))}
                     </div>
