@@ -24,13 +24,13 @@ public class UcrasAPIReader extends APIGameReader{
     }
 
     public List<Game> getAPIGames(){
-        //String json = super.readJSON("http://ucras.di.uminho.pt/v1/games/", "jsons/ucras.json", null);
-        String json = "";
+        String json = super.readJSON("http://ucras.di.uminho.pt/v1/games/", "jsons/ucras.json", null);
+        /*String json = "";
         try {
             json = super.readFromLocalFile("jsons/ucras.json");
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         response = json;
 
         if (json.equals(""))

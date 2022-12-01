@@ -28,13 +28,14 @@ public class F1APISportsReader extends APIGameReader{
     @Override
     public List<Game> getAPIGames() {
         String url = "https://v1.formula-1.api-sports.io/races?type=Race&season=" + season;
-        //this.response = super.readJSON(url, "jsons/f1.json", "b68a93e4291b512a0f3179eb9ee1bc2b");
-        response = "";
+        this.response = super.readJSON(url, "jsons/f1.json", "b68a93e4291b512a0f3179eb9ee1bc2b");
+        
+        /*response = "";
         try {
             response = super.readFromLocalFile("jsons/f1.json");
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
         JSONArray races = (JSONArray) (new JSONObject(this.response).get("response"));
         List<Game> res = new ArrayList<>();
@@ -52,11 +53,6 @@ public class F1APISportsReader extends APIGameReader{
                     added++;
                 }
             }
-            
-            //JSONObject nextRace = (JSONObject) response.get(0);
-
-            //Game g = new Game(getGameExternalId(nextRace), getGameDate(nextRace), getGameState(), getName(nextRace), getSportID(), getDrivers(nextRace));
-            //res.add(g);
 
             return res;
         }
@@ -78,14 +74,14 @@ public class F1APISportsReader extends APIGameReader{
 
     public Set<Participant> getDrivers(String extID){
         String url = "https://v1.formula-1.api-sports.io/rankings/races?race=" + extID;
-        //String stringResponse = super.readJSON(url, "jsons/f1/race_" + extID + ".json", "b68a93e4291b512a0f3179eb9ee1bc2b");
+        String stringResponse = super.readJSON(url, "jsons/f1/race_" + extID + ".json", "b68a93e4291b512a0f3179eb9ee1bc2b");
 
-        String stringResponse = "";
+        /*String stringResponse = "";
         try {
             stringResponse = super.readFromLocalFile("jsons/f1/race_" + extID + ".json");
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
         JSONArray driversResponse = (JSONArray) (new JSONObject(stringResponse).get("response"));
         Set<Participant> res = new HashSet<>();

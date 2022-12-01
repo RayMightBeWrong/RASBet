@@ -16,7 +16,7 @@ import ras.adlrr.RASBet.model.APIGameReader;
 public class NFLAPISportsReader extends APIGameReader{
     private String sport_id;
     private String response;
-    private int gamesToLoad = 2;
+    private int gamesToLoad = 10;
     
     public NFLAPISportsReader(String sport_id){
         ReadJSONBehaviour readMethod = new ReadJSONFromExternalAPI();
