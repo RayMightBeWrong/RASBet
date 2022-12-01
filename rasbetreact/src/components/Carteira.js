@@ -87,84 +87,21 @@ export const Carteira = ({
 export const CarteiraSimplificada = ({
     ratioEuro,
     balance,
-    wallet_id,
-    withdraw,
-    deposit
+    coin,
+    setOpen
 }) => {
-
-    const [value, setValue] = useState('');
-    const [open, setOpen] = useState(false);
-
-    const handleChange = event => {
-        const result = event.target.value.replace(/\D/g, '');
-        setValue(result);
-    };
-
-    const [wallet, setWallet] = useState({
-        depositar: false,
-        levantar: false,
-        wallet_id: ""
-    });
-
-    const handleClick = (wallet_id, value) => {
-        setOpen(true);
-        if (wallet.wallet_id == wallet_id && wallet.depositar == false && wallet.levantar == true) {
-            setWallet({ depositar: false, levantar: true, wallet_id: wallet_id, gambler_id: "", coupon: "" })
-            withdraw(wallet_id, value)
-            const levantar = { wallet_id, value }
-            console.log(levantar)
-            fetch("http://localhost:8080/api/transactions/withdraw", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(levantar)
-            }).then(() => {
-                console.log("Levantamento")
-            })
-        } else if (wallet.wallet_id == wallet_id && wallet.depositar == true && wallet.levantar == false) {
-            setWallet({ depositar: true, levantar: false, wallet_id: wallet_id, gambler_id: "", coupon: "" })
-            deposit(wallet_id, value)
-            const deposito = { wallet_id, value }
-            console.log(deposito)
-            fetch("http://localhost:8080/api/transactions/deposit", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(deposito)
-            }).then(() => {
-                console.log("Depósito")
-            })
-        }
-    };
-
     return (
         <>
             <div className='carteiraSimples'>
-                <div className='carteira-headerS'>
-                    <div>Ratio euro: {ratioEuro}</div>
-                    <div>Balance: {balance}</div>
-                </div>
-                <div className='carteira-transferenciaS'>
-                    <input type="txtC" placeholder="Quantia de dinheiro" value={value} onChange={handleChange} />
-                    <div className='carteira-transferencia-botoes'>
-                        <Button
-                            buttonStyle={"btn--bet"}
-                            buttonSize={'btn--medium'}
-                            onClick={() => handleClick(wallet_id, value)}>
-                            {/*todo on click diminui*/}
-                            Levantar
-                        </Button>
-                        <Button
-                            buttonStyle={"btn--bet"}
-                            buttonSize={'btn--medium'}
-                            onClick={() => handleClick(wallet_id, value)}>
-                            {/*todo on click aumenta*/}
-                            Depositar
-                        </Button>
-                        {open ?
-                            <PayMethod options={["nao sei qual é"]} closePopup={() => setOpen(false)} rBack={() => setOpen(false)} />
-                            : null
-                        }
-                    </div>
-                </div>
+                <h3>Moeda: {coin}</h3>
+                <h3>Ratio euro: {ratioEuro}</h3>
+                <h3>Balance: {balance}({coin})</h3>
+                <Button
+                    buttonStyle={"btn--bet"}
+                    buttonSize={'btn--medium'}
+                    onClick={() => setOpen()}>
+                    Levantar/Depositar
+                </Button>
             </div >
         </>
     );

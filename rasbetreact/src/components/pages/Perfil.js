@@ -15,8 +15,9 @@ const saldo = "13"
 function Perfil({
   userId
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(-1);
 
+  const [currentName, setCurrentName] = useState("");
   const [name, setName] = useState("");
   const [psw, setPsw] = useState("");
   const [email, setEmail] = useState("");
@@ -30,38 +31,75 @@ function Perfil({
   const [date_of_birth, setDate_of_birth] = useState("");
   const [postal_code, setPostal_code] = useState("");
 
-  const currency = useState([])
+  const [currency,setCurrency] = useState([])
+  const [gamblerWallets,setGamblerWallets] = useState([])
 
-  carteiras.forEach((elem) => (currency.push(elem.currency)))
+
+  const handleChange = event => {
+      const result = event.target.value.replace(/\D/g, '');
+      console.log(result);
+  };
+
+  const handleClick = () =>{}
 
   useEffect(() => {
     const requestOptions = {
       method: 'GET',
       headers: { "Content-Type": "application/json" }
     }
-    let s = "http://localhost:8080/api/users/gambler?id=" + userId
-    fetch(s, requestOptions)
+
+    fetch("http://localhost:8080/api/wallets/coin/", requestOptions)
+    .then(res => res.json())
+    .then((curr) => {
+      fetch("http://localhost:8080/api/wallets/gambler/" + userId, requestOptions)
       .then(res => res.json())
-      .then((result) => {
-        setName(result.name)
-        setPsw(result.password)
-        setEmail(result.email)
-        setCc(result.cc)
-        setNationality(result.nationality)
-        setNif(result.nif)
-        setCity(result.city)
-        setAddress(result.address)
-        setPhone_number(result.phone_number)
-        setOccupation(result.occupation)
-        setDate_of_birth(result.date_of_birth)
-        setPostal_code(result.postal_code)
+      .then((gw) => {
+        let flag
+        let currLeft = []
+        curr.forEach(c => {
+          flag = false
+          gw.forEach(w => {
+            if (w.coin.id === c.id) { 
+              w.coin["currency"] = c.ratio_EUR
+              flag = true
+            }
+          })
+          if (!flag) 
+            currLeft.push(c.id)
+        })
+        console.log("gambler wallets:",gw,"\ncurrency:", currLeft)
+        setGamblerWallets(gw)
+        setCurrency(currLeft)
       })
-  }, [])
+    })
+
+    
+
+    fetch("http://localhost:8080/api/users/gambler?id=" + userId, requestOptions)
+    .then(res => res.json())
+    .then((result) => {
+      setCurrentName(result.name)
+      setName(result.name)
+      setPsw(result.password)
+      setEmail(result.email)
+      setCc(result.cc)
+      setNationality(result.nationality)
+      setNif(result.nif)
+      setCity(result.city)
+      setAddress(result.address)
+      setPhone_number(result.phone_number)
+      setOccupation(result.occupation)
+      setDate_of_birth(result.date_of_birth)
+      setPostal_code(result.postal_code)
+    })
+  }, [userId])
+
+
 
   return (
     <div className='perfil'>
       <div className='perfil-box'>
-        <h1>{nome}</h1>
+        <h1>{currentName}</h1>
         <div className='informacoes-perfil'>
           <div className='informacoes-perfil-content'>
             <h3>Nome:</h3>
@@ -112,26 +150,31 @@ function Perfil({
             <input type="txtP" placeholder="Passeword" value={psw} onChange={(e) => setPsw(e.target.value)}  required />
           </div>
           <div className='save'>
-            <Button buttonSize={'btn--medium'}  >Gravar Alterações</Button>
+            <Button buttonSize={'btn--medium'} onClick={() => handleClick()} >Gravar Alterações</Button>
           </div>
         </div>
         <h1> Informação das carteiras </h1>
-        <div className='carteiras-body'>
-          {carteiras.map(wallet => (
-            <CarteiraSimplificada ratioEuro={wallet.ratioEuro} balance={wallet.balance} />
-          ))}
-        </div>
+        {gamblerWallets.map(wallet => (
+          <div className='carteiras-body' key={wallet.id}>
+            <CarteiraSimplificada ratioEuro={wallet.coin.currency} balance={wallet.balance} coin={wallet.coin.id} setOpen={() => setOpen(wallet.id)}/>
+          </div>
+        ))}
         <div className='save'>
-          <Button buttonSize={'btn--medium'} onClick={() => setOpen(true)}>Nova Carteira</Button>
+          {currency.length !== 0 ?
+              <Button buttonSize={'btn--medium'} onClick={() => setOpen(0)}>Nova Carteira</Button>
+            :
+              null
+          }
           <Link to='/historico' className='registerbutton'>
             <Button buttonSize={'btn--medium'} buttonStyle={'btn--inverted'} onClick={() => setOpen(true)}>
               Consultar Historico
             </Button>
           </Link>
         </div>
-        {open ?
-            <PayMethod options={currency} closePopup={() => setOpen(false)} rBack={() => setOpen(false)} />
-          : null
+        {open !== -1 ?
+            <PayMethod options={open===0 ? currency : [gamblerWallets[open-1].coin.id]} closePopup={() => setOpen(0)} rBack={() => setOpen(-1)} />
+          :
+            null
         }
       </div>
     </div >
