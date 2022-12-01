@@ -57,7 +57,7 @@ export const MoedasPopUp = ({
                         <div><Button onClick={() => criaCarteira(moeda.id)}><Moeda id={moeda.id} ratio_EUR={moeda.ratio_EUR} /></Button></div>
                     ))}
 
-                    <button onClick={closePopup}>Fechar menu das moedas</button >
+                    <button onClick={() => closePopup()}>Fechar menu das moedas</button >
 
                 </div>
             </div >

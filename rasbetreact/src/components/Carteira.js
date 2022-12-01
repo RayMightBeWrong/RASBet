@@ -6,36 +6,80 @@ import { PayMethod } from "./PayMethods"
 
 
 export const Carteira = ({
-    coinId,
-    balance,
     wallet_id,
-    verificaCarteira,
+    verificaCarteira
 }) => {
-    const [value, setValue] = useState('')
+    const [rerender, setRerender] = useState(true);
+    const [value, setValue] = useState('0')
+    const [wallet, setWallet] = useState({
+        wallet_id: 0,
+        balance: 0,
+        coinId: 0
+    })
+
+    useEffect(() => {
+        console.log("render")
+        const requestOptions = {
+            method: 'GET',
+        }
+        fetch("http://localhost:8080/api/wallets/wallet/" + wallet_id, requestOptions)
+            .then(res => res.json())
+            .then((result) => {
+                setWallet({
+                    wallet_id: result.id,
+                    balance: result.balance,
+                    coinId: result.coin.id
+                })
+            })
+
+    }, [wallet_id, rerender])
 
     const handleChange = event => {
         const result = event.target.value.replace(/\D/g, '')
-
         setValue(result)
     }
 
-    const depositarDinheiro = () => {
-        console.log("yooo")
+    const levantarDinheiro = () => {
         const requestOptions = {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" }
+            method: "PUT"
         }
-        fetch("http://localhost:8080/api/transactions/deposit?wallet_id=" + wallet_id + "&value=" + value, requestOptions)
+        fetch("http://localhost:8080/api/transactions/withdraw?wallet_id=" + wallet_id + "&value=" + value, requestOptions)
             .then(res => {
                 if (res.status !== 200) {
-                    var errorMsg;
+                    let errorMsg;
                     if ((errorMsg = res.headers.get("x-error")) == null)
                         errorMsg = "Error occured"
                     alert(errorMsg)
                 }
                 else {
+                    alert("Levantamento bem sucedido")
+                }
+            })
+            .then(() => {
+                setRerender(!rerender)
+            })
+            .catch(_ => alert("Error occured"))
+    }
+
+    const depositarDinheiro = () => {
+        const requestOptions = {
+            method: "PUT"
+        }
+        fetch("http://localhost:8080/api/transactions/deposit?wallet_id=" + wallet_id + "&value=" + value, requestOptions)
+            .then(res => {
+                if (res.status !== 200) {
+                    let errorMsg;
+                    if ((errorMsg = res.headers.get("x-error")) == null)
+                        errorMsg = "Error occured"
+                    alert(errorMsg)
+                }
+                else {
+                    console.log("depositado")
                     alert("Deposito bem sucedido")
                 }
+            })
+            .then(() => {
+                setRerender(!rerender)
             })
             .catch(_ => alert("Error occured"))
     }
@@ -44,8 +88,8 @@ export const Carteira = ({
         <>
             <div className='carteira'>
                 <div className='carteira-header'>
-                    <div>{coinId}</div>
-                    <div>Balance: {balance}</div>
+                    <div>{wallet.coinId}</div>
+                    <div>Balance: {wallet.balance}</div>
                 </div>
                 <div className='carteira-body'>
                     <div className='carteira-transferencia'>
@@ -56,7 +100,7 @@ export const Carteira = ({
                             onChange={handleChange} />
                         <Button buttonStyle={"btn--bet"}
                             buttonSize={'btn--flex'}
-                            /*onclick={() => handleClick(wallet_id, value, gambler_id, coupon)} */> {/* todo on click diminui */}
+                            onClick={() => levantarDinheiro()}>
                             Levantar
                         </Button>
                         <Button buttonStyle={"btn--bet"}
@@ -75,7 +119,7 @@ export const Carteira = ({
                 <div>
                     <Button buttonStyle={"btn"}
                         buttonSize={'btn--flex'}
-                        /*onClick={() => handleClick(balance)}*/>
+                        onClick={() => verificaCarteira()}>
                         x
                     </Button>
                 </div>

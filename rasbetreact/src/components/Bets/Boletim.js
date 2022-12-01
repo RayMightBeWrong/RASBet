@@ -29,7 +29,7 @@ export const Boletim = ({
     };
 
     useEffect(() => {
-        var soma = 0
+        let soma = 0
         if (value !== '' && bets.length !== 0)
             soma = parseFloat(value)
         {
@@ -86,8 +86,7 @@ export const Boletim = ({
                             Submeter
                         </Button>
                         {open ?
-
-                            < CarteirasPopUp userId={userId} carteiras={carteiras} closePopup={() => setOpen(false)} valormin={value} />
+                            < CarteirasPopUp userId={userId} bets={bets} carteiras={carteiras} closePopup={() => setOpen(false)} valormin={value} />
                             : null
                         }
                     </div>

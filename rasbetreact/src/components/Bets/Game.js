@@ -6,6 +6,7 @@ import { PopupNewOdd } from './PopupNewOdd';
 
 
 export const Game = ({
+    id,
     title,
     date,
     participants,
@@ -24,21 +25,21 @@ export const Game = ({
         bet: ""
     });
 
-    const handleClick = (name, odd) => {
+    const handleClick = (name, odd, participantId) => {
         if (userState === 'gambler') {
             if (locked.fechada && locked.bet === name) {
                 console.log("remover beeett")
                 setLock({ fechada: false, bet: "" })
-                removeBet(title)
+                removeBet(id)
             } else if (locked.fechada && locked.bet !== name) {
                 console.log("change beeett")
                 setLock({ fechada: true, bet: name })
-                changeBet(title, name, odd)
+                changeBet(id, title, name, odd, participantId)
             } else if (!locked.fechada) {
                 console.log("add beeett")
                 setLock({ fechada: true, bet: name })
                 console.log("Locked bet =" + locked.bet)
-                addBet(title, name, odd)
+                addBet(id, title, name, odd, participantId)
             }
         }
         else if (userState === 'expert') {
@@ -62,7 +63,7 @@ export const Game = ({
                     {participants.map(dic => (
                         <div key={dic.id}>
                             <Button buttonStyle={locked.fechada && locked.bet === dic.name ? "btn--bet-clicked" : "btn--bet"}
-                                buttonSize={'btn--flex'} onClick={() => handleClick(dic.name, dic.odd)}>
+                                buttonSize={'btn--flex'} onClick={() => handleClick(dic.name, dic.odd, dic.id)}>
                                 <div>{dic.name}</div>
                                 <div>{dic.odd}</div>
                             </Button>

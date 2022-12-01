@@ -7,13 +7,16 @@ import { MoedasPopUp } from './MoedasPopUp';
 export const CarteirasPopUp = ({
     valormin,
     closePopup,
-    userId
+    userId,
+    bets
 }) => {
 
     const [carteiras, setCarteiras] = useState([]);
     const [open, setOpen] = useState(false);
 
+
     useEffect(() => {
+        console.log(bets)
         if (!open) {
             const requestOptions = {
                 method: 'GET',
@@ -27,39 +30,59 @@ export const CarteirasPopUp = ({
         }
     }, [userId, open])
 
-    /*
-    const handleClick = (e) => {
-        e.preventDefault()
-        const carteira = { coin_id: "" }
-        console.log(carteira)
-        fetch("http://localhost:8080/api/wallets/wallet", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(carteira)
-        })
-            .then(() => { console.log("Nova Carteira Criada") })
-    }
-    */
     const handleClick = () => {
         console.log("setopentrue")
         setOpen(true)
     }
 
-    const verificaCarteira = (valor) => {
-        console.log("yoo")
-        if (parseFloat(valormin) <= parseFloat(valor) || valormin === '') {
-            alert('Aposta inserida'); {/*todo verificar se aposta é possível no backend*/ }
-            closePopup()
+    function verificaCarteira(wallet_id) {
+        let game_choices = []
+
+        bets.map(bet => (
+            game_choices.push({
+                game_id: bet.id,
+                participant_id: bet.participantId
+            })
+        ))
+        console.log(game_choices)
+
+        let bet = {
+            value: parseFloat(valormin), //pode dar erro maybe
+            gambler_id: userId,
+            wallet_id: wallet_id,
+            coin_id: "EUR",
+            coupon: null,
+            game_choices: game_choices
         }
-        else { alert('Dinheiro insuficiente'); }
+
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(bet)
+        }
+        fetch("http://localhost:8080/api/bets/", requestOptions)
+            .then(res => {
+                if (res.status !== 200) {
+                    let errorMsg;
+                    if ((errorMsg = res.headers.get("x-error")) == null)
+                        errorMsg = "Error occured"
+                    alert(errorMsg)
+                }
+                else {
+                    alert("Bet criada")
+                    closePopup()
+                }
+            })
+            .catch(_ => alert("Error occured"))
     }
     return (
         <>
             < div className="carteirasPopUp-container" >
                 < div className="carteirasPopUp-body" >
                     <h1> Seleção de carteiras </h1>
+                    <div> Aposta do valor de {valormin}</div>
                     {carteiras.map(wallet => (
-                        <div><Carteira wallet_id={wallet.id} coinId={wallet.coin.id} balance={wallet.balance} verificaCarteira={() => verificaCarteira()} /></div>
+                        <div><Carteira wallet_id={wallet.id} verificaCarteira={() => verificaCarteira(wallet.id)} /></div>
                     ))}
 
                     <Button buttonStyle={"btn--bet"} onClick={() => handleClick()}>

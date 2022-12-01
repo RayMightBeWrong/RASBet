@@ -25,39 +25,37 @@ export const GamesTab = ({
         else return;
     }
 
-    const addBet = (title, winner, cota) => {
+    const addBet = (id, title, winner, cota, participantId) => {
         console.log("adicionar")
         const updateBets = [
-            // copy the current bets state
             ...bets,
-            // now you can add a new object to add to the array
             {
-                // add the ids to update database
-                //id: users.length + 1,
-                // adding a new bet
+                id: id,
                 title: title,
                 winner: winner,
-                cota: cota
+                cota: cota,
+                participantId: participantId
             }
-        ];
-        // update the state to the updateBets
-        setBets(updateBets);
+        ]
+        setBets(updateBets)
     }
 
-    const removeBet = (title) => {
+    const removeBet = (id) => {
         console.log("remover")
         const newbets = []
-        bets.forEach((element) => { if (element.title !== title) newbets.push(element) })
+        bets.forEach((element) => { if (element.id !== id) newbets.push(element) })
         setBets(newbets)
     }
 
-    const changeBet = (title, winner, cota) => {
+    const changeBet = (id, title, winner, cota, participantId) => {
         const newbets = []
-        bets.forEach((element) => { if (element.title !== title) newbets.push(element) })
+        bets.forEach((element) => { if (element.id !== id) newbets.push(element) })
         newbets.push({
+            id: id,
             title: title,
             winner: winner,
-            cota: cota
+            cota: cota,
+            participantId: participantId
         })
         setBets(newbets);
     }
@@ -80,7 +78,7 @@ export const GamesTab = ({
                 <div className='gamestab'>
                     <div className='bets-tab'>
                         {filtredGames.map(game => (
-                            <div><Game title={game.title} date={game.date} participants={game.participants}
+                            <div><Game id={game.id} title={game.title} date={game.date} participants={game.participants}
                                 removeBet={removeBet} addBet={addBet} changeBet={changeBet} userState={userState} /></div>
                         ))}
                     </div>
