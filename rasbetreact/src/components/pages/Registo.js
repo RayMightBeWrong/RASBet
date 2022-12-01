@@ -19,6 +19,7 @@ function Registo({
     const [occupation, setOccupation] = useState("")
     const [postal_code, setPostal_code] = useState("")
     const [date_of_birth, setDate_of_birth] = useState("")
+    const [referral, setReferral] = useState("")
 
 
     const handleSubmit = event => {
@@ -36,7 +37,10 @@ function Registo({
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(registo)
             }
-            fetch("http://localhost:8080/api/users/gambler", requestOptions)
+            let link = "http://localhost:8080/api/users/gambler"
+            if (referral !== "")
+                link += "?referral=" + referral
+            fetch(link, requestOptions)
                 .then(res => {
                     if (res.status !== 200) {
                         let errorMsg;
@@ -84,6 +88,7 @@ function Registo({
                                 Occupation <input type="txtL" placeholder="Football player" value={occupation} onChange={(e) => setOccupation(e.target.value)} required />
                                 Date of birth <input type="txtL" placeholder="1985-02-05" value={date_of_birth} onChange={(e) => setDate_of_birth(e.target.value)} required />
                                 Postal code <input type="txtL" placeholder="4710-057" value={postal_code} onChange={(e) => setPostal_code(e.target.value)} required />
+                                Referral <input type="txtL" placeholder="31231" value={referral} onChange={(e) => setReferral(e.target.value)} required />
                                 <Button buttonSize='btn--flex' type="submit">Concluir</Button>
 
                             </form>

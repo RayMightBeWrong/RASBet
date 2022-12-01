@@ -16,17 +16,43 @@ function Navbar({
   function adminOptions() {
     if (userState === 'admin') {
       return (
-        <div className='boletimbox'>
+        <li className='nav-item'>
+          <Link
+            to='/admin_Options'
+            className='nav-links'
+            onClick={closeMobileMenu}
+          >
+            TOOLS
+          </Link>
+        </li>
+      );
+    }
+    else return;
+  }
+
+  function gamblerOptions() {
+    if (userState === 'gambler') {
+      return (
+        <>
           <li className='nav-item'>
             <Link
-              to='/admin_Options'
+              to='/promocoes'
               className='nav-links'
               onClick={closeMobileMenu}
             >
-              TOOLS
+              PROMOCÕES
             </Link>
           </li>
-        </div>
+          <li>
+            <Link
+              to='/perfil'
+              className='nav-links'
+              onClick={closeMobileMenu}
+            >
+              PERFIL
+            </Link>
+          </li>
+        </>
       );
     }
     else return;
@@ -57,23 +83,6 @@ function Navbar({
       )
   }
 
-
-  /*
-  if (userState === 'loggedOff') {
-      setLogButton(
-        <>
-          {button && <Link to='/login' ><Button buttonStyle='btn--outline'>Log In</Button> </Link>}
-        </>
-      )
-    }
-    else {
-      setLogButton(
-        <>
-          {button && <Link to='/'><Button buttonStyle='btn--outline' onClick={setUserState("loggedOff")}>Log Off</Button> </Link>}
-        </>
-      )
-    }
-  */
   const logButtonLogic = () => {
     if (userState === 'loggedOff') {
       setloggedIn(false)
@@ -81,10 +90,6 @@ function Navbar({
     else {
       setloggedIn(true)
     }
-  }
-
-  const handleLogOffClick = () => {
-    setUserState("loggedOff")
   }
 
   const showButton = () => {
@@ -119,11 +124,6 @@ function Navbar({
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
           </div>
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-            {/* <li className='nav-item'>
-              <Link to='/' className='nav-links' onClick={closeMobileMenu}>
-                TODOS
-              </Link>
-            </li> */}
             <li className='nav-item'>
               <Link
                 to='/futebol'
@@ -160,22 +160,14 @@ function Navbar({
                 NFL
               </Link>
             </li>
-            <li>
-              <Link
-                to='/perfil'
-                className='nav-links'
-                onClick={closeMobileMenu}
-              >
-                PERFIL
-              </Link>
-            </li>
+            {gamblerOptions()}
             {adminOptions()}
             <li>
               {logButtonMobile()}
             </li>
           </ul>
           {!loggedIn && button && <Link to='/login' ><Button buttonStyle='btn--outline'>Log In</Button> </Link>}
-          {loggedIn && button && <Link to='/'><Button buttonStyle='btn--outline' onClick={handleLogOffClick}>Log Off</Button> </Link>}
+          {loggedIn && button && <Link to='/'><Button buttonStyle='btn--outline' onClick={() => setUserState("loggedOff")}>Log Off</Button> </Link>}
         </div>
       </nav>
     </>
