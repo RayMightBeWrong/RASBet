@@ -4,50 +4,176 @@ import { Button } from '../Button';
 import { CarteiraSimplificada } from '../Carteira';
 import { PayMethod } from '../PayMethods'
 import { Link } from 'react-router-dom';
-
-const carteira1 = { ratioEuro: "0.35", balance: "30" }
-const carteira2 = { ratioEuro: "1", balance: "700" }
-const carteiras = [carteira1, carteira2]
-const nome = "Carteiro Paulo"
-const saldo = "13"
+import { render } from '@testing-library/react';
 
 
 function Perfil({
   userId
 }) {
   const [open, setOpen] = useState(-1);
+  const [selected, setSelected] = useState("");
+  const [value, setValue] = useState(0);
 
   const [currentName, setCurrentName] = useState("");
   const [name, setName] = useState("");
   const [psw, setPsw] = useState("");
   const [email, setEmail] = useState("");
-  const [cc, setCc] = useState("");
   const [nationality, setNationality] = useState("");
-  const [nif, setNif] = useState("");
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
   const [phone_number, setPhone_number] = useState("");
   const [occupation, setOccupation] = useState("");
-  const [date_of_birth, setDate_of_birth] = useState("");
   const [postal_code, setPostal_code] = useState("");
+
 
   const [currency,setCurrency] = useState([])
   const [gamblerWallets,setGamblerWallets] = useState([])
 
+  const handleClick = () =>{
+    let requestOptions = {
+      method: 'PUT',
+      headers: { "Access-Control-Allow-Origin": "*" }
+    }
+    let s = "http://localhost:8080/api/users/gambler/update?id=" + userId
+    s += "&name=" + name
+    s += "&password=" + psw
+    s += "&email=" + email
+    s += "&nationality=" + nationality
+    s += "&city=" + city
+    s += "&address=" + address
+    s += "&phone_number=" + phone_number
+    s += "&occupation=" + occupation
+    s += "&postal_code=" + postal_code
+    console.log(s);
+    fetch(s, requestOptions)
+    .then(res => {
+      if (res.status !== 200) {
+        var errorMsg;
+        if ((errorMsg = res.headers.get("x-error")) == null)
+          errorMsg = "Error occured"
+        alert(errorMsg)
+      }
+      else {
+        alert("Registos atualizados")
+      }
+    })
+    .catch(err => alert(err))
+  }
 
-  const handleChange = event => {
-      const result = event.target.value.replace(/\D/g, '');
-      console.log(result);
-  };
 
-  const handleClick = () =>{}
+ const HandlePayment = (isDeposit) =>{
+    if (value !== 0) {
+      setOpen(-1)
+      let listC = open===0 ? currency : [gamblerWallets[open-1].coin.id];
+      let sel = selected
+      let idWallet
+    
+      if (sel === "") 
+        sel = listC[0]
+        gamblerWallets.map(elem => {
+          if (elem.coin.id === sel) idWallet = elem.id
+        })
+        console.log(sel, idWallet, value, isDeposit)
+
+      if (!isDeposit && open===0)
+        alert("Operação Impossível")
+      else if (!isDeposit) {
+
+        let requestOptions = {
+          method: 'PUT',
+          headers: { "Access-Control-Allow-Origin": "*" }
+        }
+        let s = "http://localhost:8080/api/transactions/withdraw?wallet_id=" + idWallet + "&value=" + value
+        console.log(s);
+        fetch(s, requestOptions)
+        .then(res => {
+          if (res.status !== 200) {
+            var errorMsg;
+            if ((errorMsg = res.headers.get("x-error")) == null)
+              errorMsg = "Error occured"
+            alert(errorMsg)
+          }
+          else {
+            alert("Operação realizada com sucesso")
+          }
+        })
+        .catch(err => alert(err))
+
+      }else if (isDeposit && open===0){
+        let newWallet = {"coin_id": sel,"gambler_id": userId}
+        
+        fetch("http://localhost:8080/api/wallets/wallet/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newWallet)
+        }).then(() => {
+          console.log("Nova Carteira Criada")
+        })
+
+        // let requestOptions = {
+        //   method: 'GET',
+        //   headers: { "Content-Type": "application/json" }
+        // }
+        // fetch("http://localhost:8080/api/wallets/coin/", requestOptions)
+        // .then(res => res.json())
+        // .then((curr) => {
+        //   fetch("http://localhost:8080/api/wallets/gambler/" + userId, requestOptions)
+        //   .then(res => res.json())
+        //   .then((gw) => {
+        //     let flag
+        //     let currLeft = []
+        //     curr.forEach(c => {
+        //       flag = false
+        //       gw.forEach(w => {
+        //         if (w.coin.id === c.id) { 
+        //           w.coin["ratio_EUR"] = c.ratio_EUR
+        //           flag = true
+        //         }
+        //       })
+        //       if (!flag) 
+        //         currLeft.push(c.id)
+        //     })
+        //     console.log("gambler wallets:",gw,"\ncurrency:", currLeft)
+        //     setGamblerWallets(gw)
+        //     setCurrency(currLeft)
+        //   })
+        // })
+      
+      } else {
+
+        let requestOptions = {
+          method: 'PUT',
+          headers: { "Access-Control-Allow-Origin": "*" }
+        }
+        let s = "http://localhost:8080/api/transactions/deposit?wallet_id=" + idWallet + "&value=" + value
+        console.log(s);
+        fetch(s, requestOptions)
+        .then(res => {
+          if (res.status !== 200) {
+            var errorMsg;
+            if ((errorMsg = res.headers.get("x-error")) == null)
+              errorMsg = "Error occured"
+            alert(errorMsg)
+          }
+          else {
+            alert("Operação realizada com sucesso")
+          }
+        })
+        .catch(err => alert(err))
+
+      }
+    }
+    setSelected("")
+    setValue(0)
+  }
+
 
   useEffect(() => {
-    const requestOptions = {
+    
+    let requestOptions = {
       method: 'GET',
       headers: { "Content-Type": "application/json" }
     }
-
     fetch("http://localhost:8080/api/wallets/coin/", requestOptions)
     .then(res => res.json())
     .then((curr) => {
@@ -60,7 +186,7 @@ function Perfil({
           flag = false
           gw.forEach(w => {
             if (w.coin.id === c.id) { 
-              w.coin["currency"] = c.ratio_EUR
+              w.coin["ratio_EUR"] = c.ratio_EUR
               flag = true
             }
           })
@@ -73,8 +199,6 @@ function Perfil({
       })
     })
 
-    
-
     fetch("http://localhost:8080/api/users/gambler?id=" + userId, requestOptions)
     .then(res => res.json())
     .then((result) => {
@@ -82,14 +206,11 @@ function Perfil({
       setName(result.name)
       setPsw(result.password)
       setEmail(result.email)
-      setCc(result.cc)
       setNationality(result.nationality)
-      setNif(result.nif)
       setCity(result.city)
       setAddress(result.address)
       setPhone_number(result.phone_number)
       setOccupation(result.occupation)
-      setDate_of_birth(result.date_of_birth)
       setPostal_code(result.postal_code)
     })
   }, [userId])
@@ -114,16 +235,8 @@ function Perfil({
             <input type="txtP" placeholder="Phone_number" value={phone_number} onChange={(e) => setPhone_number(e.target.value)}  required />
           </div>
           <div className='informacoes-perfil-content'>
-            <h3>Cartão De Cidadão:</h3>
-            <input type="txtP" placeholder="Cc" value={cc} onChange={(e) => setCc(e.target.value)}  required />
-          </div>
-          <div className='informacoes-perfil-content'>
             <h3>Ocupação:</h3>
             <input type="txtP" placeholder="Occupation" value={occupation} onChange={(e) => setOccupation(e.target.value)}  required />
-          </div>
-          <div className='informacoes-perfil-content'>
-            <h3>NIF:</h3>
-            <input type="txtP" placeholder="Nif" value={nif} onChange={(e) => setNif(e.target.value)}  required />
           </div>
           <div className='informacoes-perfil-content'>
             <h3>Nacionalidade:</h3>
@@ -136,10 +249,6 @@ function Perfil({
           <div className='informacoes-perfil-content'>
             <h3>Morada:</h3>
             <input type="txtP" placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)}  required />
-          </div>
-          <div className='informacoes-perfil-content'>
-            <h3>Data De Nascimento:</h3>
-            <input type="txtP" placeholder="Date_of_birth" value={date_of_birth} onChange={(e) => setDate_of_birth(e.target.value)}  required />
           </div>
           <div className='informacoes-perfil-content'>
             <h3>Código Postal:</h3>
@@ -156,7 +265,7 @@ function Perfil({
         <h1> Informação das carteiras </h1>
         {gamblerWallets.map(wallet => (
           <div className='carteiras-body' key={wallet.id}>
-            <CarteiraSimplificada ratioEuro={wallet.coin.currency} balance={wallet.balance} coin={wallet.coin.id} setOpen={() => setOpen(wallet.id)}/>
+            <CarteiraSimplificada ratioEuro={wallet.coin.ratio_EUR} balance={wallet.balance} coin={wallet.coin.id} setOpen={() => setOpen(wallet.id)}/>
           </div>
         ))}
         <div className='save'>
@@ -172,7 +281,7 @@ function Perfil({
           </Link>
         </div>
         {open !== -1 ?
-            <PayMethod options={open===0 ? currency : [gamblerWallets[open-1].coin.id]} closePopup={() => setOpen(0)} rBack={() => setOpen(-1)} />
+            <PayMethod options={open===0 ? currency : [gamblerWallets[open-1].coin.id]} setSelected={setSelected} setVal={setValue} deposit={() => HandlePayment(true)} withdraw={() => HandlePayment(false)} rBack={() => setOpen(-1)} />
           :
             null
         }
