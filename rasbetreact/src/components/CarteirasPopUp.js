@@ -16,7 +16,6 @@ export const CarteirasPopUp = ({
 
 
     useEffect(() => {
-        console.log(bets)
         if (!open) {
             const requestOptions = {
                 method: 'GET',
@@ -31,26 +30,23 @@ export const CarteirasPopUp = ({
     }, [userId, open])
 
     const handleClick = () => {
-        console.log("setopentrue")
         setOpen(true)
     }
 
-    function verificaCarteira(wallet_id) {
+    function verificaCarteira(wallet_id, coin_id) {
         let game_choices = []
-
         bets.map(bet => (
             game_choices.push({
                 game_id: bet.id,
                 participant_id: bet.participantId
             })
         ))
-        console.log(game_choices)
 
         let bet = {
             value: parseFloat(valormin), //pode dar erro maybe
             gambler_id: userId,
             wallet_id: wallet_id,
-            coin_id: "EUR",
+            coin_id: coin_id,
             coupon: null,
             game_choices: game_choices
         }
@@ -82,7 +78,7 @@ export const CarteirasPopUp = ({
                     <h1> Seleção de carteiras </h1>
                     <div> Aposta do valor de {valormin}</div>
                     {carteiras.map(wallet => (
-                        <div><Carteira wallet_id={wallet.id} verificaCarteira={() => verificaCarteira(wallet.id)} /></div>
+                        <div><Carteira wallet_id={wallet.id} verificaCarteira={() => verificaCarteira(wallet.id, wallet.coin.id)} /></div>
                     ))}
 
                     <Button buttonStyle={"btn--bet"} onClick={() => handleClick()}>

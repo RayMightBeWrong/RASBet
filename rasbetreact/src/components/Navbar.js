@@ -135,29 +135,29 @@ function Navbar({
             </li>
             <li className='nav-item'>
               <Link
-                to='/basquetebol'
+                to='/nba'
                 className='nav-links'
                 onClick={closeMobileMenu}
               >
-                BASQUETEBOL
+                NBA
               </Link>
             </li>
             <li className='nav-item'>
               <Link
-                to='/tenis'
+                to='/f1'
                 className='nav-links'
                 onClick={closeMobileMenu}
               >
-                TÉNIS
+                F1
               </Link>
             </li>
             <li className='nav-item'>
               <Link
-                to='/motogp'
+                to='/nfl'
                 className='nav-links'
                 onClick={closeMobileMenu}
               >
-                MOTOGP
+                NFL
               </Link>
             </li>
             <li>

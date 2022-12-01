@@ -28,12 +28,12 @@ function App() {
         <Navbar userState={userState} setUserState={setUserState} />
         <Routes>
           <Route path="/" element={<Sport sportType="any" userState={userState} userId={userId} />} />
-          <Route path='/futebol' element={<Sport sportType="futebol" userState={userState} userId={userId} />} />
-          <Route path='/basquetebol' element={<Sport sportType="basquetebol" userState={userState} userId={userId} />} />
-          <Route path='/tenis' element={<Sport sportType="tenis" userState={userState} userId={userId} />} />
-          <Route path='/motogp' element={<Sport sportType="motogp" userState={userState} userId={userId} />} />
+          <Route path='/futebol' element={<Sport sportType="Football" userState={userState} userId={userId} />} />
+          <Route path='/nba' element={<Sport sportType="NBA" userState={userState} userId={userId} />} />
+          <Route path='/f1' element={<Sport sportType="F1" userState={userState} userId={userId} />} />
+          <Route path='/nfl' element={<Sport sportType="NFL" userState={userState} userId={userId} />} />
           <Route path='/login' element={<Login setUserState={setUserState} setUserId={setUserId} />} />
-          <Route path='/perfil' element={<Perfil userId={userId}/>} />
+          <Route path='/perfil' element={<Perfil userId={userId} />} />
           <Route path='/historico' element={<Historico />} />
           <Route path='/registo' element={<Registo userState={userState} expertMode="false" />} />
           <Route path='/admin_Options' element={<AdminMenu userState={userState} />} />

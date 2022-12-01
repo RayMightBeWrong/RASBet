@@ -18,7 +18,6 @@ export const Carteira = ({
     })
 
     useEffect(() => {
-        console.log("render")
         const requestOptions = {
             method: 'GET',
         }
@@ -74,7 +73,6 @@ export const Carteira = ({
                     alert(errorMsg)
                 }
                 else {
-                    console.log("depositado")
                     alert("Deposito bem sucedido")
                 }
             })
@@ -106,7 +104,7 @@ export const Carteira = ({
                         <Button buttonStyle={"btn--bet"}
                             buttonSize={'btn--flex'}
                             onClick={() => depositarDinheiro()}
-                        > {/*todo on click aumenta*/}
+                        >
                             Depositar
                         </Button>
                         <Button buttonStyle={"btn--bet"}
