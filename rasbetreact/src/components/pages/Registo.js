@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Login.css';
 import { Button } from '../Button';
 
@@ -7,26 +7,48 @@ function Registo({
     userState
 }) {
 
+    const [name, setName] = useState("")
+    const [nif, setNif] = useState("")
+    const [cc, setCc] = useState("")
+    const [psw, setPsw] = useState("")
+    const [email, setEmail] = useState("")
+    const [nationality, setNationality] = useState("")
+    const [city, setCity] = useState("")
+    const [address, setAddress] = useState("")
+    const [phone_number, setPhone_number] = useState("")
+    const [occupation, setOccupation] = useState("")
+    const [postal_code, setPostal_code] = useState("")
+    const [date_of_birth, setDate_of_birth] = useState("")
+
+
     const handleSubmit = event => {
         event.preventDefault()
         if (expertMode === "false") {
             const registo = {
-                name: "Tiago Martins", password: "tiago", email: "tiago@hotmail.com", cc: 30557672,
-                nationality: "Portuguese", nif: 238788888, city: "Braga", address: "Rua", phone_number: 961324242,
-                occupation: "Student", date_of_birth: "2001-07-29", postal_code: "4705-651"
+                name: name, password: psw, email: email, cc: cc,
+                nationality: nationality, nif: nif, city: city, address: address, phone_number: phone_number,
+                occupation: occupation, date_of_birth: date_of_birth, postal_code: postal_code
             }
             console.log(registo)
-            fetch("http://localhost:8080/api/users/gambler", {
+
+            const requestOptions = {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(registo)
-            }, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(registo)
-            }).then(
-                res => console.log('An error occurred.', res)
-            )
+            }
+            fetch("http://localhost:8080/api/users/gambler", requestOptions)
+                .then(res => {
+                    if (res.status !== 200) {
+                        let errorMsg;
+                        if ((errorMsg = res.headers.get("x-error")) == null)
+                            errorMsg = "Error occured"
+                        alert(errorMsg)
+                    }
+                    else {
+                        alert("Gambler account created successfully")
+                    }
+                })
+                .catch(_ => alert("Error occured"))
         }
         else {
             const registo = { email: "", psw: "" }
@@ -48,14 +70,20 @@ function Registo({
                 <div className='registo'>
                     <div className='white-box'>
                         <div className='container'>
-                            <form class="container-form" onSubmit={handleSubmit}>
+                            <form className="container-form" onSubmit={handleSubmit}>
                                 <h1>Registo</h1>
-
-                                <input type="txtL" placeholder="E-mail" name="email" required />
-                                <input type="txtL" placeholder="Palavra-passe" name="psw" required />
-                                <input type="txtL" placeholder="Data de Nascimento" name="dataNascimento" required />
-                                <input type="txtL" placeholder="NIF" name="nif" required />
-
+                                Name <input type="txtL" placeholder="Cristiano Ronaldo" value={name} onChange={(e) => setName(e.target.value)} required />
+                                Password <input type="txtL" placeholder="*****" value={psw} onChange={(e) => setPsw(e.target.value)} required />
+                                Email <input type="txtL" placeholder="cr7@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                                Cartão Cidadão <input type="txtL" placeholder="12345678" value={cc} onChange={(e) => setCc(e.target.value)} required />
+                                Nationality <input type="txtL" placeholder="Portugal" value={nationality} onChange={(e) => setNationality(e.target.value)} required />
+                                NIF <input type="txtL" placeholder="238788888" value={nif} onChange={(e) => setNif(e.target.value)} required />
+                                City <input type="txtL" placeholder="Funchal" value={city} onChange={(e) => setCity(e.target.value)} required />
+                                Address<input type="txtL" placeholder="Rua cidade do Porto, porta nº17 8ºA" value={address} onChange={(e) => setAddress(e.target.value)} required />
+                                Phone Number <input type="txtL" placeholder="930321123" value={phone_number} onChange={(e) => setPhone_number(e.target.value)} required />
+                                Occupation <input type="txtL" placeholder="Football player" value={occupation} onChange={(e) => setOccupation(e.target.value)} required />
+                                Date of birth <input type="txtL" placeholder="1985-02-05" value={date_of_birth} onChange={(e) => setDate_of_birth(e.target.value)} required />
+                                Postal code <input type="txtL" placeholder="4710-057" value={postal_code} onChange={(e) => setPostal_code(e.target.value)} required />
                                 <Button buttonSize='btn--flex' type="submit">Concluir</Button>
 
                             </form>

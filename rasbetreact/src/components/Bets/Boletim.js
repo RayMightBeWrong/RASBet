@@ -58,7 +58,7 @@ export const Boletim = ({
                 <div className='boletim-body'>
                     <div>
                         {bets.map(game => (
-                            <div><BoletimBet title={game.title} winner={game.winner} cota={game.cota} /></div>
+                            <div key={game.id}><BoletimBet title={game.title} winner={game.winner} cota={game.cota} /></div>
                         ))}
                     </div>
                     <div>
