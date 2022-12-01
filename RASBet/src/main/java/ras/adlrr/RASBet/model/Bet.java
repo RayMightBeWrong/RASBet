@@ -26,7 +26,7 @@ public class Bet {
     private int id;
 
     @OneToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "id", updatable = false)
+    @JoinColumn(name = "id", updatable = false, insertable = false)
     @MapsId
     @JsonIncludeProperties({"id","value","date"})
     private Transaction transaction;

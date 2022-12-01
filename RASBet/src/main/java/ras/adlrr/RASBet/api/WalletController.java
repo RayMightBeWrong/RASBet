@@ -3,6 +3,7 @@ package ras.adlrr.RASBet.api;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Coin;
 import ras.adlrr.RASBet.model.Wallet;
-import ras.adlrr.RASBet.service.interfaces.ICoinService;
-import ras.adlrr.RASBet.service.interfaces.IWalletService;
+import ras.adlrr.RASBet.service.interfaces.balance.ICoinService;
+import ras.adlrr.RASBet.service.interfaces.balance.IWalletService;
 
 @RequestMapping("/api/wallets")
 @RestController
@@ -22,7 +23,8 @@ public class WalletController {
     private final ICoinService coinService;
 
     @Autowired
-    public WalletController(IWalletService walletService, ICoinService coinService){
+    public WalletController(@Qualifier("balanceFacade") IWalletService walletService,
+                            @Qualifier("balanceFacade") ICoinService coinService){
         this.walletService = walletService;
         this.coinService = coinService;
     }

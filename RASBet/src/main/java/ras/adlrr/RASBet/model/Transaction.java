@@ -42,17 +42,16 @@ public class Transaction {
     private float value;
     private Float balance_after_mov;
     private String description;
-    private LocalDateTime date;
+    private LocalDateTime date = null;
 
     public Transaction(@JsonProperty("gambler_id") int gambler_id, @JsonProperty("wallet_id") Integer wallet_id,
                        @JsonProperty("balance_after_mov") Float balance_after_mov, @JsonProperty("description") String description,
-                       @JsonProperty("value") float value, @JsonProperty("coin_id") String coin_id, @JsonProperty("date") LocalDateTime date){
+                       @JsonProperty("value") float value, @JsonProperty("coin_id") String coin_id){
         this.gambler = new Gambler(); gambler.setId(gambler_id);
         if(coin_id != null) { this.coin = new Coin(); coin.setId(coin_id); }
         if(wallet_id != null) { this.wallet = new Wallet(); this.wallet.setId(wallet_id); }
         this.balance_after_mov = balance_after_mov;
         this.description = description;
         this.value = value;
-        this.date = date;
     }
 }

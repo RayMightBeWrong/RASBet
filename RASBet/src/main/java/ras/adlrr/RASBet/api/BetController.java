@@ -1,14 +1,14 @@
 package ras.adlrr.RASBet.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Bet;
-import ras.adlrr.RASBet.model.Transaction;
-import ras.adlrr.RASBet.service.interfaces.IBetService;
+import ras.adlrr.RASBet.service.interfaces.bets.IBetService;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class BetController {
     private final IBetService betService;
 
     @Autowired
-    public BetController(IBetService betService) {
+    public BetController(@Qualifier("betGameFacade") IBetService betService) {
         this.betService = betService;
     }
 
@@ -30,18 +30,20 @@ public class BetController {
 
     @PostMapping
     public ResponseEntity<Bet> addBet(@RequestBody Bet bet) {
-        try{ return ResponseEntity.ok().body(betService.addBet(bet)); }
+        try{
+            return ResponseEntity.ok().body(betService.addBet(bet));
+        }
         catch (Exception e){
             return new ResponseEntityBadRequest<Bet>().createBadRequest(e.getMessage());
         }
     }
 
     @PutMapping(path = "/withdraw")
-    public ResponseEntity<Transaction> withdrawBetWinnings(@RequestParam("bet_id") int bet_id){
+    public ResponseEntity<Float> withdrawBetWinnings(@RequestParam("bet_id") int bet_id){
         try {
-            return ResponseEntity.ok().body(betService.closeBetAndWithdrawWinnings(bet_id));
+            return ResponseEntity.ok().body(betService.closeBet(bet_id));
         }catch (Exception e){
-            return new ResponseEntityBadRequest<Transaction>().createBadRequest(e.getMessage());
+            return new ResponseEntityBadRequest<Float>().createBadRequest(e.getMessage());
         }
     }
 

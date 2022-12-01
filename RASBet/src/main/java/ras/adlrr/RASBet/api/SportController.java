@@ -1,13 +1,14 @@
 package ras.adlrr.RASBet.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Sport;
-import ras.adlrr.RASBet.service.interfaces.ISportService;
+import ras.adlrr.RASBet.service.interfaces.sports.ISportService;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class SportController {
     private final ISportService sportService;
 
     @Autowired
-    public SportController(ISportService sportService){
+    public SportController(@Qualifier("sportsFacade") ISportService sportService){
         this.sportService = sportService;
     }
 

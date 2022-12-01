@@ -1,6 +1,7 @@
 package ras.adlrr.RASBet.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,8 +9,8 @@ import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
 import ras.adlrr.RASBet.service.interfaces.IBetGameService;
-import ras.adlrr.RASBet.service.interfaces.IGameService;
-import ras.adlrr.RASBet.service.interfaces.IParticipantService;
+import ras.adlrr.RASBet.service.interfaces.sports.IGameService;
+import ras.adlrr.RASBet.service.interfaces.sports.IParticipantService;
 
 import java.util.List;
 import java.util.Set;
@@ -24,7 +25,9 @@ public class GameController {
 
     /* **** Game Methods **** */
     @Autowired
-    public GameController(IGameService gameService, IParticipantService participantService, IBetGameService betGameService){
+    public GameController(@Qualifier("sportsFacade") IGameService gameService,
+                          @Qualifier("sportsFacade") IParticipantService participantService,
+                          @Qualifier("betGameFacade") IBetGameService betGameService){
         this.gameService = gameService;
         this.participantService = participantService;
         this.betGameService = betGameService;
@@ -43,7 +46,7 @@ public class GameController {
     @PostMapping(path = "/update")
     public ResponseEntity updateGames(){
         try{ 
-            gameService.updateGames();
+            betGameService.updateGames();
             return new ResponseEntity(HttpStatus.OK);
         }
         catch (Exception e){
@@ -76,7 +79,7 @@ public class GameController {
         return ResponseEntity.ok().body(gameService.getGamesSorted());
     }
 
-    @GetMapping("/{sport}")
+    @GetMapping("/sport/{sport}")
     public ResponseEntity<List<Game>> getGamesFromSport(@PathVariable("sport") String sport) {
         try{
             return ResponseEntity.ok().body(gameService.getGamesFromSport(sport));

@@ -167,6 +167,7 @@ public class FootballAPISportsReader extends APIGameReader{
     }
 
     public Set<Participant> updateOdds(List<Game> games){
+        games.removeIf(g -> g.getExtID().length() > 8);
         Set<Participant> res = new HashSet<>();
 
         for(Game g: games){
@@ -184,6 +185,7 @@ public class FootballAPISportsReader extends APIGameReader{
     }
 
     public Set<Participant> updateScores(List<Game> games){
+        games.removeIf(g -> g.getExtID().length() > 8);
         Set<Participant> res = new HashSet<>();
         JSONArray gamesArray = (JSONArray) (new JSONObject(response).get("response"));
 
@@ -222,6 +224,7 @@ public class FootballAPISportsReader extends APIGameReader{
     }
 
     public List<Game> updateGamesState(List<Game> games){
+        games.removeIf(g -> g.getExtID().length() > 8);
         List<Game> res = new ArrayList<>();
         JSONArray gamesArray = (JSONArray) (new JSONObject(response).get("response"));
 

@@ -1,6 +1,7 @@
 package ras.adlrr.RASBet.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +12,8 @@ import ras.adlrr.RASBet.model.Promotions.ClaimedPromo;
 import ras.adlrr.RASBet.model.Promotions.Promotion;
 import ras.adlrr.RASBet.model.Promotions.ReferralPromotions.ReferralBalancePromotion;
 import ras.adlrr.RASBet.model.Promotions.ReferralPromotions.ReferralBoostOddPromotion;
-import ras.adlrr.RASBet.service.interfaces.Promotions.IClientPromotionService;
-import ras.adlrr.RASBet.service.interfaces.Promotions.IPromotionService;
+import ras.adlrr.RASBet.service.interfaces.promotions.IClientPromotionService;
+import ras.adlrr.RASBet.service.interfaces.promotions.IPromotionService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,7 +27,8 @@ public class PromotionController {
     private final IClientPromotionService clientPromotionService;
 
     @Autowired
-    public PromotionController(IPromotionService promotionService, IClientPromotionService clientPromotionService) {
+    public PromotionController(@Qualifier("promotionsFacade") IPromotionService promotionService,
+                               @Qualifier("promotionsFacade") IClientPromotionService clientPromotionService) {
         this.promotionService = promotionService;
         this.clientPromotionService = clientPromotionService;
     }

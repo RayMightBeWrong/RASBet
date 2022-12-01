@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.*;
 import ras.adlrr.RASBet.service.interfaces.*;
+import ras.adlrr.RASBet.service.interfaces.users.IAdminService;
+import ras.adlrr.RASBet.service.interfaces.users.IExpertService;
+import ras.adlrr.RASBet.service.interfaces.users.IGamblerService;
+import ras.adlrr.RASBet.service.interfaces.users.IUserService;
 
 
 @RequestMapping("/api/users")
@@ -24,9 +29,9 @@ public class UserController {
     private final IUserReferralService userReferralService;
 
     @Autowired
-    public UserController(IUserService userService, IAdminService adminService,
-                          IGamblerService gamblerService, IExpertService expertService,
-                          IUserReferralService userReferralService){
+    public UserController(@Qualifier("userFacade") IUserService userService, @Qualifier("userFacade") IAdminService adminService,
+                          @Qualifier("userFacade") IGamblerService gamblerService, @Qualifier("userFacade") IExpertService expertService,
+                          @Qualifier("userReferralService") IUserReferralService userReferralService){
         this.userService = userService;
         this.adminService = adminService;
         this.gamblerService = gamblerService;
