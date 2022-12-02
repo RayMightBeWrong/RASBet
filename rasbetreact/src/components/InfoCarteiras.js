@@ -162,11 +162,15 @@ export const InfoCarteiras = ({
     return (
         <>
             <h1> Informação das carteiras </h1>
-            {gamblerWallets.map(wallet => (
-                <div className='carteiras-body' key={wallet.id}>
-                    <CarteiraSimplificada ratioEuro={wallet.coin.ratio_EUR} balance={wallet.balance} coin={wallet.coin.id} setOpen={() => setOpen(wallet.id)}/>
+            <div className='carteiras'>
+                <div className='carteiras-body'>
+                    {gamblerWallets.map(wallet => (
+                        <div className='carteiras-line' key={wallet.id}>
+                            <CarteiraSimplificada ratioEuro={wallet.coin.ratio_EUR} balance={wallet.balance} coin={wallet.coin.id} setOpen={() => setOpen(wallet.id)}/>
+                        </div>
+                    ))}
                 </div>
-            ))}
+            </div>
             <div className='save'>
                 {currency.length !== 0 ?
                     <Button buttonSize={'btn--medium'} onClick={() => setOpen(0)}>Nova Carteira</Button>

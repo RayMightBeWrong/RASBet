@@ -122,11 +122,11 @@ export const CarteiraSimplificada = ({
     return (
         <>
             <div className='carteiraSimples'>
-                <h3>Moeda: {coin}</h3>
-                <h3>Ratio euro: {ratioEuro}</h3>
-                <h3>Balance: {balance}({coin})</h3>
+                <h4>Moeda: {coin}</h4>
+                <h4>Ratio euro: {ratioEuro}</h4>
+                <h4>Balance: {balance}({coin})</h4>
                 <Button
-                    buttonStyle={"btn--bet"}
+                    buttonStyle={"btn--inverted"}
                     buttonSize={'btn--medium'}
                     onClick={() => setOpen()}>
                     Levantar/Depositar

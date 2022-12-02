@@ -32,7 +32,11 @@
         flex-direction: column;
     }
     .carteira-header {
-        flex-direction: column;
+        font-size: 19px;
+        width: 80%;
+        margin-bottom: 10px;
+        flex-direction: row;
+        justify-content: space-between;
     }
 }
 
@@ -48,67 +52,6 @@
     justify-content: space-between;
 }
 
-.carteira-headerS {
-    display: flex;
-    flex-direction: column;
-    width: 200px;
-    align-items: flex-start;
-}
-
-.carteira-transferenciaS {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 10px;
-}
-
-.carteira-transferencia-botoes{
-    display: flex;
-    justify-content: space-between;
-}
-
 .btn{
     margin-left: 3px;
-}
-
-input[type=txtC]{
-    border-radius: 5px;
-    width: 100%;
-    padding: 15px;
-    border: none;
-    background: #f1f1f1;
-}
-
-input[type=txtC]:focus,
-input[type=txtC]:hover{
-    background-color: #ddd;
-    outline: none;
-}
-
-@media only screen and (max-width: 700px){
-    .carteira-transferenciaS {
-        flex-direction: column;
-        width: 300px;
-    }
-    
-    .input[type=txtC]{
-        width: 100%;
-    }
-}
-
-
-@media only screen and (max-width: 550px){
-    .carteiraSimples {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .carteira-transferencia-botoes{
-        padding: 10px 20px;
-    }
-
-    .carteira-headerS {
-        flex-direction: row;
-        justify-content: space-between;
-        width: 75%;
-    }
 }
