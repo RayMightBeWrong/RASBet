@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import './Login.css';
-import { Button } from '../Button';
+import '../Comons.css';
+import { Button } from '../../Button';
 import { Link } from 'react-router-dom';
-import { NewCoinPopUp } from '../NewCoinPopUp'
-import "../PayMethods.css"
+import { NewCoinPopUp } from '../../NewCoinPopUp'
 
 function CriaMoeda({
     userState
@@ -26,10 +25,10 @@ function CriaMoeda({
     if (userState === "admin") {
         return (
             <>
-                <div className='registo'>
+                <div className='greenBackGround'>
                     <div className='white-box'>
                         Coins
-                        <div className='carteirasPopUp-list'>
+                        <div>
                             {moedas.map(coin => (
                                 <div key={coin.id}>
                                     Coin name: {coin.id} | Ratio Euro: {coin.ratio_EUR}

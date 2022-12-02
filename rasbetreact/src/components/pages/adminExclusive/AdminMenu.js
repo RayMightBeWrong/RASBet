@@ -1,6 +1,6 @@
 import React from 'react';
-import './Login.css';
-import { Button } from '../Button';
+import '../Comons.css';
+import { Button } from '../../Button';
 import { Link } from 'react-router-dom';
 
 function AdminMenu({
@@ -9,7 +9,7 @@ function AdminMenu({
     if (userState === "admin") {
         return (
             <>
-                <div className='registo'>
+                <div className='greenBackGround'>
                     <div className='white-box'>
                         <Link to='/admin_Options/registo_Expert'>
                             <Button buttonStyle="btn--inverted" buttonSize='btn--flex'>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./CarteirasPopUp.css";
-import { Carteira } from './Carteira';
+import { Carteira } from './objects/Carteira';
 import { Button } from './Button';
 
 export const NewCoinPopUp = ({

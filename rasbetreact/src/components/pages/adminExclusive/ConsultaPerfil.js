@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import './Login.css';
-import { Button } from '../Button';
+import '../Comons.css';
+import { Button } from '../../Button';
 import { Link, useNavigate } from 'react-router-dom';
 
 function ConsultaPerfil({
@@ -38,7 +38,7 @@ function ConsultaPerfil({
     if (userState === "admin") {
         return (
             <>
-                <div className='registo'>
+                <div className='greenBackGround'>
                     <div className='white-box'>
                         <form className="container-form" onSubmit={handleSubmit}>
                             <h1>Consulta de perfil</h1>

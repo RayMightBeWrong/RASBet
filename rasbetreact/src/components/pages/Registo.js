@@ -86,7 +86,7 @@ function Registo({
     if (expertMode === "false") {
         return (
             <>
-                <div className='registo'>
+                <div className='greenBackGround'>
                     <div className='white-box'>
                         <div className='container'>
                             <form className="container-form" onSubmit={handleSubmit}>
@@ -119,7 +119,7 @@ function Registo({
     } else if (expertMode === "true" && userState === "admin") {
         return (
             <>
-                <div className='registo'>
+                <div className='greenBackGround'>
                     <div className='white-box'>
                         <div className='container'>
                             <form className="container-form" onSubmit={handleSubmit}>

@@ -1,12 +1,12 @@
 import React from 'react';
-import './Login.css';
-import { Button } from '../Button';
+import '../Login.css';
+import { Button } from '../../Button';
 import { Link } from 'react-router-dom';
 
-function GestorPromocoes({
+function Promocoes({
     userState
 }) {
-    if (userState === "admin") {
+    if (userState === "gambler") {
         return (
             <>
                 <div className='registo'>
@@ -22,4 +22,4 @@ function GestorPromocoes({
     }
 }
 
-export default GestorPromocoes;
+export default Promocoes;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { GamesTab } from '../Bets/GamesTab'
+import { GamesTab } from '../GamesTab'
 
 function Sport({
     sportType,

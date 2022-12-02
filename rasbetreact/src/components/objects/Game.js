@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Game.css';
 import { Button } from '../Button';
-import { PopupNewOdd } from './PopupNewOdd';
+import { PopupNewOdd } from '../PopupNewOdd';
 
 
 

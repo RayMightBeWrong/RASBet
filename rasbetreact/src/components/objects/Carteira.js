@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Carteira.css';
-import { Button } from './Button';
-import { PayMethod } from "./PayMethods"
+import { Button } from '../Button';
+import { PayMethod } from "../PayMethods"
 
 
 
@@ -24,14 +24,14 @@ export const Carteira = ({
             method: 'GET',
         }
         fetch("http://localhost:8080/api/wallets/wallet/" + wallet_id, requestOptions)
-        .then(res => res.json())
-        .then((result) => {
-            setWallet({
-                wallet_id: result.id,
-                balance: result.balance,
-                coinId: result.coin.id
+            .then(res => res.json())
+            .then((result) => {
+                setWallet({
+                    wallet_id: result.id,
+                    balance: result.balance,
+                    coinId: result.coin.id
+                })
             })
-        })
 
     }, [wallet_id, rerender])
 
@@ -40,22 +40,22 @@ export const Carteira = ({
             method: "PUT"
         }
         fetch("http://localhost:8080/api/transactions/deposit?wallet_id=" + wallet_id + "&value=" + value, requestOptions)
-        .then(res => {
-            if (res.status !== 200) {
-                let errorMsg;
-                if ((errorMsg = res.headers.get("x-error")) == null)
-                    errorMsg = "Error occured"
-                alert(errorMsg)
-            }
-            else {
-                alert("Deposito bem sucedido")
-                setOpen(false)
-            }
-        })
-        .then(() => {
-            setRerender(!rerender)
-        })
-        .catch(_ => alert("Error occured"))
+            .then(res => {
+                if (res.status !== 200) {
+                    let errorMsg;
+                    if ((errorMsg = res.headers.get("x-error")) == null)
+                        errorMsg = "Error occured"
+                    alert(errorMsg)
+                }
+                else {
+                    alert("Deposito bem sucedido")
+                    setOpen(false)
+                }
+            })
+            .then(() => {
+                setRerender(!rerender)
+            })
+            .catch(_ => alert("Error occured"))
     }
 
     return (
@@ -78,12 +78,12 @@ export const Carteira = ({
                         Submeter
                     </Button>
                 </div>
-                {open?
-                    <PayMethod 
+                {open ?
+                    <PayMethod
                         option={wallet.coinId}
-                        hasDeposit={true} 
+                        hasDeposit={true}
                         hasWithdraw={false}
-                        setSelected={()=>""}
+                        setSelected={() => ""}
                         setVal={setValue}
                         deposit={() => depositarDinheiro()}
                         rBack={() => setOpen(false)}

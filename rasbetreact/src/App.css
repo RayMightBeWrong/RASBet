@@ -5,9 +5,7 @@
   font-family: 'PT Sans', sans-serif;
 }
 
-.home,
-.services,
-.products {
+.whiteBackGround {
   display: flex;
   height: 90vh;
   align-items: center;
@@ -15,25 +13,7 @@
   font-size: 3rem;
 }
 
-.services {
-  background-image: url('/public/images/img-2.jpg');
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  color: #fff;
-  font-size: 100px;
-}
-
-.products {
-  background-color: #003915;
-  background-size: cover;
-  background-repeat: no-repeat;
-  color: #fff;
-  font-size: 100px;
-}
-
-.login,
-.registo {
+.greenBackGround {
   display: flex;
   height: 92vh;
   align-items: center;

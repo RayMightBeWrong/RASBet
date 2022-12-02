@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Game } from './Game';
+import { Game } from './objects/Game';
 import { Boletim } from './Boletim';
 import './GamesTab.css';
-import Sport from '../pages/Sport';
+import Sport from './pages/Sport';
 
 export const GamesTab = ({
     games,

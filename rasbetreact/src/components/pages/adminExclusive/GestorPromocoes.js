@@ -1,15 +1,15 @@
 import React from 'react';
-import './Login.css';
-import { Button } from '../Button';
+import '../Comons.css';
+import { Button } from '../../Button';
 import { Link } from 'react-router-dom';
 
-function Promocoes({
+function GestorPromocoes({
     userState
 }) {
-    if (userState === "gambler") {
+    if (userState === "admin") {
         return (
             <>
-                <div className='registo'>
+                <div className='greenBackGround'>
                     <div className='white-box'>
 
 
@@ -22,4 +22,4 @@ function Promocoes({
     }
 }
 
-export default Promocoes;
+export default GestorPromocoes;

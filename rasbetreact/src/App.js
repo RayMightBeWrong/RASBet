@@ -3,15 +3,15 @@ import Navbar from './components/Navbar';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/pages/Login';
-import Perfil from './components/pages/Perfil';
+import Perfil from './components/pages/gamblerExclusive/Perfil';
 import Registo from './components/pages/Registo';
 import Sport from './components/pages/Sport';
-import AdminMenu from './components/pages/AdminMenu';
-import MenuCoins from './components/pages/MenuCoins';
-import GestorPromocoes from './components/pages/GestorPromocoes';
-import Promocoes from './components/pages/Promocoes';
-import ConsultaPerfil from './components/pages/ConsultaPerfil';
-import Historico from './components/pages/Historico';
+import AdminMenu from './components/pages/adminExclusive/AdminMenu';
+import MenuCoins from './components/pages/adminExclusive/MenuCoins';
+import GestorPromocoes from './components/pages/adminExclusive/GestorPromocoes';
+import Promocoes from './components/pages/gamblerExclusive/Promocoes';
+import ConsultaPerfil from './components/pages/adminExclusive/ConsultaPerfil';
+import Historico from './components/pages/gamblerExclusive/Historico';
 
 function App() {
   /*Possible userStates:

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "./CarteirasPopUp.css";
-import { Carteira } from './Carteira';
+import { Carteira } from './objects/Carteira';
 import { Button } from './Button';
 import { MoedasPopUp } from './MoedasPopUp';
 import "./PayMethods.css"
@@ -58,19 +58,19 @@ export const CarteirasPopUp = ({
             body: JSON.stringify(bet)
         }
         fetch("http://localhost:8080/api/bets/", requestOptions)
-        .then(res => {
-            if (res.status !== 200) {
-                let errorMsg;
-                if ((errorMsg = res.headers.get("x-error")) == null)
-                    errorMsg = "Error occured"
-                alert(errorMsg)
-            }
-            else {
-                alert("Bet criada")
-                closePopup()
-            }
-        })
-        .catch(_ => alert("Error occured"))
+            .then(res => {
+                if (res.status !== 200) {
+                    let errorMsg;
+                    if ((errorMsg = res.headers.get("x-error")) == null)
+                        errorMsg = "Error occured"
+                    alert(errorMsg)
+                }
+                else {
+                    alert("Bet criada")
+                    closePopup()
+                }
+            })
+            .catch(_ => alert("Error occured"))
     }
     return (
         <>
@@ -81,7 +81,7 @@ export const CarteirasPopUp = ({
                         <h1> Seleção de carteiras </h1>
                         <Button buttonStyle={'btn--flex'} onClick={closePopup}> X </Button >
                     </div>
-                    
+
                     <h3> Aposta do valor de {valormin}</h3>
                     <div className='carteirasPopUp-list'>
                         {carteiras.map(wallet => (
