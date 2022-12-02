@@ -55,15 +55,30 @@ function Registo({
                 .catch(_ => alert("Error occured"))
         }
         else {
-            const registo = { email: "", psw: "" }
-            console.log(registo)
-            fetch("http://localhost:8080/api/users/expert", {
+            const registo = {
+                name: name,
+                password: psw,
+                email: email
+            }
+
+            const requestOptions = {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(registo)
-            }).then(() => {
-                console.log("Nova Conta Registada de Expert")
-            })
+            }
+            fetch("http://localhost:8080/api/users/expert", requestOptions)
+                .then(res => {
+                    if (res.status !== 200) {
+                        let errorMsg;
+                        if ((errorMsg = res.headers.get("x-error")) == null)
+                            errorMsg = "Error occured"
+                        alert(errorMsg)
+                    }
+                    else {
+                        alert("Expert account created successfully")
+                    }
+                })
+                .catch(_ => alert("Error occured"))
         }
     }
 
@@ -107,13 +122,13 @@ function Registo({
                 <div className='registo'>
                     <div className='white-box'>
                         <div className='container'>
-                            <form class="container-form" onSubmit={handleSubmit}>
+                            <form className="container-form" onSubmit={handleSubmit}>
                                 <h1>Registo</h1>
-
-                                <input type="txtL" placeholder="E-mail" name="email" required />
-                                <input type="txtL" placeholder="Palavra-passe" name="psw" required />
-
+                                Name <input type="txtL" placeholder="Cristiano Ronaldo" value={name} onChange={(e) => setName(e.target.value)} required />
+                                Password <input type="txtL" placeholder="*****" value={psw} onChange={(e) => setPsw(e.target.value)} required />
+                                Email <input type="txtL" placeholder="cr7@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
                                 <Button buttonSize='btn--flex' type="submit">Concluir</Button>
+
                             </form>
                         </div>
                         <img className='imagem'
