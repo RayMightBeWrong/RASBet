@@ -106,22 +106,9 @@ export const GameAdmin = ({
     id,
     title,
     date,
-    gameState
+    gameState,
+    rerender
 }) => {
-    const [locked, setLock] = useState({
-        fechada: false,
-        bet: ""
-    });
-
-    const [oddPopUp, setOddPopUp] = useState({
-        activated: false,
-        bet: ""
-    });
-
-    function handleClick() {
-
-    }
-
     let estado
     switch (gameState) {
         case 1:
@@ -135,6 +122,57 @@ export const GameAdmin = ({
             break
         default:
     }
+
+    const [locked, setLock] = useState({
+        fechada: false,
+        bet: ""
+    });
+
+    const [oddPopUp, setOddPopUp] = useState({
+        activated: false,
+        bet: ""
+    });
+
+    function changeGameState(state) {
+        let computedState
+        let printMsg
+
+        switch (state) {
+            case "OPEN":
+                computedState = "1"
+                printMsg = "aberto"
+                break;
+            case "SUSPEND":
+                computedState = "3"
+                printMsg = "suspenso"
+                break;
+            case "CLOSE":
+                printMsg = "fechado"
+                computedState = "close"
+                break;
+            default:
+                return
+        }
+
+        let requestOptions = {
+            method: 'PUT'
+        }
+        fetch("http://localhost:8080/api/games/" + id + "/state/" + computedState, requestOptions)
+            .then(res => {
+                if (res.status !== 200) {
+                    var errorMsg;
+                    if ((errorMsg = res.headers.get("x-error")) == null)
+                        errorMsg = "Error occured"
+                    alert(errorMsg)
+                }
+                else {
+                    alert("Jogo " + printMsg)
+                    rerender()
+                }
+            })
+            .catch(_ => alert("Error occured"))
+    }
+
     return (
         <>
             <div className='game'>
@@ -147,8 +185,18 @@ export const GameAdmin = ({
                 </div>
                 <Button buttonStyle={"btn--bet"}
                     buttonSize={'btn--flex'}
-                    onClick={handleClick}>
-                    Mudar Estado
+                    onClick={() => changeGameState("SUSPEND")}>
+                    Suspender
+                </Button>
+                <Button buttonStyle={"btn--bet"}
+                    buttonSize={'btn--flex'}
+                    onClick={() => changeGameState("OPEN")}>
+                    Abrir
+                </Button>
+                <Button buttonStyle={"btn--bet"}
+                    buttonSize={'btn--flex'}
+                    onClick={() => changeGameState("CLOSE")}>
+                    Fechar
                 </Button>
             </div>
         </>

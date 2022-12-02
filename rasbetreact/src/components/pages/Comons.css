@@ -26,6 +26,17 @@
     padding: 60px;
 }
 
+.imagem {
+    width: 40vw;
+    height: 70vh;
+    object-fit: cover;
+    border-radius: 25px;
+}
+
+.registerbutton {
+    text-align: right;
+}
+
 /* Full-width input fields */
 input[type=txtL] {
     border: 5px solid red;

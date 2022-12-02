@@ -68,7 +68,7 @@ export const GamesTab = ({
             )
         } else if (userState === 'admin') {
             return (
-                <GameAdmin id={game.id} title={game.title} date={game.date} gameState={game.state} />
+                <GameAdmin id={game.id} title={game.title} date={game.date} gameState={game.state} rerender={() => rerender()} />
             )
         } else if (userState === 'expert') {
             return (

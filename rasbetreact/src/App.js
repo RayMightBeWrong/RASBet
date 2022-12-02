@@ -12,6 +12,7 @@ import GestorPromocoes from './components/pages/adminExclusive/GestorPromocoes';
 import Promocoes from './components/pages/gamblerExclusive/Promocoes';
 import ConsultaPerfil from './components/pages/adminExclusive/ConsultaPerfil';
 import Historico from './components/pages/gamblerExclusive/Historico';
+import CriarPromocao from './components/pages/adminExclusive/CriarPromocao'
 
 function App() {
   /*Possible userStates:
@@ -20,7 +21,7 @@ function App() {
     expert: expert logged in
     admin: admin logged in
   */
-  const [userState, setUserState] = useState('expert')
+  const [userState, setUserState] = useState('admin')
   const [userId, setUserId] = useState(1)
 
   return (
@@ -47,6 +48,7 @@ function App() {
           <Route path='/admin_Options/registo_Expert' element={<Registo userState={userState} expertMode="true" />} />
           <Route path='/admin_Options/coins' element={<MenuCoins userState={userState} />} />
           <Route path='/admin_Options/promocoes' element={<GestorPromocoes userState={userState} />} />
+          <Route path='/admin_Options/promocoes/creation' element={<CriarPromocao userState={userState} />} />
           <Route path='/admin_Options/consultaPerfil' element={<ConsultaPerfil userState={userState} setUserState={setUserState} setUserId={setUserId} />} />
 
         </Routes>

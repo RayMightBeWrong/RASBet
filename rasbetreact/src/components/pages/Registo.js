@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Login.css';
+import './Comons.css';
 import { Button } from '../Button';
 
 function Registo({

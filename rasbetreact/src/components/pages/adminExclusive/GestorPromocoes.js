@@ -11,8 +11,13 @@ function GestorPromocoes({
             <>
                 <div className='greenBackGround'>
                     <div className='white-box'>
-
-
+                        <div>
+                            <Link to='/admin_Options/promocoes/creation'>
+                                <Button buttonStyle="btn--inverted" buttonSize='btn--flex'>
+                                    Criar Promocao
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </>
