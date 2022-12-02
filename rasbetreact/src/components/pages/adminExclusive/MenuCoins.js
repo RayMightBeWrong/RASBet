@@ -3,6 +3,7 @@ import '../Comons.css';
 import { Button } from '../../Button';
 import { Link } from 'react-router-dom';
 import { NewCoinPopUp } from '../../NewCoinPopUp'
+import { Coin } from '../../objects/Coin';
 
 function CriaMoeda({
     userState
@@ -27,22 +28,24 @@ function CriaMoeda({
             <>
                 <div className='greenBackGround'>
                     <div className='white-box'>
-                        Coins
-                        <div>
-                            {moedas.map(coin => (
-                                <div key={coin.id}>
-                                    Coin name: {coin.id} | Ratio Euro: {coin.ratio_EUR}
-                                </div>
-                            ))}
+                        <div className='container'>
+                            <div><h1>Coins</h1></div>
+                            <div>
+                                {moedas.map(coin => (
+                                    <div key={coin.id}>
+                                        <Coin coinName={coin.id} ratioEuro={coin.ratio_EUR} />
+                                    </div>
+                                ))}
+                            </div>
+                            {open ?
+                                <NewCoinPopUp closePopup={() => setOpen(false)} />
+                                : <Button buttonStyle={"btn--bet"}
+                                    buttonSize={'btn--large'}
+                                    onClick={() => setOpen(true)}>
+                                    Nova Moeda
+                                </Button>
+                            }
                         </div>
-                        {open ?
-                            <NewCoinPopUp closePopup={() => setOpen(false)} />
-                            : <Button buttonStyle={"btn--bet"}
-                                buttonSize={'btn--large'}
-                                onClick={() => setOpen(true)}>
-                                Nova Moeda
-                            </Button>
-                        }
                     </div>
                 </div>
             </>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Game } from './objects/Game';
+import { GameGambler, GameExpert, GameAdmin } from './objects/Game';
 import { Boletim } from './Boletim';
 import './GamesTab.css';
 import Sport from './pages/Sport';
@@ -8,7 +8,8 @@ export const GamesTab = ({
     games,
     sportType,
     userState,
-    userId
+    userId,
+    rerender
 }) => {
 
     const [bets, setBets] = useState([]);
@@ -59,14 +60,29 @@ export const GamesTab = ({
         setBets(newbets);
     }
 
+    function gameType(game) {
+        if (userState === 'gambler' || userState === 'loggedOff') {
+            return (
+                <GameGambler id={game.id} title={game.title} date={game.date} participants={game.participants}
+                    removeBet={removeBet} addBet={addBet} changeBet={changeBet} />
+            )
+        } else if (userState === 'admin') {
+            return (
+                <GameAdmin id={game.id} title={game.title} date={game.date} gameState={game.state} />
+            )
+        } else if (userState === 'expert') {
+            return (
+                <GameExpert title={game.title} date={game.date} participants={game.participants} rerender={() => rerender()} />
+            )
+        }
+    }
     if (games.length !== 0) {
         return (
             <>
                 <div className='gamestab'>
                     <div className='bets-tab'>
                         {games.map(game => (
-                            <div key={game.id}><Game id={game.id} title={game.title} date={game.date} participants={game.participants}
-                                removeBet={removeBet} addBet={addBet} changeBet={changeBet} userState={userState} /></div>
+                            <div key={game.id}>{gameType(game)}</div>
                         ))}
                     </div>
                     <BoletimLock />
