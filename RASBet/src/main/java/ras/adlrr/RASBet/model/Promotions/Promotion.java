@@ -26,11 +26,11 @@ public class Promotion implements IPromotion {
     @Column(nullable = false)
     private String description;
 
-    @JsonIgnore
+    @JsonProperty("begin_date")
     @Column(nullable = false, name = "begin_date")
     private LocalDateTime beginDate;
 
-    @JsonIgnore
+    @JsonProperty("expiration_date")
     @Column(name = "expiration_date")
     private LocalDateTime expirationDate;
 
@@ -50,11 +50,4 @@ public class Promotion implements IPromotion {
         this.coupon = coupon;
     }
 
-    public LocalDateTime getBegin_date(){
-        return beginDate;
-    }
-
-    public LocalDateTime getExpiration_date(){
-        return expirationDate;
-    }
 }
