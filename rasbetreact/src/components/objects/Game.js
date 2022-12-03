@@ -123,16 +123,6 @@ export const GameAdmin = ({
         default:
     }
 
-    const [locked, setLock] = useState({
-        fechada: false,
-        bet: ""
-    });
-
-    const [oddPopUp, setOddPopUp] = useState({
-        activated: false,
-        bet: ""
-    });
-
     function changeGameState(state) {
         let computedState
         let printMsg

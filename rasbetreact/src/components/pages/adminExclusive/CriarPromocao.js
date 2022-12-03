@@ -8,18 +8,18 @@ function CriarPromocao({
 }) {
 
     const tiposDePromocoes = ["BoostOdd", "ReferralBoostOdd", "ReferralBalance"]
-    const [promType, setPromType] = useState("")
+    const [promType, setPromType] = useState("BoostOdd")
     const [promocaoBase, setPromocaoBase] = useState({
         title: "",
         description: "",
         begin_date: "",
         expiration_date: "",
-        nr_uses: "",
+        nr_uses: 0,
         coupon: ""
     })
-    const [boost_percentage, setBoost_percentage] = useState("0")
-    const [number_of_referrals_needed, setNumber_of_referrals_needed] = useState("")
-    const [value_to_give, setValue_to_give] = useState("")
+    const [boost_percentage, setBoost_percentage] = useState(0.0)
+    const [number_of_referrals_needed, setNumber_of_referrals_needed] = useState(0)
+    const [value_to_give, setValue_to_give] = useState(0.0)
     const [coin_id, setCoin_id] = useState("")
 
     function escolherPromocao() {
@@ -41,20 +41,20 @@ function CriarPromocao({
         switch (promType) {
             case "BoostOdd":
                 promSpecific = {
-                    boost_percentage: 50
+                    boost_percentage: boost_percentage
                 }
                 break;
             case "ReferralBoostOdd":
                 promSpecific = {
-                    boost_percentage: 50,
-                    number_of_referrals_needed: 1
+                    boost_percentage: boost_percentage,
+                    number_of_referrals_needed: number_of_referrals_needed
                 }
                 break;
             case "ReferralBalance":
                 promSpecific = {
-                    number_of_referrals_needed: 1,
-                    value_to_give: 10,
-                    coin_id: "EUR"
+                    number_of_referrals_needed: number_of_referrals_needed,
+                    value_to_give: value_to_give,
+                    coin_id: coin_id
                 }
                 break;
             default:
@@ -62,15 +62,16 @@ function CriarPromocao({
         }
 
         const finalPromocao = {
-            ...JSON.parse(promocaoBase),
-            ...JSON.parse(promSpecific)
+            ...promocaoBase,
+            ...promSpecific
         }
 
-        console.log(finalPromocao)
+        console.log(JSON.stringify(finalPromocao))
         const requestOptions = {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(finalPromocao)
+            //body: JSON.stringify(temp)
         }
 
         fetch("http://localhost:8080/api/promotions/" + promType, requestOptions)
@@ -85,7 +86,10 @@ function CriarPromocao({
                     alert("Promotion created successfully")
                 }
             })
-            .catch(_ => alert("Error occured"))
+            .catch(error => {
+                console.log(error)
+                alert("Error occured")
+            })
     }
 
 
@@ -134,7 +138,7 @@ function CriarPromocao({
                                     value={promocaoBase.nr_uses}
                                     onChange={(e) => setPromocaoBase(oldVal => ({
                                         ...oldVal,
-                                        nr_uses: e.target.value,
+                                        nr_uses: parseInt(e.target.value),
                                     }))} required />
 
                                 Coupon <input type="txtL"
@@ -145,14 +149,38 @@ function CriarPromocao({
                                         coupon: e.target.value,
                                     }))} required />
 
-                                Boost percentage <input type="txtL"
-                                    placeholder="CHRISTMAS"
-                                    value={promocaoBase.coupon}
-                                    onChange={(e) => setBoost_percentage(e.target.value)} required />
-                                const [boost_percentage, setBoost_percentage] = useState("0")
-                                const [number_of_referrals_needed, setNumber_of_referrals_needed] = useState("")
-                                const [value_to_give, setValue_to_give] = useState("")
-                                const [coin_id, setCoin_id] = useState("")
+                                {(promType === "BoostOdd" || promType === "ReferralBoostOdd") ?
+                                    <> Boost percentage <input type="txtL"
+                                        placeholder="50"
+                                        value={boost_percentage}
+                                        onChange={(e) => setBoost_percentage(parseFloat(e.target.value))} required /> </>
+                                    : null
+                                }
+
+                                {(promType === "ReferralBoostOdd" || promType === "ReferralBalance") ?
+                                    <> Number of referrals needed <input type="txtL"
+                                        placeholder="1"
+                                        value={number_of_referrals_needed}
+                                        onChange={(e) => setNumber_of_referrals_needed(parseInt(e.target.value))} required /> </>
+                                    : null
+                                }
+
+                                {(promType === "ReferralBalance") ?
+                                    <> Value to give <input type="txtL"
+                                        placeholder="10"
+                                        value={value_to_give}
+                                        onChange={(e) => setValue_to_give(parseFloat(e.target.value))} required /> </>
+                                    : null
+                                }
+
+                                {(promType === "ReferralBalance") ?
+                                    <> Coin id <input type="txtL"
+                                        placeholder="EUR"
+                                        value={coin_id}
+                                        onChange={(e) => setCoin_id(e.target.value)} required /></>
+                                    : null
+                                }
+
                                 <Button buttonSize='btn--flex' type="submit">Concluir</Button>
                             </form>
                         </div>

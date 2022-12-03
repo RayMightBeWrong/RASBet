@@ -14,8 +14,10 @@
 }
 
 .greenBackGround {
+  padding: 30px;
   display: flex;
-  height: 92vh;
+  min-height: 92vh;
+  height: 100%;
   align-items: center;
   justify-content: center;
   background-color: #003915;
