@@ -192,3 +192,32 @@ export const GameAdmin = ({
         </>
     )
 }
+
+export const GameSelected = ({
+    title,
+    date,
+    participants,
+    winnerId
+}) => {
+    return (
+        <>
+            <div className='game'>
+                <div className='title-hour'>
+                    <div className='title'>{title}</div>
+                    <div className='date'>{date}</div>
+                </div>
+                <div className='bets'>
+                    {participants.map(dic => (
+                        <div key={dic.id}>
+                            <Button buttonStyle={winnerId === dic.id ? "btn--bet-clicked" : "btn--bet"}
+                                buttonSize={'btn--flex'}>
+                                <div>{dic.name}</div>
+                                <div>{dic.odd}</div>
+                            </Button>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </>
+    )
+}
