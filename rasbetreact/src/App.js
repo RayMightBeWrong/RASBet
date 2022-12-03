@@ -22,7 +22,7 @@ function App() {
     expert: expert logged in
     admin: admin logged in
   */
-  const [userState, setUserState] = useState('admin')
+  const [userState, setUserState] = useState('admin');
   const [userId, setUserId] = useState(1)
 
   return (
@@ -39,9 +39,9 @@ function App() {
           <Route path='/login' element={<Login setUserState={setUserState} setUserId={setUserId} />} />
 
           {/*TODO organizar o resto das pages*/}
-          <Route path='/perfil' element={<Perfil userId={userId} />} />
-          <Route path='/promocoes' element={<Promocoes userId={userId} />} />
-          <Route path='/historico' element={<Historico />} />
+          <Route path='/perfil' element={<Perfil userId={userId} userState={userState} />} />
+          <Route path='/promocoes' element={<Promocoes userState={userState} />} />
+          <Route path='/historico' element={<Historico userId={userId} userState={userState} />} />
           <Route path='/registo' element={<Registo userState={userState} expertMode="false" />} />
 
           {/*Admin TOOLS*/}

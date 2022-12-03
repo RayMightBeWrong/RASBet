@@ -5,7 +5,8 @@ import { InfoCarteiras } from '../../InfoCarteiras';
 
 
 function Perfil({
-  userId
+  userId,
+  userState
 }) {
 
   const [currentName, setCurrentName] = useState("");
@@ -76,55 +77,57 @@ function Perfil({
       })
   }, [userId, rerender])
 
-  return (
-    <div className='perfil'>
-      <div className='perfil-box'>
-        <h1>{currentName}</h1>
-        <div className='informacoes-perfil'>
-          <div className='informacoes-perfil-content'>
-            <h3>Nome:</h3>
-            <input type="txtP" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
+  if (userState === "gambler") {
+    return (
+      <div className='perfil'>
+        <div className='perfil-box'>
+          <h1>{currentName}</h1>
+          <div className='informacoes-perfil'>
+            <div className='informacoes-perfil-content'>
+              <h3>Nome:</h3>
+              <input type="txtP" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
+            </div>
+            <div className='informacoes-perfil-content'>
+              <h3>Email:</h3>
+              <input type="txtP" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            </div>
+            <div className='informacoes-perfil-content'>
+              <h3>Número De Telemóvel:</h3>
+              <input type="txtP" placeholder="Phone_number" value={phone_number} onChange={(e) => setPhone_number(e.target.value)} required />
+            </div>
+            <div className='informacoes-perfil-content'>
+              <h3>Ocupação:</h3>
+              <input type="txtP" placeholder="Occupation" value={occupation} onChange={(e) => setOccupation(e.target.value)} required />
+            </div>
+            <div className='informacoes-perfil-content'>
+              <h3>Nacionalidade:</h3>
+              <input type="txtP" placeholder="Nationality" value={nationality} onChange={(e) => setNationality(e.target.value)} required />
+            </div>
+            <div className='informacoes-perfil-content'>
+              <h3>Cidade:</h3>
+              <input type="txtP" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} required />
+            </div>
+            <div className='informacoes-perfil-content'>
+              <h3>Morada:</h3>
+              <input type="txtP" placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} required />
+            </div>
+            <div className='informacoes-perfil-content'>
+              <h3>Código Postal:</h3>
+              <input type="txtP" placeholder="Postal_code" value={postal_code} onChange={(e) => setPostal_code(e.target.value)} required />
+            </div>
+            <div className='informacoes-perfil-content'>
+              <h3>Nova palavra-passe:</h3>
+              <input type="txtP" placeholder="Password" value={psw} onChange={(e) => setPsw(e.target.value)} required />
+            </div>
+            <div className='save'>
+              <Button buttonSize={'btn--medium'} onClick={() => handleClick()} >Gravar Alterações</Button>
+            </div>
           </div>
-          <div className='informacoes-perfil-content'>
-            <h3>Email:</h3>
-            <input type="txtP" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          </div>
-          <div className='informacoes-perfil-content'>
-            <h3>Número De Telemóvel:</h3>
-            <input type="txtP" placeholder="Phone_number" value={phone_number} onChange={(e) => setPhone_number(e.target.value)} required />
-          </div>
-          <div className='informacoes-perfil-content'>
-            <h3>Ocupação:</h3>
-            <input type="txtP" placeholder="Occupation" value={occupation} onChange={(e) => setOccupation(e.target.value)} required />
-          </div>
-          <div className='informacoes-perfil-content'>
-            <h3>Nacionalidade:</h3>
-            <input type="txtP" placeholder="Nationality" value={nationality} onChange={(e) => setNationality(e.target.value)} required />
-          </div>
-          <div className='informacoes-perfil-content'>
-            <h3>Cidade:</h3>
-            <input type="txtP" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} required />
-          </div>
-          <div className='informacoes-perfil-content'>
-            <h3>Morada:</h3>
-            <input type="txtP" placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} required />
-          </div>
-          <div className='informacoes-perfil-content'>
-            <h3>Código Postal:</h3>
-            <input type="txtP" placeholder="Postal_code" value={postal_code} onChange={(e) => setPostal_code(e.target.value)} required />
-          </div>
-          <div className='informacoes-perfil-content'>
-            <h3>Nova palavra-passe:</h3>
-            <input type="txtP" placeholder="Password" value={psw} onChange={(e) => setPsw(e.target.value)} required />
-          </div>
-          <div className='save'>
-            <Button buttonSize={'btn--medium'} onClick={() => handleClick()} >Gravar Alterações</Button>
-          </div>
+          <InfoCarteiras userId={userId} />
         </div>
-        <InfoCarteiras userId={userId} />
-      </div>
-    </div >
-  );
+      </div >
+    );
+  } else return null;
 }
 
 export default Perfil;
