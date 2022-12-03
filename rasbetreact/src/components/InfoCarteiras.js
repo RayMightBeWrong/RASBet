@@ -37,6 +37,7 @@ export const InfoCarteiras = ({
                     alert("Operação realizada com sucesso")
                 }
             })
+            .then(() => setRerender(!rerender))
             .catch(err => alert(err))
     }
 
@@ -59,8 +60,8 @@ export const InfoCarteiras = ({
                     alert("Operação realizada com sucesso")
                 }
             })
+            .then(() => setRerender(!rerender))
             .catch(err => alert(err))
-        setRerender(!rerender)
     }
 
     const createWallet = (newWallet) => {
@@ -81,6 +82,7 @@ export const InfoCarteiras = ({
                     alert("Carteira criada")
                 }
             })
+            .then(() => setRerender(!rerender))
             .catch(_ => alert("Error occured"))
     }
 
@@ -109,13 +111,13 @@ export const InfoCarteiras = ({
                     console.log(newWallet);
                     createWallet(newWallet, value)
                     break
+                default:
             }
         } else
             alert("Operação Impossível")
 
         setSelected("")
         setValue(0)
-        setRerender(!rerender)
     }
 
     useEffect(() => {

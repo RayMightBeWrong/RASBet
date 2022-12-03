@@ -49,8 +49,11 @@ function Perfil({
           alert("Registos atualizados")
         }
       })
+      .then(() => setRerender(!rerender))
       .catch(err => alert(err))
   }
+
+  const [rerender, setRerender] = useState(false)
 
   useEffect(() => {
     let requestOptions = {
@@ -71,7 +74,7 @@ function Perfil({
         setOccupation(result.occupation)
         setPostal_code(result.postal_code)
       })
-  }, [userId])
+  }, [userId, rerender])
 
   return (
     <div className='perfil'>
