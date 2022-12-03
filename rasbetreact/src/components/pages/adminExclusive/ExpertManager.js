@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../Comons.css';
 import { Button } from '../../Button';
 import { Link } from 'react-router-dom';
+import { UserFunction } from '../../objects/User'
 
 function ExpertManager({
     userState
@@ -23,19 +24,42 @@ function ExpertManager({
             })
     }, [rerender])
 
+
+    function deleteExpert(id) {
+        const requestOptions = {
+            method: 'DELETE'
+        }
+        fetch("http://localhost:8080/api/users/expert/" + id, requestOptions)
+            .then(res => {
+                if (res.status !== 200) {
+                    var errorMsg;
+                    if ((errorMsg = res.headers.get("x-error")) == null)
+                        errorMsg = "Error occured"
+                    alert(errorMsg)
+                }
+                else {
+                    alert("Expert deleted")
+                }
+            })
+            .then(() => setRerender(!rerender))
+            .catch(err => alert(err))
+    }
+
     if (userState === "admin") {
         return (
             <>
                 <div className='greenBackGround'>
                     <div className='white-box'>
                         <div>
-                            <form className="container-form" onSubmit={handleSubmit}>
-                                <h1>Consulta de perfil</h1>
-                                Insere o email do utilizador
-
-                                <input type="txtL" placeholder="user@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                                <Button type="submit" buttonSize='btn--flex'>Aceder</Button>
-                            </form>
+                            <h1>Consulta de experts</h1>
+                            {users.map(user => (
+                                <div key={user.id}>
+                                    <UserFunction nome={user.name}
+                                        id={user.id} email={user.email}
+                                        butonName={"Apagar"}
+                                        runnable={() => deleteExpert(user.id)} />
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>

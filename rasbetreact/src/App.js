@@ -13,6 +13,7 @@ import Promocoes from './components/pages/gamblerExclusive/Promocoes';
 import ConsultaPerfil from './components/pages/adminExclusive/ConsultaPerfil';
 import Historico from './components/pages/gamblerExclusive/Historico';
 import CriarPromocao from './components/pages/adminExclusive/CriarPromocao'
+import ExpertManager from './components/pages/adminExclusive/ExpertManager';
 
 function App() {
   /*Possible userStates:
@@ -50,6 +51,7 @@ function App() {
           <Route path='/admin_Options/promocoes' element={<GestorPromocoes userState={userState} />} />
           <Route path='/admin_Options/promocoes/creation' element={<CriarPromocao userState={userState} />} />
           <Route path='/admin_Options/consultaPerfil' element={<ConsultaPerfil userState={userState} setUserState={setUserState} setUserId={setUserId} />} />
+          <Route path='/admin_Options/expertManager' element={<ExpertManager userState={userState} />} />
 
         </Routes>
       </Router>

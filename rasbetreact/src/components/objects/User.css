@@ -4,6 +4,10 @@
     padding: 15px 30px;
     width: 100%;
     display: flex;
-    align-items: center;
+    align-items: left;
     justify-content: space-between;
+}
+
+.info {
+    flex-direction: column;
 }

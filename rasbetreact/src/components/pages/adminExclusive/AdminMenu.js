@@ -65,7 +65,14 @@ function AdminMenu({
                         <div>
                             <Link to='/admin_Options/consultaPerfil'>
                                 <Button buttonStyle="btn--inverted" buttonSize={'btn--flex'}>
-                                    Consulta Perfil
+                                    Consulta Perfil Gambler
+                                </Button>
+                            </Link>
+                        </div>
+                        <div>
+                            <Link to='/admin_Options/expertManager'>
+                                <Button buttonStyle="btn--inverted" buttonSize={'btn--flex'}>
+                                    Manage Experts
                                 </Button>
                             </Link>
                         </div>
