@@ -1,10 +1,8 @@
 package ras.adlrr.RASBet.model.Promotions;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ras.adlrr.RASBet.model.Promotions.interfaces.IPromotion;
 
 import javax.persistence.*;
@@ -28,9 +26,11 @@ public class Promotion implements IPromotion {
     @Column(nullable = false)
     private String description;
 
+    @JsonIgnore
     @Column(nullable = false, name = "begin_date")
     private LocalDateTime beginDate;
 
+    @JsonIgnore
     @Column(name = "expiration_date")
     private LocalDateTime expirationDate;
 
@@ -48,5 +48,13 @@ public class Promotion implements IPromotion {
         this.expirationDate = expiration_date;
         this.nr_uses = nr_uses;
         this.coupon = coupon;
+    }
+
+    public LocalDateTime getBegin_date(){
+        return beginDate;
+    }
+
+    public LocalDateTime getExpiration_date(){
+        return expirationDate;
     }
 }

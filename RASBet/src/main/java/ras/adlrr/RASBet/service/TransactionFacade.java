@@ -139,8 +139,8 @@ public class TransactionFacade implements ITransactionService, IUserTransactions
         Wallet wallet = walletService.getWallet(wallet_id);
         if(wallet == null)
             throw new Exception("Cannot deposit a value into a non existent wallet!");
-        if(valueToDeposit < 0)
-            throw new Exception("Value to deposit cannot be negative.");
+        if(valueToDeposit <= 0)
+            throw new Exception("Value to deposit must be positive.");
 
 
         Transaction transaction = new Transaction();
@@ -175,8 +175,8 @@ public class TransactionFacade implements ITransactionService, IUserTransactions
         Wallet wallet = walletService.getWallet(wallet_id);
         if(wallet == null)
             throw new Exception("Cannot withdraw a value from a non existent wallet!");
-        if(valueToWithdraw < 0)
-            throw new Exception("Value to withdraw cannot be negative.");
+        if(valueToWithdraw <= 0)
+            throw new Exception("Value to withdraw must be positive.");
 
         Transaction transaction = new Transaction();
         Gambler gambler = wallet.getGambler();
