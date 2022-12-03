@@ -155,8 +155,8 @@ public class PromotionService implements IPromotionService{
      * @return null if all the specific attributes are valid. Otherwise, returns a string with the error.
      */
     private String checkReferralBalancePromotionSpecificAttributes(ReferralBalancePromotion referralBalancePromotion) {
-        if(referralBalancePromotion.getNumber_of_referrals_needed() <= 0)
-            return "Number of referrals needed to claim the promotion should be positive.";
+        if(referralBalancePromotion.getNumber_of_referrals_needed() < 0)
+            return "Number of referrals needed to claim the promotion cannot be negative.";
         if(referralBalancePromotion.getValue_to_give() <= 0)
             return "Value should be positive.";
         if(referralBalancePromotion.getCoin() == null || !coinService.coinExistsById(referralBalancePromotion.getCoin().getId()))
@@ -169,8 +169,8 @@ public class PromotionService implements IPromotionService{
      * @return null if all the specific attributes are valid. Otherwise, returns a string with the error.
      */
     private String checkReferralBoostOddPromotionSpecificAttributes(ReferralBoostOddPromotion referralBoostOddPromotion) {
-        if(referralBoostOddPromotion.getNumber_of_referrals_needed() <= 0)
-            return "Number of referrals needed to claim the promotion should be positive.";
+        if(referralBoostOddPromotion.getNumber_of_referrals_needed() < 0)
+            return "Number of referrals needed to claim the promotion cannot be negative.";
         if(referralBoostOddPromotion.getBoost_percentage() <= 0 || referralBoostOddPromotion.getBoost_percentage() > 100)
             return "The boost percentage should be a value between 0 (exclusive) and 100 (inclusive).";
         return null;
