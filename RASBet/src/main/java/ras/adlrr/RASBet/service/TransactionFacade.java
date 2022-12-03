@@ -200,33 +200,31 @@ public class TransactionFacade implements ITransactionService, IUserTransactions
 
     /**
      * Claims the balance offered by a balance promotion
-     * @param wallet_id Identification of the wallet that is supposed to receive the balance
+     * @param gambler_id Identification of the gambler that is supposed to receive the balance
      * @param coupon Identification of the balance promotion
      * @throws Exception If a necessary condition is not met. The message contains the error.
      */
     @Transactional(rollbackOn = {Exception.class}, value = Transactional.TxType.REQUIRES_NEW)
-    public Transaction claimBalancePromotion(int wallet_id, String coupon) throws Exception {
-        Wallet wallet = walletService.getWallet(wallet_id);
-        if(wallet == null)
-            throw new Exception("Cannot claim the balance to a invalid wallet.");
-        int gambler_id = wallet.getGambler().getId();
-
+    public Transaction claimBalancePromotion(int gambler_id, String coupon) throws Exception {
         //Checks if coupon belongs to a balance promotion
         IPromotion promotion = promotionService.getPromotionByCoupon(coupon);
         if(!(promotion instanceof IBalancePromotion balancePromotion))
             throw new Exception("Invalid coupon.");
-        String promo_coin_id = balancePromotion.getCoin().getId();
+        String coin_id = balancePromotion.getCoin().getId();
         float balanceToGive = balancePromotion.getValue_to_give();
 
-        //Checks if the coin of the wallet matches the coin of the promotion
-        if(!promo_coin_id.equals(wallet.getCoin().getId()))
-            throw new Exception("Coin of the wallet does not match the coin of the promotion.");
+        //Gets the gambler's wallet that has the same coin has the one used to bet
+        Wallet wallet_withdraw = walletService.getWalletByGamblerIdAndCoinId(gambler_id, coin_id);
+
+        //If the gambler does not have a wallet with the specific coin, then a wallet is created
+        if(wallet_withdraw == null)
+            wallet_withdraw = walletService.createWallet(new Wallet(coin_id, gambler_id));
 
         clientPromotionService.claimPromotionWithCoupon(gambler_id, coupon);
 
-        Transaction transaction = new Transaction(gambler_id, wallet_id, wallet.getBalance(),
+        Transaction transaction = new Transaction(gambler_id, wallet_withdraw.getId(), 0.0f,
                 "Claimed balance with promotion coupon " + coupon + ".",
-                balanceToGive, promo_coin_id);
+                balanceToGive, coin_id);
 
         return addTransaction(transaction);
     }
