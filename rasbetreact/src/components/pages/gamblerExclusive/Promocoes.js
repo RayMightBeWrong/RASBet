@@ -54,7 +54,7 @@ function Promocoes({
                     coupon={promotion.coupon}
                     number_of_referrals_needed={promotion.number_of_referrals_needed}
                     value_to_give={promotion.value_to_give}
-                    coin_id={promotion.coin_id}
+                    coin_id={promotion.coin.id}
                 />
             default:
                 return ""
