@@ -1,19 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './Historico.css';
 
 const listHist = ["Transações","Apostas"];
-const id = 1;
-const contentList2 = [
-    {"balance_after_mov": 25.0,"description": "Deposit","value": 25.0,"date": "2022-11-27T18:48:21.584163","id": 1,"gambler": {"id": 1},"wallet": {"id": 1},"coin": {"id": "Bitcoin","ratio_EUR": 20500.0}},
-    {"balance_after_mov": 0.0,"description": "Withdraw","value": 25.0,"date": "2022-11-27T18:48:30.430386","id": 2,"gambler": {"id": 1},"wallet": {"id": 1},"coin": {"id": "Bitcoin","ratio_EUR": 20500.0}},
-    {"balance_after_mov": 25.0,"description": "Deposit","value": 25.0,"date": "2022-11-27T18:48:43.106686","id": 3,"gambler": {"id": 1},"wallet": {"id": 1},"coin": {"id": "Bitcoin","ratio_EUR": 20500.0}},
-    {"balance_after_mov": 50.0,"description": "Deposit","value": 25.0,"date": "2022-11-27T18:48:43.781689","id": 4,"gambler": {"id": 1},"wallet": {"id": 1},"coin": {"id": "Bitcoin","ratio_EUR": 20500.0}}
-];
-
-function getDate(date){
-    const str = date.split('.')[0].split('T');
-    return str;
-};
 
 function getTrans(sorce){
     let datas = [], horas = [], desc = [], val = [], fin = [], dh;
@@ -25,7 +13,6 @@ function getTrans(sorce){
         val.push(e.value + ' (' + e.coin.id + ')')
         fin.push(e.balance_after_mov + ' (' + e.coin.id + ')');
     });
-    sorce.map(e=>e.date.split('.')[0].split('T')[1]);
 
     let trans = [
         {"head":"Data", "body": datas},
@@ -38,25 +25,33 @@ function getTrans(sorce){
 };
 
 function getBets(sorce){
-    let datas = [], horas = [], desc = [], val = [], fin = [], dh;
+    let datas = [], horas = [], desporto = [], desc = [], result = [], odd = [], ini = [], fin = [], oddAux, dh, stateAux;
     sorce.map(e=>{
-        dh=e.date.split('.')[0].split('T')
-        datas.push(dh[0])
-        horas.push(dh[1])
-        desc.push(e.description);
-        val.push(e.value + ' (' + e.coin.id + ')')
-        fin.push(e.balance_after_mov + ' (' + e.coin.id + ')');
+        stateAux = e.state
+        if (stateAux === 3 || stateAux === 2){
+            dh=e.transaction.date.split('.')[0].split('T')
+            datas.push(dh[0])
+            horas.push(dh[1])
+            desporto.push(" ")
+            desc.push(e.game_choices.length === 1? "Simples": "Multipla")
+            result.push(" ")
+            oddAux=1
+            e.game_choices.map(gc => oddAux *= gc.odd)
+            odd.push(oddAux)
+            ini.push(Math.abs(e.transaction.value))
+            fin.push(stateAux === 3? e.transaction.value : e.transaction.value * oddAux)
+        }
     });
-    sorce.map(e=>e.date.split('.')[0].split('T')[1]);
 
     let trans = [
-        {"head":"Data", "body": horas},
-        {"head":"Desporto", "body": horas},
+        {"head":"Data", "body": datas},
+        {"head":"Hora", "body": horas},
+        {"head":"Desporto", "body": desporto},
         {"head":"Descrição", "body": desc},
-        {"head":"Resultado", "body": fin},
-        {"head":"Odd", "body": val},
-        {"head":"Valor inicial", "body": datas},
-        {"head":"Valor final", "body": fin}
+        {"head":"Resultado", "body": result},
+        {"head":"Odd", "body": odd},
+        {"head":"Valor apostado", "body": ini},
+        {"head":"Saldo final", "body": fin}
     ];
     return trans;
 };
@@ -79,15 +74,14 @@ function getTable(table){
 
 
 function Historico({
-    idGambler
+    userId
 }) {
     const [contentList,setContentList] = useState([]);
     const [content,setContent] = useState(listHist[1]);
 
-    const changeHist = (opt) => {
-        setContent(opt)
-        if (opt === "Transações"){
-            let s = "http://localhost:8080/api/transactions/gambler/" + id
+    useEffect(() => {
+        if (content === "Transações"){
+            let s = "http://localhost:8080/api/transactions/gambler/" + userId + "/DESC"
             fetch(s)
             .then(res => res.json())
             .then((result) => {
@@ -95,15 +89,15 @@ function Historico({
                 console.log(result);
             })
         } else {
-            let s = "http://localhost:8080/api/bets/gambler/" + id
+            let s = "http://localhost:8080/api/bets/gambler/" + userId + "/DESC"
             fetch(s)
             .then(res => res.json())
             .then((result) => {
-                //setContentList(result);
                 console.log(result);
+                setContentList(result);
             })
         }
-    };
+    }, [content])
 
 
     return (
@@ -112,7 +106,7 @@ function Historico({
                 <h1>Histórico de {content}</h1>
                 <div className='contentMod'>
                     <h3>Modificar historico:</h3>
-                    <select value={content} onChange={(opt) => changeHist(opt.target.value)} required>
+                    <select value={content} onChange={(opt) => setContent(opt.target.value)} required>
                         {listHist.map((opt) => (
                             <option key={opt} value={opt}>
                                 {opt}
