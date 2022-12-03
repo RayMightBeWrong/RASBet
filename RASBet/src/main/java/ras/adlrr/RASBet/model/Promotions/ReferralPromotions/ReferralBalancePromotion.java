@@ -1,5 +1,6 @@
 package ras.adlrr.RASBet.model.Promotions.ReferralPromotions;
 
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class ReferralBalancePromotion extends Promotion implements IBalancePromo
     private float value_to_give;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "coin_id", updatable = false)
+    @JsonIncludeProperties("id")
     private Coin coin;
 
     public ReferralBalancePromotion(@JsonProperty("title") String title, @JsonProperty("description") String description,
