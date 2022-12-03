@@ -12,6 +12,7 @@ export const InfoCarteiras = ({
 }) => {
 
     const [open, setOpen] = useState(-1);
+    const [cupon, setCupon] = useState("");
     const [selected, setSelected] = useState("");
     const [value, setValue] = useState(0);
     const [currency, setCurrency] = useState([])
@@ -152,6 +153,8 @@ export const InfoCarteiras = ({
             })
     }, [rerender, userId, open])
 
+
+
     const getId = (wallet_id) => {
         let id
         gamblerWallets.map(wallet => {
@@ -161,6 +164,27 @@ export const InfoCarteiras = ({
         return id
     }
 
+    const aplicaCupao = () => {
+        let requestOptions = {
+            method: 'PUT',
+            headers: { "Access-Control-Allow-Origin": "*" }
+        }
+
+        fetch("http://localhost:8080/api/transactions/claimBalancePromotion?gambler_id=" + userId + "&coupon=" + cupon, requestOptions)
+            .then(res => {
+                if (res.status !== 200) {
+                    var errorMsg;
+                    if ((errorMsg = res.headers.get("x-error")) == null)
+                        errorMsg = "Error occured"
+                    alert(errorMsg)
+                }
+                else {
+                    alert("Cupão aplicado")
+                }
+            })
+            .then(() => setRerender(!rerender))
+            .catch(err => alert("Error occured"))
+    }
     return (
         <>
             <h1> Informação das carteiras </h1>
@@ -171,6 +195,12 @@ export const InfoCarteiras = ({
                             <CarteiraSimplificada ratioEuro={wallet.coin.ratio_EUR} balance={wallet.balance} coin={wallet.coin.id} setOpen={() => setOpen(wallet.id)} />
                         </div>
                     ))}
+                </div>
+                <div className='carteiras-body'>
+                    <h3>Cupao:</h3>
+                    <input type="txtP" placeholder="Cupao" value={cupon} onChange={(e) => setCupon(e.target.value)} required />
+                    <Button buttonSize={'btn--medium'} buttonStyle={'btn--inverted'} onClick={() => aplicaCupao()}> Aplicar Promoção </Button>
+
                 </div>
             </div>
             <div className='save'>

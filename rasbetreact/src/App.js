@@ -22,7 +22,7 @@ function App() {
     expert: expert logged in
     admin: admin logged in
   */
-  const [userState, setUserState] = useState('admin');
+  const [userState, setUserState] = useState('gambler')
   const [userId, setUserId] = useState(1)
 
   return (
@@ -38,7 +38,7 @@ function App() {
           <Route path='/nfl' element={<Sport sportType="NFL" userState={userState} userId={userId} />} />
           <Route path='/login' element={<Login setUserState={setUserState} setUserId={setUserId} />} />
 
-          {/*TODO organizar o resto das pages*/}
+          {/*gambler pages*/}
           <Route path='/perfil' element={<Perfil userId={userId} userState={userState} />} />
           <Route path='/promocoes' element={<Promocoes userState={userState} />} />
           <Route path='/historico' element={<Historico userId={userId} userState={userState} />} />
@@ -51,7 +51,7 @@ function App() {
           <Route path='/admin_Options/promocoes' element={<GestorPromocoes userState={userState} />} />
           <Route path='/admin_Options/promocoes/creation' element={<CriarPromocao userState={userState} />} />
           <Route path='/admin_Options/consultaPerfil' element={<ConsultaPerfil userState={userState} setUserState={setUserState} setUserId={setUserId} />} />
-          <Route path='/admin_Options/expertManager' element={<ExpertManager userState={userState} />} />
+          <Route path='/admin_Options/expertDelete' element={<ExpertManager userState={userState} />} />
 
         </Routes>
       </Router>

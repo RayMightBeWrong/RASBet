@@ -70,9 +70,9 @@ function AdminMenu({
                             </Link>
                         </div>
                         <div>
-                            <Link to='/admin_Options/expertManager'>
+                            <Link to='/admin_Options/expertDelete'>
                                 <Button buttonStyle="btn--inverted" buttonSize={'btn--flex'}>
-                                    Manage Experts
+                                    Delete Expert
                                 </Button>
                             </Link>
                         </div>

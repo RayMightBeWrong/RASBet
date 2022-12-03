@@ -9,7 +9,8 @@ export const CarteirasPopUp = ({
     valormin,
     closePopup,
     userId,
-    bets
+    bets,
+    cupao
 }) => {
 
     const [carteiras, setCarteiras] = useState([]);
@@ -43,15 +44,18 @@ export const CarteirasPopUp = ({
             })
         ))
 
+        let cupaoFinal = cupao
+        if (cupaoFinal === "")
+            cupaoFinal = null
         let bet = {
             value: parseFloat(valormin), //pode dar erro maybe
             gambler_id: userId,
             wallet_id: wallet_id,
             coin_id: coin_id,
-            coupon: null,
+            coupon: cupaoFinal,
             game_choices: game_choices
         }
-
+        console.log(bet)
         const requestOptions = {
             method: "POST",
             headers: { "Content-Type": "application/json" },

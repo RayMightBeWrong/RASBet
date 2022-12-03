@@ -74,7 +74,6 @@ export const Boletim = ({
                                 placeholder="Cupão da aposta"
                                 value={cupao}
                                 onChange={changeCupao} />
-                            <button>Apply</button>
                         </div>
                         <div className='boletim-ganhos'>
                             Possivel ganho: {finalWin}
@@ -85,7 +84,7 @@ export const Boletim = ({
                             Submeter
                         </Button>
                         {open ?
-                            < CarteirasPopUp userId={userId} bets={bets} carteiras={carteiras} closePopup={() => setOpen(false)} valormin={value} />
+                            < CarteirasPopUp userId={userId} cupao={cupao} bets={bets} carteiras={carteiras} closePopup={() => setOpen(false)} valormin={value} />
                             : null
                         }
                     </div>

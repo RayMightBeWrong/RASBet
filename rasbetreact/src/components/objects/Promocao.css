@@ -1,0 +1,13 @@
+.promocao {
+    border-top: 1px solid green;
+    border-bottom: 1px solid green;
+    padding: 15px 30px;
+    width: 100%;
+    display: flex;
+    align-items: left;
+    justify-content: space-between;
+}
+
+.info {
+    flex-direction: column;
+}
