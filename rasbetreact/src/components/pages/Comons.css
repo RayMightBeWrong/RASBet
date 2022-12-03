@@ -1,0 +1,55 @@
+.white-box {
+    /* The image used */
+    background-color: white;
+    color: #003915;
+    padding: 30px;
+    position: center;
+    border-radius: 25px;
+    display: flex;
+    width: 80vw;
+    min-height: 80vh;
+    height: 100%;
+}
+
+.container {
+    border-radius: 25px;
+    width: 90vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container-form {
+    display: flex;
+    flex-direction: column;
+    border-radius: 25px;
+    width: 35vw;
+    padding: 60px;
+}
+
+.imagem {
+    width: 40vw;
+    height: 70vh;
+    object-fit: cover;
+    border-radius: 25px;
+}
+
+.registerbutton {
+    text-align: right;
+}
+
+/* Full-width input fields */
+input[type=txtL] {
+    border: 5px solid red;
+    border-radius: 5px;
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    border: none;
+    background: #f1f1f1;
+}
+
+input[type=txtL]:focus input[type=txtL]:hover {
+    background-color: #ddd;
+    outline: none;
+}

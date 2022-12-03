@@ -3,15 +3,17 @@ import Navbar from './components/Navbar';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/pages/Login';
-import Perfil from './components/pages/Perfil';
+import Perfil from './components/pages/gamblerExclusive/Perfil';
 import Registo from './components/pages/Registo';
 import Sport from './components/pages/Sport';
-import AdminMenu from './components/pages/AdminMenu';
-import MenuCoins from './components/pages/MenuCoins';
-import GestorPromocoes from './components/pages/GestorPromocoes';
-import Promocoes from './components/pages/Promocoes';
-import ConsultaPerfil from './components/pages/ConsultaPerfil';
-import Historico from './components/pages/Historico';
+import AdminMenu from './components/pages/adminExclusive/AdminMenu';
+import MenuCoins from './components/pages/adminExclusive/MenuCoins';
+import GestorPromocoes from './components/pages/adminExclusive/GestorPromocoes';
+import Promocoes from './components/pages/gamblerExclusive/Promocoes';
+import ConsultaPerfil from './components/pages/adminExclusive/ConsultaPerfil';
+import Historico from './components/pages/gamblerExclusive/Historico';
+import CriarPromocao from './components/pages/adminExclusive/CriarPromocao'
+import ExpertManager from './components/pages/adminExclusive/ExpertManager';
 
 function App() {
   /*Possible userStates:
@@ -20,7 +22,7 @@ function App() {
     expert: expert logged in
     admin: admin logged in
   */
-  const [userState, setUserState] = useState('gambler')
+  const [userState, setUserState] = useState('admin');
   const [userId, setUserId] = useState(1)
 
   return (
@@ -37,9 +39,9 @@ function App() {
           <Route path='/login' element={<Login setUserState={setUserState} setUserId={setUserId} />} />
 
           {/*TODO organizar o resto das pages*/}
-          <Route path='/perfil' element={<Perfil userId={userId} />} />
-          <Route path='/promocoes' element={<Promocoes userId={userId} />} />
-          <Route path='/historico' element={<Historico />} />
+          <Route path='/perfil' element={<Perfil userId={userId} userState={userState} />} />
+          <Route path='/promocoes' element={<Promocoes userState={userState} />} />
+          <Route path='/historico' element={<Historico userId={userId} userState={userState} />} />
           <Route path='/registo' element={<Registo userState={userState} expertMode="false" />} />
 
           {/*Admin TOOLS*/}
@@ -47,7 +49,9 @@ function App() {
           <Route path='/admin_Options/registo_Expert' element={<Registo userState={userState} expertMode="true" />} />
           <Route path='/admin_Options/coins' element={<MenuCoins userState={userState} />} />
           <Route path='/admin_Options/promocoes' element={<GestorPromocoes userState={userState} />} />
-          <Route path='/admin_Options/consultaPerfil' element={<ConsultaPerfil userState={userState} />} />
+          <Route path='/admin_Options/promocoes/creation' element={<CriarPromocao userState={userState} />} />
+          <Route path='/admin_Options/consultaPerfil' element={<ConsultaPerfil userState={userState} setUserState={setUserState} setUserId={setUserId} />} />
+          <Route path='/admin_Options/expertManager' element={<ExpertManager userState={userState} />} />
 
         </Routes>
       </Router>

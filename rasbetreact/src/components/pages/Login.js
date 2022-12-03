@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Login.css';
+import './Comons.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../Button';
 
@@ -9,7 +9,7 @@ function Login({
 }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const handleSubmit = event => {
     event.preventDefault()
@@ -50,7 +50,7 @@ function Login({
 
   return (
     <>
-      <div className='login'>
+      <div className='greenBackGround'>
         <div className='white-box'>
           <div className='container'>
             <form className="container-form" onSubmit={handleSubmit}>

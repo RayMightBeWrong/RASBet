@@ -1,0 +1,57 @@
+.carteira {
+    border-top: 1px solid green;
+    border-bottom: 1px solid green;
+    padding: 15px 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.carteira-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 200px;
+}
+
+.carteira-body {
+    align-items: center;
+    display: flex;
+    max-width: 400px;
+    width: 300px;
+    justify-content: space-between;
+}
+
+.carteira-transferencia {
+    display: flex;
+}
+
+@media only screen and (max-width: 570px){
+    .carteira{
+        flex-direction: column;
+    }
+    .carteira-header {
+        font-size: 19px;
+        width: 80%;
+        margin-bottom: 10px;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+
+
+
+
+.carteiraSimples {
+    border-radius: 15px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.btn{
+    margin-left: 3px;
+}

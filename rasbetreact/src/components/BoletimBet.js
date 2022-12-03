@@ -1,6 +1,6 @@
 import React from 'react';
 import './BoletimBet.css';
-import { Button } from '../Button';
+import { Button } from './Button';
 
 
 

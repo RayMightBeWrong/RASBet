@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import "./CarteirasPopUp.css";
-import { Carteira } from './Carteira';
+import { Carteira } from './objects/Carteira';
 import { Button } from './Button';
 import { MoedasPopUp } from './MoedasPopUp';
+import "./PayMethods.css"
 
 export const CarteirasPopUp = ({
     valormin,
@@ -75,16 +76,23 @@ export const CarteirasPopUp = ({
         <>
             < div className="carteirasPopUp-container" >
                 < div className="carteirasPopUp-body" >
-                    <h1> Seleção de carteiras </h1>
-                    <div> Aposta do valor de {valormin}</div>
-                    {carteiras.map(wallet => (
-                        <div key={wallet.id}><Carteira wallet_id={wallet.id} verificaCarteira={() => verificaCarteira(wallet.id, wallet.coin.id)} /></div>
-                    ))}
+                    <div className="payMethods-close-button">
+                        <div className="pmAline"> </div>
+                        <h1> Seleção de carteiras </h1>
+                        <Button buttonStyle={'btn--flex'} onClick={closePopup}> X </Button >
+                    </div>
 
-                    <Button buttonStyle={"btn--bet"} onClick={() => handleClick()}>
+                    <h3> Aposta do valor de {valormin}</h3>
+                    <div className='carteirasPopUp-list'>
+                        {carteiras.map(wallet => (
+                            <div key={wallet.id}>
+                                <Carteira wallet_id={wallet.id} verificaCarteira={() => verificaCarteira(wallet.id, wallet.coin.id)} />
+                            </div>
+                        ))}
+                    </div>
+                    <Button buttonStyle={"btn--inverted"} onClick={() => handleClick()}>
                         Criar carteira
                     </Button>
-                    <button onClick={closePopup}>Fechar menu das carteiras</button >
                     {open ?
                         < MoedasPopUp userId={userId} closePopup={() => setOpen(false)} />
                         : null

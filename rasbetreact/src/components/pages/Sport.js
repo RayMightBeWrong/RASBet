@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { GamesTab } from '../Bets/GamesTab'
+import { GamesTab } from '../GamesTab'
 
 function Sport({
     sportType,
@@ -8,6 +8,7 @@ function Sport({
 }) {
 
     const [jogos, setJogos] = useState([])
+    const [rerender, setRerender] = useState(false)
 
     useEffect(() => {
         const requestOptions = {
@@ -23,12 +24,17 @@ function Sport({
             .then((result) => {
                 setJogos(result)
             })
-    }, [sportType])
+    }, [sportType, rerender])
 
     return (
         <>
             <div>
-                <GamesTab games={jogos} sportType={sportType} userState={userState} userId={userId} />
+                <GamesTab games={jogos}
+                    sportType={sportType}
+                    userState={userState}
+                    userId={userId}
+                    rerender={() => setRerender(!rerender)}
+                />
             </div>
         </>
     );
