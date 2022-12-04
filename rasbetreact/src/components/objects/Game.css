@@ -1,32 +1,61 @@
-.game {
-    border: 2px solid #003915;
-    border-style: dotted;
+.game-CLOSED{
+    background-color: rgba(255, 0, 0, 0.562);
+    border: 1px solid #003915;
+    margin-bottom: 10px;
     border-radius: 15px;
-    padding: 20px;
-    width: 60vw;
-    display: flex;
-    align-items: center;
-}
-
-.title-hour {
-    width: 40%;
+    padding: 20px 40px;
     display: flex;
     flex-direction: column;
+    max-width: 1300px;
+    min-width: max-content;
+}
+.game-OPEN{
+    background-color: white;
+    border: 1px solid #003915;
+    margin-bottom: 10px;
+    border-radius: 15px;
+    padding: 20px 40px;
+    display: flex;
+    flex-direction: column;
+    max-width: 1300px;
+    min-width: max-content;
+}
+.game-SUSPENDED{
+    background-color: rgba(128, 128, 128, 0.582);
+    border: 1px solid #003915;
+    margin-bottom: 10px;
+    border-radius: 15px;
+    padding: 20px 40px;
+    display: flex;
+    flex-direction: column;
+    max-width: 1300px;
+    min-width: max-content;
 }
 
-.bets {
-    width: 60%;
-    display: grid;
-    grid-template-columns: repeat(3, auto);
-    grid-gap: 10px;
-    list-style: none;
-    margin-right: 2rem;
+.game-title-state {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
 }
 
-.title {
-    font-size: 1.8rem;
+.game-time-bet {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
 }
 
-.time {
-    color: grey;
+.game-bet{
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.date-hour{
+    padding-top: 5px;
+    padding-left: 5px;
+    color: gray;
+    width: inherit;
 }

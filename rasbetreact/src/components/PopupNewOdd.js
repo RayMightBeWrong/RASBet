@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import "./PopupNewOdd.css"
+import "./PayMethods.css"
 import { Button } from "./Button"
 
 export const PopupNewOdd = ({
@@ -38,15 +39,17 @@ export const PopupNewOdd = ({
             .catch(_ => alert("Odd Não inserida"))
     }
     return (
-        <div className="popupNewOdd-container" >
-            < div className="popupNewOdd-body" >
-                <h1> Alterar Odd de {bet} </h1>
-                <input type="text"
-                    placeholder="Nova odd"
-                    value={value}
-                    onChange={handleChange} />
-                <Button onClick={atualizaOdd}>Submeter</Button >
-                <button onClick={() => closePopup()}>Fechar menu das carteiras</button >
+        <div className="payMethod-container">
+            <div className="payMethod-body">
+                <div className="payMethods-close-button">
+                    <div className="pmAline"> </div>
+                    <h1> Alterar Odd de {bet} </h1>
+                    <Button buttonStyle={'btn--flex'} onClick={() => closePopup()}> X </Button >
+                </div>
+                <div className='submit-change-odd'>
+                    <input type="txtNOdds" value={value} onChange={handleChange} />
+                    <Button onClick={atualizaOdd}>Submeter</Button >
+                </div>
             </div>
         </div >
     )

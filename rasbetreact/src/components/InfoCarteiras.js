@@ -196,12 +196,7 @@ export const InfoCarteiras = ({
                         </div>
                     ))}
                 </div>
-                <div className='carteiras-body'>
-                    <h3>Cupao:</h3>
-                    <input type="txtP" placeholder="Cupao" value={cupon} onChange={(e) => setCupon(e.target.value)} required />
-                    <Button buttonSize={'btn--medium'} buttonStyle={'btn--inverted'} onClick={() => aplicaCupao()}> Aplicar Promoção </Button>
-
-                </div>
+                <br></br>
             </div>
             <div className='save'>
                 {currency.length !== 0 ?
@@ -212,6 +207,13 @@ export const InfoCarteiras = ({
                 <Link to='/historico' className='registerbutton'>
                     <Button buttonSize={'btn--medium'} buttonStyle={'btn--inverted'} onClick={() => setOpen(true)}> Consultar Historico </Button>
                 </Link>
+            </div>
+            <div className='promos-box'>
+                <h2>Cupão</h2>
+                <div className='promos-box-data'>
+                    <input type="txtP2" placeholder="Codigo do cupão" value={cupon} onChange={(e) => setCupon(e.target.value)} required />
+                    <Button buttonSize={'btn--medium'}  onClick={() => aplicaCupao()}> Aplicar Promoção </Button>
+                </div>
             </div>
             {open > 0 ?
                 <PayMethod

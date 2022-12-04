@@ -37,6 +37,14 @@
   padding: 15px;
 }
 
+input[type=txtP2]{
+  border-radius: 5px;
+  width: 200px;
+  padding: 15px;
+  border: none;
+  background: #f1f1f1;
+}
+
 input[type=txtP]{
   border-radius: 5px;
   width: 500px;
@@ -46,6 +54,8 @@ input[type=txtP]{
   background: #f1f1f1;
 }
 
+input[type=txtP2]:focus,
+input[type=txtP2]:hover,
 input[type=txtP]:focus,
 input[type=txtP]:hover{
   background-color: #ddd;
@@ -81,6 +91,21 @@ input[type=txtP]:hover{
 
 .registerbutton{
   margin-right: 10px;
+}
+
+.promos-box{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  margin-top: 80px;
+}
+
+.promos-box-data{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-top: 30px;
 }
 
 @media only screen and (max-width: 880px){

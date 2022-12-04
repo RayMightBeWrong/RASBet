@@ -5,6 +5,16 @@ import { PopupNewOdd } from '../PopupNewOdd';
 
 
 
+const getDate = (date) => {
+    let dateS = date.split('T')
+    return(
+        <div className='date-hour'>
+            <h4>{dateS[0]}</h4>
+            <h4>{dateS[1].split('.')[0]}</h4>
+        </div>
+    )
+}
+
 export const GameGambler = ({
     id,
     title,
@@ -38,21 +48,22 @@ export const GameGambler = ({
 
     return (
         <>
-            <div className='game'>
-                <div className='title-hour'>
-                    <div className='title'>{title}</div>
-                    <div className='date'>{date}</div>
+            <div className={`game-OPEN`}>
+                <div className='game-title-state'>
+                    <h2>{title}</h2>
+                    <h4> </h4>
                 </div>
-                <div className='bets'>
-                    {participants.map(dic => (
-                        <div key={dic.id}>
+                <div className='game-time-bet'>
+                    {getDate(date)}
+                    <div className='game-bet'>
+                        {participants.map(dic => (
                             <Button buttonStyle={locked.fechada && locked.bet === dic.name ? "btn--bet-clicked" : "btn--bet"}
                                 buttonSize={'btn--flex'} onClick={() => handleClick(dic.name, dic.odd, dic.id)}>
-                                <div>{dic.name}</div>
-                                <div>{dic.odd}</div>
+                                <h5>{dic.name}</h5>
+                                <h5>{dic.odd}</h5>
                             </Button>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </div>
         </>
@@ -63,8 +74,23 @@ export const GameExpert = ({
     title,
     date,
     participants,
+    gameState,
     rerender
 }) => {
+    let estado
+    switch (gameState) {
+        case 1:
+            estado = "OPEN"
+            break
+        case 2:
+            estado = "CLOSED"
+            break
+        case 3:
+            estado = "SUSPENDED"
+            break
+        default:
+    }
+    
     const [oddPopUp, setOddPopUp] = useState({
         activated: false,
         bet: "",
@@ -81,26 +107,28 @@ export const GameExpert = ({
                 <PopupNewOdd rerender={() => rerender()} bet={oddPopUp.bet} participantId={oddPopUp.participantId} closePopup={() => setOddPopUp({ activated: false, bet: "" })} />
                 : null
             }
-            <div className='game'>
-                <div className='title-hour'>
-                    <div className='title'>{title}</div>
-                    <div className='date'>{date}</div>
+            <div className={`game-${estado}`}>
+                <div className='game-title-state'>
+                    <h2>{title}</h2>
+                    <h4>Estado do jogo: {estado}</h4>
                 </div>
-                <div className='bets'>
-                    {participants.map(dic => (
-                        <div key={dic.id}>
+                <div className='game-time-bet'>
+                    {getDate(date)}
+                    <div className='game-bet'>
+                        {participants.map(dic => (
                             <Button buttonStyle={"btn--bet"}
                                 buttonSize={'btn--flex'} onClick={() => handleClick(dic.name, dic.id)}>
                                 <div>{dic.name}</div>
                                 <div>{dic.odd}</div>
                             </Button>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </div>
         </>
     )
 }
+
 
 export const GameAdmin = ({
     id,
@@ -165,29 +193,31 @@ export const GameAdmin = ({
 
     return (
         <>
-            <div className='game'>
-                <div className='title-hour'>
-                    <div className='title'>{title}</div>
-                    <div className='date'>{date}</div>
+            <div className={`game-${estado}`}>
+                <div className='game-title-state'>
+                    <h2>{title}</h2>
+                    <h4>Estado do jogo: {estado}</h4>
                 </div>
-                <div>
-                    Estado do jogo: {estado}
+                <div className='game-time-bet'>
+                    {getDate(date)}
+                    <div className='game-bet'>
+                        <Button buttonStyle={"btn--bet"}
+                            buttonSize={'btn--flex'}
+                            onClick={() => changeGameState("SUSPEND")}>
+                            Suspender
+                        </Button>
+                        <Button buttonStyle={"btn--bet"}
+                            buttonSize={'btn--flex'}
+                            onClick={() => changeGameState("OPEN")}>
+                            Abrir
+                        </Button>
+                        <Button buttonStyle={"btn--bet"}
+                            buttonSize={'btn--flex'}
+                            onClick={() => changeGameState("CLOSE")}>
+                            Fechar
+                        </Button>
+                    </div>
                 </div>
-                <Button buttonStyle={"btn--bet"}
-                    buttonSize={'btn--flex'}
-                    onClick={() => changeGameState("SUSPEND")}>
-                    Suspender
-                </Button>
-                <Button buttonStyle={"btn--bet"}
-                    buttonSize={'btn--flex'}
-                    onClick={() => changeGameState("OPEN")}>
-                    Abrir
-                </Button>
-                <Button buttonStyle={"btn--bet"}
-                    buttonSize={'btn--flex'}
-                    onClick={() => changeGameState("CLOSE")}>
-                    Fechar
-                </Button>
             </div>
         </>
     )

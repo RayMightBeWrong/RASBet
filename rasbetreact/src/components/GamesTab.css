@@ -1,13 +1,19 @@
 .gamestab {
     display: flex;
     flex-direction: row;
-    padding: 20px;
-    height: 100vh;
+    height: 100%;
     width: 100%;
+    color: #003915;
 }
 
 .bets-tab {
+    padding: 30px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    width: 100%;
+}
+
+.boletimbox{
+    padding: 30px;
+    padding-left: 0px;
 }

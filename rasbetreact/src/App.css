@@ -6,6 +6,7 @@
 }
 
 .whiteBackGround {
+  min-height: max-content;
   display: flex;
   height: 90vh;
   align-items: center;
@@ -14,6 +15,7 @@
 }
 
 .greenBackGround {
+  min-height: max-content;
   padding: 30px;
   display: flex;
   min-height: 92vh;

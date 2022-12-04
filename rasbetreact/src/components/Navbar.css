@@ -8,6 +8,7 @@
   position: sticky;
   top: 0;
   z-index: 999;
+  min-height: max-content;
 }
 
 .navbar-container {

@@ -2,6 +2,18 @@ import React, { useState, useEffect } from 'react';
 import './Promocao.css';
 import { Button } from '../Button';
 
+
+const getDate = (date) => {
+    let dateS = date.split('T')
+    return(
+        <div className='promo-date-hour'>
+            <h4>{dateS[0]}</h4>
+            <h4>{dateS[1].split('.')[0]}</h4>
+        </div>
+    )
+}
+
+
 export const Promocao = ({
     tipo,
     title,
@@ -79,8 +91,8 @@ const PromocaoBoostOdd = ({
                 <div className='info'>
                     <h3> Boost Odd </h3>
                     <h4> Título: {title} </h4>
-                    <h4>Inicio: {begin_date}</h4>
-                    <h4>Fim: {expiration_date}</h4>
+                    <h4>Inicio: {getDate(begin_date)}</h4>
+                    <h4>Fim: {getDate(expiration_date)}</h4>
                     <h4>Cupão: {coupon}</h4>
                     <h4>Número de utilizações: {nr_uses}</h4>
                     <h4>Percentagem de boost: {boost_percentage}</h4>
@@ -110,8 +122,8 @@ const PromocaoReferralBoostOdd = ({
                 <div className='info'>
                     <h3> Referral Boost Odd </h3>
                     <h4> Título: {title} </h4>
-                    <h4>Inicio: {begin_date}</h4>
-                    <h4>Fim: {expiration_date}</h4>
+                    <h4>Inicio: {getDate(begin_date)}</h4>
+                    <h4>Fim: {getDate(expiration_date)}</h4>
                     <h4>Cupão: {coupon}</h4>
                     <h4>Número de utilizações: {nr_uses}</h4>
                     <h4>Percentagem de boost: {boost_percentage}</h4>
@@ -144,8 +156,8 @@ const PromocaoReferralBalance = ({
                 <div className='info'>
                     <h3> Referral Balance </h3>
                     <h4> Título: {title} </h4>
-                    <h4>Inicio: {begin_date}</h4>
-                    <h4>Fim: {expiration_date}</h4>
+                    <h4>Inicio: {getDate(begin_date)}</h4>
+                    <h4>Fim: {getDate(expiration_date)}</h4>
                     <h4>Cupão: {coupon}</h4>
                     <h4>Número de utilizações: {nr_uses}</h4>
                     <h4>Numero de referrals necessários: {number_of_referrals_needed}</h4>

@@ -61,7 +61,7 @@ export const GamesTab = ({
     }
 
     function gameType(game) {
-        if (userState === 'gambler' || userState === 'loggedOff') {
+        if ((userState === 'gambler' || userState === 'loggedOff') && game.state === 1) {
             return (
                 <GameGambler id={game.id} title={game.title} date={game.date} participants={game.participants}
                     removeBet={removeBet} addBet={addBet} changeBet={changeBet} />
@@ -72,7 +72,7 @@ export const GamesTab = ({
             )
         } else if (userState === 'expert') {
             return (
-                <GameExpert title={game.title} date={game.date} participants={game.participants} rerender={() => rerender()} />
+                <GameExpert title={game.title} date={game.date} participants={game.participants} gameState={game.state} rerender={() => rerender()} />
             )
         }
     }

@@ -26,8 +26,9 @@ function ConsultaPerfil({
                 alert("Changed to gambler profile")
                 setUserState("gambler")
                 setUserId(result.user_id)
-                navigate("/")
+                
             })
+            .then(() => navigate("/"))
             .catch(error => {
                 alert("Email not found")
                 console.log(error)
