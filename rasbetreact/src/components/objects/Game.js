@@ -7,7 +7,7 @@ import { PopupNewOdd } from '../PopupNewOdd';
 
 const getDate = (date) => {
     let dateS = date.split('T')
-    return(
+    return (
         <div className='date-hour'>
             <h4>{dateS[0]}</h4>
             <h4>{dateS[1].split('.')[0]}</h4>
@@ -57,7 +57,7 @@ export const GameGambler = ({
                     {getDate(date)}
                     <div className='game-bet'>
                         {participants.map(dic => (
-                            <Button buttonStyle={locked.fechada && locked.bet === dic.name ? "btn--bet-clicked" : "btn--bet"}
+                            <Button key={dic.id} buttonStyle={locked.fechada && locked.bet === dic.name ? "btn--bet-clicked" : "btn--bet"}
                                 buttonSize={'btn--flex'} onClick={() => handleClick(dic.name, dic.odd, dic.id)}>
                                 <h5>{dic.name}</h5>
                                 <h5>{dic.odd}</h5>
@@ -90,7 +90,7 @@ export const GameExpert = ({
             break
         default:
     }
-    
+
     const [oddPopUp, setOddPopUp] = useState({
         activated: false,
         bet: "",

@@ -25,8 +25,8 @@ function ConsultaPerfil({
                 console.log(result)
                 alert("Changed to gambler profile")
                 setUserState("gambler")
-                setUserId(result.user_id)
-                
+                setUserId(result.id)
+
             })
             .then(() => navigate("/"))
             .catch(error => {
