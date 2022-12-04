@@ -43,7 +43,7 @@ export const PayMethod = ({
                             <img className='imagem-payMethod' src={'images/mbway.png'} alt={''} />
                         </Button >
                         <Button onClick={() => handleClick(2)} buttonStyle={(payM === 2) ? 'btn--image--selected' : 'btn--image'}>
-                            <img className='imagem-payMethod' src={'images/multibanco.png'} alt={''} />
+                            <img className='imagem-payMethod' src={'images/Multibanco.png'} alt={''} />
                         </Button >
                         <Button onClick={() => handleClick(3)} buttonStyle={(payM === 3) ? 'btn--image--selected' : 'btn--image'}>
                             <img className='imagem-payMethod' src={'images/visa.png'} alt={''} />

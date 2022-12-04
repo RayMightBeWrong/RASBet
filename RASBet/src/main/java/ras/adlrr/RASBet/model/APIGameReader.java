@@ -101,7 +101,6 @@ public abstract class APIGameReader {
             try {
                 Files.write( Paths.get(path), response.getBody().getBytes());
             } catch (Exception e) {
-                e.printStackTrace();
                 // ignore
             }
     

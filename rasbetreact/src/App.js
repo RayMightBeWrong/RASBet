@@ -22,7 +22,7 @@ function App() {
     expert: expert logged in
     admin: admin logged in
   */
-  const [userState, setUserState] = useState('gambler')
+  const [userState, setUserState] = useState('loggedOff')
   const [userId, setUserId] = useState(1)
 
   return (

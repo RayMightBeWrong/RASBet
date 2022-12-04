@@ -104,8 +104,6 @@ public class SeedController {
 
         gameService.addGame(new Game("EXTID", LocalDateTime.now().plusDays(2), Game.OPEN, "Alex BC vs Luis BC",
                 "Football", Set.of(new Participant("Alex BC", 1, 1000), new Participant("Luis BC", 1000, 0))));
-        //Update games with football api
-        //gameService.updateGamesVPN();
-        //gameService.updateGames();
+        gameService.updateGames();
     }
 }
