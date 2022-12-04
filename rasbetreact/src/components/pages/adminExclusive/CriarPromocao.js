@@ -24,7 +24,7 @@ function CriarPromocao({
 
     function escolherPromocao() {
         return (
-            <select onClick={e => setPromType(e.target.value)}>
+            <select className="select-promos" onClick={e => setPromType(e.target.value)}>
                 {tiposDePromocoes.map((opt) => (
                     <option key={opt} value={opt}>
                         {opt}
@@ -99,8 +99,10 @@ function CriarPromocao({
                 <div className='greenBackGround'>
                     <div className='white-box'>
                         <div className='container'>
+                            <div className="titulo-comons">
+                                <h1>Criar Promoções</h1>
+                            </div>
                             <form className="container-form" onSubmit={handleSubmit}>
-                                <h1>Promotion Creation</h1>
                                 {escolherPromocao()}
 
                                 Title <input type="txtL" placeholder="christmas promotion" value={promocaoBase.title}

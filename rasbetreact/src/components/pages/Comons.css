@@ -23,8 +23,9 @@
     display: flex;
     flex-direction: column;
     border-radius: 25px;
-    width: 35vw;
-    padding: 60px;
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
 }
 
 .imagem {
@@ -52,4 +53,35 @@ input[type=txtL] {
 input[type=txtL]:focus input[type=txtL]:hover {
     background-color: #ddd;
     outline: none;
+}
+
+.select-promos{
+    padding: 5px;
+    margin-bottom: 30px;
+    width: 100%;
+    border: 2px solid #f1f1f1;
+}
+
+.select-promos:focus,
+.select-promos:hover{
+    background-color: #ddd;
+    border: 2px solid #ddd;
+    outline: none;
+}
+
+.titulo-comons{
+    margin-bottom: 30px;
+}
+
+.botton-flexing{
+    display: flex;
+    flex-direction: row;
+}
+
+
+.menu-admin-buttons{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 30px;
 }

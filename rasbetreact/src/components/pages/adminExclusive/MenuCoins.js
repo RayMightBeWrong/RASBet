@@ -29,17 +29,18 @@ function CriaMoeda({
                 <div className='greenBackGround'>
                     <div className='white-box'>
                         <div className='container'>
-                            <div><h1>Coins</h1></div>
-                            <div>
-                                {moedas.map(coin => (
-                                    <div key={coin.id}>
-                                        <Coin coinName={coin.id} ratioEuro={coin.ratio_EUR} />
-                                    </div>
-                                ))}
+                            <div className="titulo-comons">
+                                <h1>Coins</h1>
                             </div>
+                            {moedas.map(coin => (
+                                <Coin coinName={coin.id} ratioEuro={coin.ratio_EUR} />
+                            ))}
+                            <br/>
+
                             {open ?
                                 <NewCoinPopUp closePopup={() => setOpen(false)} />
-                                : <Button buttonStyle={"btn--bet"}
+                                : 
+                                <Button
                                     buttonSize={'btn--large'}
                                     onClick={() => setOpen(true)}>
                                     Nova Moeda

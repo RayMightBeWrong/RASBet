@@ -46,7 +46,7 @@
     background-color: white;
     width: 100%;
     display: block;
-    min-width: 950px;
+    min-width: 980px;
 }
 
 .hist-body-columns{
@@ -75,7 +75,7 @@
     border-top: 1px solid green ;
 }
 
-@media only screen and (max-width: 1069px){
+@media only screen and (max-width: 1099px){
     .transaction {
         overflow-x: scroll;
     }

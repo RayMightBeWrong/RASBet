@@ -51,43 +51,39 @@ export const Boletim = ({
         <>
             <div className='boletim'>
                 <div className='boletim-header'>
-                    <div>BOLETIM</div>
-                    <div>{tipoAposta}</div>
+                    <h2>BOLETIM</h2>
+                    <h3>{tipoAposta}</h3>
                 </div>
                 <div className='boletim-body'>
-                    <div>
-                        {bets.map(game => (
-                            <div key={game.id}><BoletimBet title={game.title} winner={game.winner} cota={game.cota} /></div>
-                        ))}
+                    {bets.map(game => (
+                        <BoletimBet key={game.id} title={game.title} winner={game.winner} cota={game.cota} />
+                    ))}
+                    <br/>
+                    <div className='boletim-ganhos'>
+                        <h3>Aposta:</h3>
+                        <input type="txtBoletim"
+                            placeholder="Valor da aposta"
+                            value={value}
+                            onChange={handleChange} />
                     </div>
-                    <div>
-                        <div className='boletim-ganhos'>
-                            Aposta:
-                            <input type="text"
-                                placeholder="Valor da aposta"
-                                value={value}
-                                onChange={handleChange} />
-                        </div>
-                        <div className='boletim-ganhos'>
-                            Cupão:
-                            <input type="text"
-                                placeholder="Cupão da aposta"
-                                value={cupao}
-                                onChange={changeCupao} />
-                        </div>
-                        <div className='boletim-ganhos'>
-                            Possivel ganho: {finalWin}
-                        </div>
-                        <Button buttonStyle={"btn--bet"}
-                            buttonSize={'btn--flex'}
-                            onClick={() => handleClick()}>
-                            Submeter
-                        </Button>
-                        {open ?
-                            < CarteirasPopUp userId={userId} cupao={cupao} bets={bets} carteiras={carteiras} closePopup={() => setOpen(false)} valormin={value} />
-                            : null
-                        }
+                    <div className='boletim-ganhos'>
+                        <h3>Cupão:</h3>
+                        <input type="txtBoletim"
+                            placeholder="Código do cupão"
+                            value={cupao}
+                            onChange={changeCupao} />
                     </div>
+                    <div><h3>Possivel ganho: {finalWin.toFixed(3)}</h3></div>
+                    <br/>
+                    <Button buttonStyle={"btn--inverted"}
+                        buttonSize={'btn--flex'}
+                        onClick={() => handleClick()}>
+                        Submeter
+                    </Button>
+                    {open ?
+                        < CarteirasPopUp userId={userId} cupao={cupao} bets={bets} carteiras={carteiras} closePopup={() => setOpen(false)} valormin={value} />
+                        : null
+                    }
                 </div>
             </div>
         </>

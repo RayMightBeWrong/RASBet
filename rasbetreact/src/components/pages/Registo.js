@@ -132,7 +132,7 @@ function Registo({
                             </form>
                         </div>
                         <img className='imagem'
-                            src={'images/fallingmoney.jpg'}
+                            src={'../images/fallingmoney.jpg'}
                             alt={''}
                         />
                     </div>

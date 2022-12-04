@@ -50,16 +50,20 @@ function ExpertManager({
             <>
                 <div className='greenBackGround'>
                     <div className='white-box'>
-                        <div>
-                            <h1>Consulta de experts</h1>
-                            {users.map(user => (
-                                <div key={user.id}>
-                                    <UserFunction nome={user.name}
-                                        id={user.id} email={user.email}
-                                        butonName={"Apagar"}
-                                        runnable={() => deleteExpert(user.id)} />
-                                </div>
-                            ))}
+                        <div className='container'>
+                            <div className="titulo-comons">
+                                <h1>Consulta de experts</h1>
+                            </div> 
+                            <div className='container-form'>
+                                {users.map(user => (
+                                    <div key={user.id} >
+                                        <UserFunction nome={user.name}
+                                            id={user.id} email={user.email}
+                                            butonName={"Apagar"}
+                                            runnable={() => deleteExpert(user.id)} />
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

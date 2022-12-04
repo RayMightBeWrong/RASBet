@@ -2,8 +2,10 @@
     border-top: 1px solid green;
     border-bottom: 1px solid green;
     padding: 15px 30px;
+    max-width: 400px;
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
+    gap: 15px;
 }

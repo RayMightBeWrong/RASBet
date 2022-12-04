@@ -42,10 +42,15 @@ function ConsultaPerfil({
                 <div className='greenBackGround'>
                     <div className='white-box'>
                         <form className="container-form" onSubmit={handleSubmit}>
+                            <br/>
+                            <br/>
+                            <br/>
                             <h1>Consulta de perfil</h1>
+                            <br/>
                             Insere o email do utilizador
 
                             <input type="txtL" placeholder="user@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                            <br/>
                             <Button type="submit" buttonSize='btn--flex'>Aceder</Button>
                         </form>
                     </div>

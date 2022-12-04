@@ -33,27 +33,42 @@ function getDespostos(game_choices) {
     return(list)
 }
 
+function getEstado(e) {
+    if (e === 1)
+        return("A aguardar")
+    else if (e === 2)
+        return("Ganha")
+    else if (e === 3)
+        return("Perdida")
+    else if (e === 4)
+        return("Cancelada")
+}
+
 function getBets(sorce) {
-    let datas = [], horas = [], desporto = [], desc = [], result = [], odd = [], ini = [], fin = [], oddAux, dh, stateAux;
+    let datas = [], horas = [], estados=[],desporto = [], desc = [], result = [], odd = [], ini = [], fin = [], oddAux, dh, stateAux;
     sorce.map(e => {
         stateAux = e.state
-        if (stateAux === 3 || stateAux === 2) {
-            dh = e.transaction.date.split('.')[0].split('T')
-            datas.push(dh[0])
-            horas.push(dh[1])
-            // desporto.push(getDespostos(e.game_choices))
-            oddAux = 1
-            e.game_choices.map(gc => oddAux *= gc.odd)
-            odd.push(oddAux)
-            ini.push(Math.abs(e.transaction.value))
-            fin.push(stateAux === 3 ? e.transaction.value : e.transaction.value * oddAux)
-            // desc.push(getDesc(e.game_choices))
-        }
+        dh = e.transaction.date.split('.')[0].split('T')
+        datas.push(dh[0])
+        horas.push(dh[1])
+        estados.push(getEstado(stateAux))
+        // desporto.push(getDespostos(e.game_choices))
+        oddAux = 1
+        e.game_choices.map(gc => oddAux *= gc.odd)
+        odd.push(oddAux)
+        ini.push(Math.abs(e.transaction.value))
+        if (stateAux === 3) 
+            fin.push(e.transaction.value)
+        else if (stateAux === 2) 
+            fin.push("+" + (e.transaction.value * oddAux * -1))
+        else fin.push("- - - - - -")
+        // desc.push(getDesc(e.game_choices))
     });
 
     let trans = [
         { "head": "Data", "body": datas },
         { "head": "Hora", "body": horas },
+        { "head": "Estado", "body": estados },
         // { "head": "Desportos", "body": desporto },
         { "head": "Valor apostado", "body": ini },
         { "head": "Odd", "body": odd },
@@ -84,7 +99,8 @@ function Historico({
     userId,
     userState
 }) {
-    const [contentList, setContentList] = useState([]);
+    const [contentListTrans, setContentListTrans] = useState([]);
+    const [contentListBets, setContentListBets] = useState([]);
     const [cGames, setCGames] = useState([]);
     const [content, setContent] = useState(listHist[1]);
 
@@ -94,7 +110,7 @@ function Historico({
             fetch(s)
             .then(res => res.json())
             .then((result) => {
-                setContentList(result);
+                setContentListTrans(result);
                 console.log(result);
             })
         } else {
@@ -114,7 +130,7 @@ function Historico({
             //         })
             //     })
                 console.log(bets);
-                setContentList(bets);
+                setContentListBets(bets);
             })
             
         }
@@ -138,9 +154,9 @@ function Historico({
                     <div className='transaction'>
                         <div className='transaction-box'>
                             {content === "Transações" ?
-                                getTable(getTrans(contentList))
+                                getTable(getTrans(contentListTrans))
                                 :
-                                getTable(getBets(contentList))
+                                getTable(getBets(contentListBets))
                             }
                         </div>
                     </div>

@@ -12,12 +12,13 @@ export const BoletimBet = ({
     return (
         <>
             <div className='boletimbet-gameChoice'>
-                <div className='boletimbet-title'>{title}</div>
-                <div className='boletimbet-winner-cota'>
-                    <div className='winner'>{winner}</div>
-                    <div className='cota'>{cota}</div>
+                <div className='boletimbet-title'>
+                    <h3>{title}</h3>
                 </div>
-
+                <div className='boletimbet-winner-cota'>
+                    <div className='winner'><h3>{winner}</h3></div>
+                    <div className='cota'><h3>{cota}</h3></div>
+                </div>
             </div>
         </>
     );

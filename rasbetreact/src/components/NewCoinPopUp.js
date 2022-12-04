@@ -12,7 +12,7 @@ export const NewCoinPopUp = ({
     const [value, setValue] = useState('0.00000');
 
     const handleChange = event => {
-        const result = ("000" + event.target.value.replace(/\D/g, '')).match(/(000|00[123456789]|0[123456789]\d|[123456789]\d*)$/g).toString();
+        const result = ("000000" + event.target.value.replace(/\D/g, '')).match(/(000000|00000[123456789]|0000[123456789]\d|000[123456789]\d\d|00[123456789]\d\d\d|0[123456789]\d\d\d\d|[123456789]\d*)$/g).toString();
         setValue(result.slice(0, -5) + '.' + result.slice(-5));
         setRatio_EUR(parseFloat(result) / 100000)
         console.log(ratio_EUR)
@@ -57,8 +57,10 @@ export const NewCoinPopUp = ({
                 Ratio Euro:
                 <input type="txtL" placeholder="Ratio-Eur" value={value} onChange={handleChange} />
 
-                <Button type="submit" buttonSize='btn--flex' onClick={handleSubmit}>Concluir</Button>
-                <button onClick={closePopup}>Cancelar</button >
+                <div className="botton-flexing">
+                    <Button type="submit" buttonSize='btn--flex' onClick={handleSubmit}>Concluir</Button>
+                    <Button buttonStyle={'btn--inverted'} buttonSize='btn--flex' onClick={closePopup} >Cancelar</Button>
+                </div>
             </form>
 
 

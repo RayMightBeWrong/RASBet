@@ -13,6 +13,16 @@ function Navbar({
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
 
+  function getImage(){
+    var path = window.location.href.split('/');
+    let difDirectory = path[3] === 'admin_Options'
+
+    if (difDirectory)
+      return <img className='icon' src={'../images/icon.png'} alt={''} />
+    else
+      return <img className='icon' src={'images/icon.png'} alt={''} />
+  }
+
   function adminOptions() {
     if (userState === 'admin') {
       return (
@@ -115,10 +125,7 @@ function Navbar({
       <nav className='navbar'>
         <div className='navbar-container'>
           <Link to='/' className='navbar-logo' onClick={closeMobileMenu}>
-            <img className='icon'
-              src={'images/icon.png'}
-              alt={''}
-            />
+            {getImage()}
           </Link>
           <div className='menu-icon' onClick={handleClick}>
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
