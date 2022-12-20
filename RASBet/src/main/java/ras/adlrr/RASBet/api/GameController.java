@@ -14,6 +14,8 @@ import ras.adlrr.RASBet.service.game_subscription.IGameSubscriptionService;
 import ras.adlrr.RASBet.service.interfaces.IBetGameService;
 import ras.adlrr.RASBet.service.interfaces.sports.IGameService;
 import ras.adlrr.RASBet.service.interfaces.sports.IParticipantService;
+import ras.adlrr.RASBet.service.interfaces.users.IGamblerService;
+import ras.adlrr.RASBet.service.users.GamblerService;
 
 import java.util.List;
 import java.util.Set;
@@ -208,6 +210,15 @@ public class GameController {
             return ResponseEntity.ok().body(gameNotificationService.findAllGameNotificationsByGamblerId(gamblerId));
         } catch (Exception e){
             return new ResponseEntityBadRequest<List<GameNotification>>().createBadRequest(e.getMessage());
+        }
+    }
+
+    @GetMapping("/isSubscribedToGame")
+    public ResponseEntity<Boolean> isSubscribedToGame(@RequestParam("gambler_id") int gambler_id, @RequestParam("game_id") int game_id) {
+        try{
+            return ResponseEntity.ok().body(gameSubscriptionService.isSubscribedToGame(gambler_id, game_id));
+        } catch (Exception e){
+            return new ResponseEntityBadRequest<Boolean>().createBadRequest(e.getMessage());
         }
     }
 }

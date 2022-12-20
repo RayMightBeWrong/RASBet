@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class ClientNotifier implements IClientNotifier,IGameSubscriber{
 
@@ -27,11 +28,12 @@ public class ClientNotifier implements IClientNotifier,IGameSubscriber{
     }
 
     @Override
-    public int update(String type, String msg) {
+    public int update(String type, String msg, LocalDateTime timestamp) {
         if(type == null || msg == null) return 0;
 
         String eventFormatted = new JSONObject().put("type", type)
                                                 .put("msg", msg)
+                                                .put("timestamp", timestamp.toString())
                                                 .toString();
 
         try { emitter.send(SseEmitter.event().name(type).data(eventFormatted)); }

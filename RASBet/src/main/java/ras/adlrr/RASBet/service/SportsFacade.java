@@ -11,6 +11,8 @@ import ras.adlrr.RASBet.service.interfaces.sports.IParticipantService;
 import ras.adlrr.RASBet.service.interfaces.sports.ISportService;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -127,8 +129,10 @@ public class SportsFacade implements ISportService, IGameService, IParticipantSe
        gameService.removeGame(id);
     }
 
+    @Transactional
     public void closeGame(int id) throws Exception{
         gameService.closeGame(id);
+        removeGameSubscribers(id);
     }
 
     public void changeGameState(int id, int state) throws Exception{
@@ -257,20 +261,41 @@ public class SportsFacade implements ISportService, IGameService, IParticipantSe
         return gameSubscriptionService.findAllIdsOfGamesSubscribedByGambler(gamblerId);
     }
 
-    private void notifySubscribers(int game_id, String type, String message){
-        Set<Integer> set = this.subscribersOfGames.get(game_id);
-        if(set == null || type == null || message == null) return;
-
-        for(Integer gambler_id: set){
-            gameNotificationService.createGameNotification(gambler_id, type, message);
-            IGameSubscriber gameSubscriber = subscribers.get(gambler_id);
-            if(gameSubscriber != null) gameSubscriber.update(type, message);
-        }
+    @Override
+    public List<Integer> findAllGameSubscribers(int game_id) {
+        return gameSubscriptionService.findAllGameSubscribers(game_id);
     }
 
     @Override
-    public GameNotification createGameNotification(int gambler_id, String type, String msg) {
-        return gameNotificationService.createGameNotification(gambler_id, type, msg);
+    public boolean isSubscribedToGame(int gambler_id, int game_id) {
+        return gameSubscriptionService.isSubscribedToGame(gambler_id, game_id);
+    }
+
+    private void notifySubscribers(int game_id, String type, String message){
+        if(type == null || message == null) return;
+
+        LocalDateTime timestamp = LocalDateTime.now(ZoneId.of("UTC+00:00"));
+
+        for (Integer gambler_id : findAllGameSubscribers(game_id))
+            gameNotificationService.createGameNotification(gambler_id, type, message, timestamp);
+
+        Set<Integer> set = this.subscribersOfGames.get(game_id);
+        if(set != null) {
+            for (Integer gambler_id : set) {
+                IGameSubscriber gameSubscriber = subscribers.get(gambler_id);
+                if (gameSubscriber != null) gameSubscriber.update(type, message, timestamp);
+            }
+        }
+    }
+
+    public void removeGameSubscribers(int game_id){
+        gameSubscriptionService.removeGameSubscribers(game_id);
+        var set = subscribersOfGames.remove(game_id);
+    }
+
+    @Override
+    public GameNotification createGameNotification(int gambler_id, String type, String msg, LocalDateTime timestamp) {
+        return gameNotificationService.createGameNotification(gambler_id, type, msg, timestamp);
     }
 
     @Override

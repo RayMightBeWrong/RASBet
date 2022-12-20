@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -26,13 +27,14 @@ public class GameNotification {
     private Gambler gambler;
 
     private String type;
-
     private String msg;
+    private LocalDateTime timestamp;
 
-    public GameNotification(@JsonProperty("gambler_id") int gambler_id, String type, String msg) {
+    public GameNotification(@JsonProperty("gambler_id") int gambler_id, @JsonProperty("type") String type, @JsonProperty("msg") String msg, @JsonProperty("timestamp") LocalDateTime timestamp) {
         gambler = new Gambler();
         gambler.setId(gambler_id);
         this.type = type;
         this.msg = msg;
+        this.timestamp = timestamp;
     }
 }
