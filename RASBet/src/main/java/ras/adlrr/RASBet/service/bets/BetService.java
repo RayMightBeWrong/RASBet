@@ -201,6 +201,9 @@ public class BetService implements IBetService {
         if(gameChoices == null || gameChoices.size() == 0)
             throw new Exception("Bet requires at least 1 valid game choice!");
 
+        if(gameChoices.size() > 20)
+            throw new Exception("Max of 20 games per bet.");
+
         //Gets all the ids of the games in which the gambler has already placed a bet
         var gamesWithBet = gameChoiceRepository.findGamblerGameChoicesIds(gambler_id)
                                                             .stream()
