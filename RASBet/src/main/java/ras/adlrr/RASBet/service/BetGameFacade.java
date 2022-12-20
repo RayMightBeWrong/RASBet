@@ -350,6 +350,10 @@ public class BetGameFacade implements IBetService, IBetGameService, IGameSubject
      */
     @Transactional
     public void subscribe(int gambler_id, IGameSubscriber gameSubscriber){
+        //Avoids non gambler subscriptions
+        if(!gamblerService.gamblerExistsById(gambler_id))
+            return;
+
         var gameSubscriberAux = subscribers.get(gambler_id);
 
         //If there is already a subscription for the gambler, informs that instance that it wont receive the notification anymore.
@@ -370,7 +374,15 @@ public class BetGameFacade implements IBetService, IBetGameService, IGameSubject
     @Override
     @Transactional
     public GameSubscription subscribeGame(int gambler_id, int game_id){
+        //Avoids non gambler subscriptions
+        if(!gamblerService.gamblerExistsById(gambler_id))
+            return null;
+
+        //Persists the subscription
         GameSubscription gs = gameSubscriptionService.subscribeGame(gambler_id, game_id);
+
+        //If the server is handling the gambler notifications then saves the will
+        // of the gambler to receive the information from the specific game
         if(subscribers.containsKey(gambler_id)) {
             var set = subscribersOfGames.computeIfAbsent(game_id, k -> new HashSet<>());
             set.add(gambler_id);
