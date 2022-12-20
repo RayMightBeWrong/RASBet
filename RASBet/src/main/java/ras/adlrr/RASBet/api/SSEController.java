@@ -19,13 +19,13 @@ public class SSEController {
     private final IGameSubject gameSubject;
 
     @Autowired
-    public SSEController(@Qualifier("betGameFacade") IGameSubject gameSubject) {
+    public SSEController(IGameSubject gameSubject) {
         this.gameSubject = gameSubject;
     }
 
     @GetMapping(value = "/subscribe", consumes = MediaType.ALL_VALUE)
     public SseEmitter subscribe(@RequestParam int gambler_id){
-        SseEmitter sseEmitter = new SseEmitter();
+        SseEmitter sseEmitter = new SseEmitter(5 * 60 * 1000L); //Timeout of 5 minutes
         try{
             sseEmitter.send(SseEmitter.event().name("INIT"));
         }catch (IOException e){

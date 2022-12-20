@@ -152,7 +152,7 @@ public class GameController {
     @PutMapping("/participants/{pid}/odd/{odd}")
     public ResponseEntity editOddInParticipant(@PathVariable("pid") int participant_id, @PathVariable("odd") float odd){
         try{
-            betGameService.editOddInParticipant(participant_id, odd);
+            participantService.editOddInParticipant(participant_id, odd);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
