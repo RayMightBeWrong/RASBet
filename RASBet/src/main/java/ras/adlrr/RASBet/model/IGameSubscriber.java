@@ -6,7 +6,7 @@ public interface IGameSubscriber {
 
     /**
      *
-     * @return if -1 an error occured that invalidates the subscriber. 1 indicates success.
+     * @return 1 indicates success. 0 indicates fail.
      */
-    int update();
+    int update(String type, String msg);
 }

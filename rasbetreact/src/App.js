@@ -22,8 +22,31 @@ function App() {
     expert: expert logged in
     admin: admin logged in
   */
-  const [userState, setUserState] = useState('loggedOff')
-  const [userId, setUserId] = useState(1)
+
+  const [userState, setUserState] = useState(() => {
+    const userState = window.localStorage.getItem('userState');
+    if (userState) {
+      return userState
+    }
+    else return "admin"
+  })
+
+  const [userId, setUserId] = useState(() => {
+    const userId = window.localStorage.getItem('userId');
+    if (userId) {
+      return userId
+    }
+    else return 0
+  })
+
+  useEffect(() => {
+    window.localStorage.setItem('userState', userState)
+  }, [userState])
+
+  useEffect(() => {
+    window.localStorage.setItem('userId', userId)
+  }, [userId])
+
 
   return (
     <>
