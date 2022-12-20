@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Game;
+import ras.adlrr.RASBet.model.GameNotification;
 import ras.adlrr.RASBet.model.Participant;
 import ras.adlrr.RASBet.service.game_subscription.IGameNotificationService;
 import ras.adlrr.RASBet.service.game_subscription.IGameSubscriptionService;
@@ -25,17 +26,20 @@ public class GameController {
     private final IParticipantService participantService;
     private final IBetGameService betGameService;
     private final IGameSubscriptionService gameSubscriptionService;
+    private final IGameNotificationService gameNotificationService;
 
     /* **** Game Methods **** */
     @Autowired
     public GameController(@Qualifier("sportsFacade") IGameService gameService,
                           @Qualifier("sportsFacade") IParticipantService participantService,
                           @Qualifier("betGameFacade") IBetGameService betGameService,
-                          @Qualifier("sportsFacade") IGameSubscriptionService gameSubscriptionService){
+                          @Qualifier("sportsFacade") IGameSubscriptionService gameSubscriptionService,
+                          @Qualifier("sportsFacade") IGameNotificationService gameNotificationService){
         this.gameService = gameService;
         this.participantService = participantService;
         this.betGameService = betGameService;
         this.gameSubscriptionService = gameSubscriptionService;
+        this.gameNotificationService = gameNotificationService;
     }
 
     @PostMapping
@@ -186,6 +190,24 @@ public class GameController {
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
+        }
+    }
+
+    @GetMapping("/subscribed")
+    public ResponseEntity<List<Integer>> getAllIdsOfSubscribedGames(@RequestParam("gambler_id") int gamblerId) {
+        try{
+            return ResponseEntity.ok().body(gameSubscriptionService.findAllIdsOfGamesSubscribedByGambler(gamblerId));
+        } catch (Exception e){
+            return new ResponseEntityBadRequest<List<Integer>>().createBadRequest(e.getMessage());
+        }
+    }
+
+    @GetMapping("/notifications")
+    public ResponseEntity<List<GameNotification>> getAllGameNotificationsByGamblerId(@RequestParam("gambler_id") int gamblerId) {
+        try{
+            return ResponseEntity.ok().body(gameNotificationService.findAllGameNotificationsByGamblerId(gamblerId));
+        } catch (Exception e){
+            return new ResponseEntityBadRequest<List<GameNotification>>().createBadRequest(e.getMessage());
         }
     }
 }

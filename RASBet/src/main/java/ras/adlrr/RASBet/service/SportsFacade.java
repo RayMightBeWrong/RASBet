@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service("sportsFacade")
-public class SportsFacade implements ISportService, IGameService, IParticipantService, IGameSubject, IGameSubscriptionService {
+public class SportsFacade implements ISportService, IGameService, IParticipantService, IGameSubject, IGameSubscriptionService, IGameNotificationService {
     private final ISportService sportService;
     private final IGameService gameService;
     private final IParticipantService participantService;
@@ -178,7 +178,7 @@ public class SportsFacade implements ISportService, IGameService, IParticipantSe
         Participant participant = participantService.getParticipant(participant_id);
         int game_id = participantService.getGameID(participant_id);
         Game game = gameService.getGame(game_id);
-        notifySubscribers(participantService.getGameID(participant_id), "Odd update", "Odd updated for participant " + participant.getName() + " on event " + game.getTitle() + ".");
+        notifySubscribers(participantService.getGameID(participant_id), "Odd update", "Participant '" + participant.getName() + "' has now a odd of " + odd + " at event '" + game.getTitle() + "'.");
     }
 
     public void editScoreInParticipant(int participant_id, int score) throws Exception {
@@ -231,8 +231,10 @@ public class SportsFacade implements ISportService, IGameService, IParticipantSe
     @Transactional
     public GameSubscription subscribeGame(int gambler_id, int game_id){
         GameSubscription gs = gameSubscriptionService.subscribeGame(gambler_id, game_id);
-        var set = subscribersOfGames.computeIfAbsent(game_id, k -> new HashSet<>());
-        set.add(gambler_id);
+        if(subscribers.containsKey(gambler_id)) {
+            var set = subscribersOfGames.computeIfAbsent(game_id, k -> new HashSet<>());
+            set.add(gambler_id);
+        }
         return gs;
     }
 
@@ -264,5 +266,15 @@ public class SportsFacade implements ISportService, IGameService, IParticipantSe
             IGameSubscriber gameSubscriber = subscribers.get(gambler_id);
             if(gameSubscriber != null) gameSubscriber.update(type, message);
         }
+    }
+
+    @Override
+    public GameNotification createGameNotification(int gambler_id, String type, String msg) {
+        return gameNotificationService.createGameNotification(gambler_id, type, msg);
+    }
+
+    @Override
+    public List<GameNotification> findAllGameNotificationsByGamblerId(int gamblerId) {
+        return gameNotificationService.findAllGameNotificationsByGamblerId(gamblerId);
     }
 }

@@ -25,7 +25,7 @@ public class SSEController {
 
     @GetMapping(value = "/subscribe", consumes = MediaType.ALL_VALUE)
     public SseEmitter subscribe(@RequestParam int gambler_id){
-        SseEmitter sseEmitter = new SseEmitter(5 * 60 * 1000L); //Timeout of 5 minutes
+        SseEmitter sseEmitter = new SseEmitter(8 * 60 * 60 * 1000L); //Timeout of 8 hours
         try{
             sseEmitter.send(SseEmitter.event().name("INIT"));
         }catch (IOException e){
@@ -40,5 +40,4 @@ public class SSEController {
 
         return sseEmitter;
     }
-
 }
