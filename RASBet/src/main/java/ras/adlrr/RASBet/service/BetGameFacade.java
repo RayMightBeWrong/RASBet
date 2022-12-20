@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import ras.adlrr.RASBet.model.*;
 import ras.adlrr.RASBet.model.Promotions.interfaces.IBoostOddPromotion;
@@ -18,12 +20,13 @@ import ras.adlrr.RASBet.service.interfaces.notifications.INotificationService;
 import ras.adlrr.RASBet.service.interfaces.promotions.IClientPromotionService;
 import ras.adlrr.RASBet.service.interfaces.promotions.IPromotionService;
 import ras.adlrr.RASBet.service.interfaces.sports.IGameService;
+import ras.adlrr.RASBet.service.interfaces.sports.IParticipantService;
 import ras.adlrr.RASBet.service.interfaces.transactions.ITransactionService;
 import ras.adlrr.RASBet.service.interfaces.users.IGamblerService;
 
 
 @Service("betGameFacade")
-public class BetGameFacade implements IBetService, IBetGameService {
+public class BetGameFacade implements IBetService, IBetGameService, IGameSubject {
     private final IBetService betService;
     private final ITransactionService transactionService;
     private final IWalletService walletService;
@@ -31,7 +34,11 @@ public class BetGameFacade implements IBetService, IBetGameService {
     private final IGameService gameService;
     private final IClientPromotionService clientPromotionService;
     private final IPromotionService promotionService;
+    private final IParticipantService participantService;
     private final INotificationService notificationService;
+    private Map<Integer, Set<Integer>> subscribersOfGames;
+    private Map<Integer, IGameSubscriber> subscribers; 
+
 
     @Autowired
     public BetGameFacade(@Qualifier("betService") IBetService betService,
@@ -41,6 +48,7 @@ public class BetGameFacade implements IBetService, IBetGameService {
                          @Qualifier("sportsFacade") IGameService gameService,
                          @Qualifier("promotionsFacade") IClientPromotionService clientPromotionService,
                          @Qualifier("promotionsFacade") IPromotionService promotionService,
+                         @Qualifier("sportsFacade") IParticipantService participantService,
                          INotificationService notificationService) {
         this.betService = betService;
         this.transactionService = transactionService;
@@ -49,6 +57,7 @@ public class BetGameFacade implements IBetService, IBetGameService {
         this.gameService = gameService;
         this.clientPromotionService = clientPromotionService;
         this.promotionService = promotionService;
+        this.participantService = participantService;
         this.notificationService = notificationService;
     }
 
@@ -247,6 +256,15 @@ public class BetGameFacade implements IBetService, IBetGameService {
         return betService.getBetsIdsByGameId(game_id);
     }
 
+    public void editOddInParticipant(int participant_id, float odd) throws Exception {
+        try{
+            participantService.editOddInParticipant(participant_id, odd);
+            notifySubscribers(participantService.getGameID(participant_id), "mensagem", "assunto");
+        }
+        catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
 
     /* ********* IBetGameService Methods ********* */
 
@@ -263,6 +281,37 @@ public class BetGameFacade implements IBetService, IBetGameService {
             try {
                 closeBet(bet_id);
             }catch (Exception ignored){ignored.printStackTrace();}
+        }
+    }
+
+    /* ********* Subscription Methods ********* */
+
+    public void subscribe(int game_id, IGameSubscriber gameSubscriber){
+        
+    }
+
+    public void subscribeGame(int gambler_id, int game_id){
+        Set<Integer> subscribersOfGame = this.subscribersOfGames.get(game_id);
+        subscribersOfGame.add(gambler_id);
+        this.subscribersOfGames.put(game_id, subscribersOfGame);
+    }
+    
+    public void unsubscribe(int gambler_id){
+
+    }
+
+    public void unsubscribeGame(int gambler_id, int game_id){
+        Set<Integer> subscribersOfGame = this.subscribersOfGames.get(game_id);
+        subscribersOfGame.remove(gambler_id);
+        this.subscribersOfGames.put(game_id, subscribersOfGame);
+    }
+
+    private void notifySubscribers(int game_id, String message, String subject) throws Exception{
+        Set<Integer> subscribersOfGame = this.subscribersOfGames.get(game_id);
+
+        for(Integer gambler_id: subscribersOfGame){
+            Notification n = new Notification(gambler_id, gamblerService.getGamblerEmail(gambler_id), message, subject);
+            this.notificationService.addNotification(n);
         }
     }
 

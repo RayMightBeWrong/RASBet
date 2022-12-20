@@ -255,6 +255,10 @@ public class GameService implements IGameService, IParticipantService {
             giveOddToGameChoice(gc);
     }
 
+    public int getGameID(int participant_id){
+        return pr.getGameID(participant_id);
+    }
+
     /*  UPDATE DE JOGOS */
 
     public List<Game> getGamesFromAPIVPN() throws Exception{

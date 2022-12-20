@@ -178,4 +178,8 @@ public class SportsFacade implements ISportService, IGameService, IParticipantSe
     public void giveOddToGameChoices(List<GameChoice> gcs){
         participantService.giveOddToGameChoices(gcs);
     }
+
+    public int getGameID(int participant_id){
+        return participantService.getGameID(participant_id);
+    }
 }

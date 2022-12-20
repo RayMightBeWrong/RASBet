@@ -27,4 +27,6 @@ public interface IParticipantService {
     public void giveOddToGameChoice(GameChoice gc);
 
     public void giveOddToGameChoices(List<GameChoice> gcs);
+
+    public int getGameID(int participant_id);
 }
