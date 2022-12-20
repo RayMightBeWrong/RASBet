@@ -8,25 +8,25 @@ import ras.adlrr.RASBet.model.GameChoice;
 import ras.adlrr.RASBet.model.Participant;
 
 public interface IParticipantService {
-    public Set<Participant> getGameParticipants(int gameID) throws Exception;
+    Set<Participant> getGameParticipants(int gameID) throws Exception;
 
-    public void addParticipantsToGame(int gameID, Collection<Participant> participants) throws Exception;
+    void addParticipantsToGame(int gameID, Collection<Participant> participants) throws Exception;
 
-    public void addParticipantToGame(int gameID, Participant p) throws Exception;
+    void addParticipantToGame(int gameID, Participant p) throws Exception;
 
-    public void removeParticipant(int participant_id) throws Exception;
+    void removeParticipant(int participant_id) throws Exception;
 
-    public Participant getParticipant(int participant_id);
+    Participant getParticipant(int participant_id);
 
-    public void editOddInParticipant(int participant_id, float odd) throws Exception;
+    void editOddInParticipant(int participant_id, float odd) throws Exception;
 
-    public void editScoreInParticipant(int participant_id, int score) throws Exception;
+    void editScoreInParticipant(int participant_id, int score) throws Exception;
 
-    public boolean participantExistsById(int id);
+    boolean participantExistsById(int id);
 
-    public void giveOddToGameChoice(GameChoice gc);
+    void giveOddToGameChoice(GameChoice gc);
 
-    public void giveOddToGameChoices(List<GameChoice> gcs);
+    void giveOddToGameChoices(List<GameChoice> gcs);
 
-    public int getGameID(int participant_id);
+    int getGameID(int participant_id);
 }

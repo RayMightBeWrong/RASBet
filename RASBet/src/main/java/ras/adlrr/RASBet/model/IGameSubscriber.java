@@ -11,5 +11,8 @@ public interface IGameSubscriber {
      */
     int update(String type, String msg, LocalDateTime timestamp);
 
-    void close();
+    /**
+     * Used to inform the subscriber that it was unsubscribed.
+     */
+    void unsubscribed();
 }

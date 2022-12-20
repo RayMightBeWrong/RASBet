@@ -6,27 +6,27 @@ import java.util.Set;
 import ras.adlrr.RASBet.model.Game;
 
 public interface IGameService {
-    public List<Game> getGames();
+    List<Game> getGames();
 
-    public List<Game> getGamesSorted();
+    List<Game> getGamesSorted();
 
-    public List<Game> getOngoingGames();
+    List<Game> getOngoingGames();
 
-    public Set<Game> getGamesFromSport(String sport);
+    Set<Game> getGamesFromSport(String sport);
 
-    public List<Game> updateGames() throws Exception;
+    List<Game> updateGames() throws Exception;
 
-    public Game getGame(int id);
+    Game getGame(int id);
 
-    public Game addGame(Game newGame) throws Exception;
+    Game addGame(Game newGame) throws Exception;
 
-    public void addGames(List<Game> games) throws Exception;
+    void addGames(List<Game> games) throws Exception;
 
-    public void removeGame(int id) throws Exception;
+    void removeGame(int id) throws Exception;
 
-    public void closeGame(int id) throws Exception;
+    void closeGame(int id) throws Exception;
 
-    public void changeGameState(int id, int state) throws Exception;
+    void changeGameState(int id, int state) throws Exception;
 
-    public boolean gameExistsById(int id);
+    boolean gameExistsById(int id);
 }

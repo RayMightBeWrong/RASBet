@@ -12,7 +12,7 @@ public class ClientNotifier implements IClientNotifier,IGameSubscriber{
 
     private final int client_id;
     private final SseEmitter emitter;
-    private final IGameSubject gameSubject;
+    private IGameSubject gameSubject;
 
     public ClientNotifier(int client_id, SseEmitter emitter, IGameSubject gameSubject) {
         this.client_id = client_id;
@@ -24,7 +24,14 @@ public class ClientNotifier implements IClientNotifier,IGameSubscriber{
     @Override
     public void close() {
         emitter.complete();
-        gameSubject.unsubscribe(client_id);
+        if(gameSubject != null)
+            gameSubject.unsubscribe(client_id);
+    }
+
+    @Override
+    public void unsubscribed() {
+        gameSubject = null;
+        close();
     }
 
     @Override
@@ -36,7 +43,7 @@ public class ClientNotifier implements IClientNotifier,IGameSubscriber{
                                                 .put("timestamp", timestamp.toString())
                                                 .toString();
 
-        try { emitter.send(SseEmitter.event().name(type).data(eventFormatted)); }
+        try { emitter.send(SseEmitter.event().name("NOTIFICATION").data(eventFormatted)); }
         catch (IOException e) {
             gameSubject.unsubscribe(client_id);
             close();

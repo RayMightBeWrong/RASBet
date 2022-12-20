@@ -35,8 +35,8 @@ public class GameController {
     public GameController(@Qualifier("sportsFacade") IGameService gameService,
                           @Qualifier("sportsFacade") IParticipantService participantService,
                           @Qualifier("betGameFacade") IBetGameService betGameService,
-                          @Qualifier("sportsFacade") IGameSubscriptionService gameSubscriptionService,
-                          @Qualifier("sportsFacade") IGameNotificationService gameNotificationService){
+                          @Qualifier("betGameFacade") IGameSubscriptionService gameSubscriptionService,
+                          @Qualifier("betGameFacade") IGameNotificationService gameNotificationService){
         this.gameService = gameService;
         this.participantService = participantService;
         this.betGameService = betGameService;
@@ -113,7 +113,7 @@ public class GameController {
     @PutMapping(path = "/{id}/state/{state}")
     public ResponseEntity changeGameState(@PathVariable("id") int id, @PathVariable("state") int state){
         try {
-            gameService.changeGameState(id, state);
+            betGameService.changeGameState(id, state);
             return new ResponseEntity(HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
@@ -158,7 +158,7 @@ public class GameController {
     @PutMapping("/participants/{pid}/odd/{odd}")
     public ResponseEntity editOddInParticipant(@PathVariable("pid") int participant_id, @PathVariable("odd") float odd){
         try{
-            participantService.editOddInParticipant(participant_id, odd);
+            betGameService.editOddInParticipant(participant_id, odd);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
@@ -168,7 +168,7 @@ public class GameController {
     @PutMapping("/participants/{pid}/score/{score}")
     public ResponseEntity editScoreInParticipant(@PathVariable("pid") int participant_id, @PathVariable("score") int score){
         try{
-            participantService.editScoreInParticipant(participant_id, score);
+            betGameService.editScoreInParticipant(participant_id, score);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
