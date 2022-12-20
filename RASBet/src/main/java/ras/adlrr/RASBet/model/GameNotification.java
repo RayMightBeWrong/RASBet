@@ -25,12 +25,14 @@ public class GameNotification {
     @JsonIncludeProperties("id")
     private Gambler gambler;
 
-    public GameNotification(@JsonProperty("gambler_id") int gambler_id) {
-        gambler = new Gambler();
-        gambler.setId(gambler_id);
-    }
-
     private String type;
 
     private String msg;
+
+    public GameNotification(@JsonProperty("gambler_id") int gambler_id, String type, String msg) {
+        gambler = new Gambler();
+        gambler.setId(gambler_id);
+        this.type = type;
+        this.msg = msg;
+    }
 }

@@ -7,12 +7,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import ras.adlrr.RASBet.model.*;
 import ras.adlrr.RASBet.model.Promotions.interfaces.IBoostOddPromotion;
+import ras.adlrr.RASBet.service.game_subscription.IGameNotificationService;
+import ras.adlrr.RASBet.service.game_subscription.IGameSubscriptionService;
 import ras.adlrr.RASBet.service.interfaces.IBetGameService;
 import ras.adlrr.RASBet.service.interfaces.balance.IWalletService;
 import ras.adlrr.RASBet.service.interfaces.bets.IBetService;
@@ -26,7 +29,7 @@ import ras.adlrr.RASBet.service.interfaces.users.IGamblerService;
 
 
 @Service("betGameFacade")
-public class BetGameFacade implements IBetService, IBetGameService, IGameSubject {
+public class BetGameFacade implements IBetService, IBetGameService, IGameSubject, IGameSubscriptionService {
     private final IBetService betService;
     private final ITransactionService transactionService;
     private final IWalletService walletService;
@@ -35,9 +38,11 @@ public class BetGameFacade implements IBetService, IBetGameService, IGameSubject
     private final IClientPromotionService clientPromotionService;
     private final IPromotionService promotionService;
     private final IParticipantService participantService;
+    private final IGameNotificationService gameNotificationService;
+    private final IGameSubscriptionService gameSubscriptionService;
     private final INotificationService notificationService;
-    private Map<Integer, Set<Integer>> subscribersOfGames;
-    private Map<Integer, IGameSubscriber> subscribers; 
+    private Map<Integer, Set<Integer>> subscribersOfGames; //Key: game id   |   Value: Set of gambler ids that subscribed the game
+    private Map<Integer, IGameSubscriber> subscribers; //Key: gambler id   |   Value: Class associated with the gambler that should be notified
 
 
     @Autowired
@@ -49,6 +54,8 @@ public class BetGameFacade implements IBetService, IBetGameService, IGameSubject
                          @Qualifier("promotionsFacade") IClientPromotionService clientPromotionService,
                          @Qualifier("promotionsFacade") IPromotionService promotionService,
                          @Qualifier("sportsFacade") IParticipantService participantService,
+                         @Qualifier("gameNotificationService") IGameNotificationService gameNotificationService,
+                         @Qualifier("gameNotificationService") IGameSubscriptionService gameSubscriptionService,
                          INotificationService notificationService) {
         this.betService = betService;
         this.transactionService = transactionService;
@@ -58,6 +65,8 @@ public class BetGameFacade implements IBetService, IBetGameService, IGameSubject
         this.clientPromotionService = clientPromotionService;
         this.promotionService = promotionService;
         this.participantService = participantService;
+        this.gameNotificationService = gameNotificationService;
+        this.gameSubscriptionService = gameSubscriptionService;
         this.notificationService = notificationService;
     }
 
@@ -256,14 +265,14 @@ public class BetGameFacade implements IBetService, IBetGameService, IGameSubject
         return betService.getBetsIdsByGameId(game_id);
     }
 
+    //TODO - este metodo n é chamado assim
+    @Transactional
     public void editOddInParticipant(int participant_id, float odd) throws Exception {
-        try{
-            participantService.editOddInParticipant(participant_id, odd);
-            notifySubscribers(participantService.getGameID(participant_id), "mensagem", "assunto");
-        }
-        catch (Exception e){
-            throw new Exception(e.getMessage());
-        }
+        participantService.editOddInParticipant(participant_id, odd);
+        Participant participant = participantService.getParticipant(participant_id);
+        int game_id = participantService.getGameID(participant_id);
+        Game game = gameService.getGame(game_id);
+        notifySubscribers(participantService.getGameID(participant_id), "Odd update", "Odd updated for participant " + participant.getName() + " on event " + game.getTitle() + ".");
     }
 
     /* ********* IBetGameService Methods ********* */
@@ -286,33 +295,68 @@ public class BetGameFacade implements IBetService, IBetGameService, IGameSubject
 
     /* ********* Subscription Methods ********* */
 
-    public void subscribe(int game_id, IGameSubscriber gameSubscriber){
-        
-    }
+    //TODO - maps should be concurrent?
 
-    public void subscribeGame(int gambler_id, int game_id){
-        Set<Integer> subscribersOfGame = this.subscribersOfGames.get(game_id);
-        subscribersOfGame.add(gambler_id);
-        this.subscribersOfGames.put(game_id, subscribersOfGame);
-    }
-    
-    public void unsubscribe(int gambler_id){
+    /**
+     * Registers the gambler has someone who wants to receive the notifications in real time.
+     * @param gambler_id Identification of the gambler
+     * @param gameSubscriber Subscriber that will await for updates
+     */
+    @Transactional
+    public void subscribe(int gambler_id, IGameSubscriber gameSubscriber){
+        var gameSubscriberAux = subscribers.get(gambler_id);
 
-    }
+        //If there is already a subscription for the gambler, informs that instance that it wont receive the notification anymore.
+        if(gameSubscriberAux != null)
+            gameSubscriberAux.close();
 
-    public void unsubscribeGame(int gambler_id, int game_id){
-        Set<Integer> subscribersOfGame = this.subscribersOfGames.get(game_id);
-        subscribersOfGame.remove(gambler_id);
-        this.subscribersOfGames.put(game_id, subscribersOfGame);
-    }
+        //Adds the gambler to the subscribers
+        subscribers.put(gambler_id, gameSubscriber);
 
-    private void notifySubscribers(int game_id, String message, String subject) throws Exception{
-        Set<Integer> subscribersOfGame = this.subscribersOfGames.get(game_id);
-
-        for(Integer gambler_id: subscribersOfGame){
-            Notification n = new Notification(gambler_id, gamblerService.getGamblerEmail(gambler_id), message, subject);
-            this.notificationService.addNotification(n);
+        //For all games followed by the gambler, adds him to the subscribers set
+        var gamesSubscribed = gameSubscriptionService.findAllIdsOfGamesSubscribedByGambler(gambler_id);
+        for (int game_id : gamesSubscribed){
+            var set = subscribersOfGames.computeIfAbsent(game_id, k -> new HashSet<>());
+            set.add(gambler_id);
         }
     }
 
+    @Override
+    @Transactional
+    public GameSubscription subscribeGame(int gambler_id, int game_id){
+        GameSubscription gs = gameSubscriptionService.subscribeGame(gambler_id, game_id);
+        var set = subscribersOfGames.computeIfAbsent(game_id, k -> new HashSet<>());
+        set.add(gambler_id);
+        return gs;
+    }
+
+    @Override
+    public void unsubscribe(int gambler_id){
+        subscribers.remove(gambler_id);
+        for(var set : subscribersOfGames.values())
+            set.remove(gambler_id);
+    }
+
+    @Override
+    public void unsubscribeGame(int gambler_id, int game_id){
+        gameSubscriptionService.unsubscribeGame(gambler_id, game_id);
+        var set = subscribersOfGames.get(game_id);
+        if(set != null) set.remove(gambler_id);
+    }
+
+    @Override
+    public List<Integer> findAllIdsOfGamesSubscribedByGambler(int gamblerId) {
+        return gameSubscriptionService.findAllIdsOfGamesSubscribedByGambler(gamblerId);
+    }
+
+    private void notifySubscribers(int game_id, String type, String message){
+        Set<Integer> set = this.subscribersOfGames.get(game_id);
+        if(set == null || type == null || message == null) return;
+
+        for(Integer gambler_id: set){
+            gameNotificationService.createGameNotification(gambler_id, type, message);
+            IGameSubscriber gameSubscriber = subscribers.get(gambler_id);
+            if(gameSubscriber != null) gameSubscriber.update(type, message);
+        }
+    }
 }

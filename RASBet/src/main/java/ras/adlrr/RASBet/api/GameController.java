@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import ras.adlrr.RASBet.api.auxiliar.ResponseEntityBadRequest;
 import ras.adlrr.RASBet.model.Game;
 import ras.adlrr.RASBet.model.Participant;
+import ras.adlrr.RASBet.service.game_subscription.IGameNotificationService;
+import ras.adlrr.RASBet.service.game_subscription.IGameSubscriptionService;
 import ras.adlrr.RASBet.service.interfaces.IBetGameService;
 import ras.adlrr.RASBet.service.interfaces.sports.IGameService;
 import ras.adlrr.RASBet.service.interfaces.sports.IParticipantService;
@@ -22,15 +24,18 @@ public class GameController {
     private final IGameService gameService;
     private final IParticipantService participantService;
     private final IBetGameService betGameService;
+    private final IGameSubscriptionService gameSubscriptionService;
 
     /* **** Game Methods **** */
     @Autowired
     public GameController(@Qualifier("sportsFacade") IGameService gameService,
                           @Qualifier("sportsFacade") IParticipantService participantService,
-                          @Qualifier("betGameFacade") IBetGameService betGameService){
+                          @Qualifier("betGameFacade") IBetGameService betGameService,
+                          @Qualifier("betGameFacade") IGameSubscriptionService gameSubscriptionService){
         this.gameService = gameService;
         this.participantService = participantService;
         this.betGameService = betGameService;
+        this.gameSubscriptionService = gameSubscriptionService;
     }
 
     @PostMapping
@@ -158,6 +163,26 @@ public class GameController {
     public ResponseEntity editScoreInParticipant(@PathVariable("pid") int participant_id, @PathVariable("score") int score){
         try{
             participantService.editScoreInParticipant(participant_id, score);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
+        }
+    }
+
+    @PostMapping("/subscribe")
+    public ResponseEntity subscribeGame(@RequestParam("gambler_id") int gambler_id, @RequestParam("game_id") int game_id){
+        try{
+            gameSubscriptionService.subscribeGame(gambler_id, game_id);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntityBadRequest().createBadRequest(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/unsubscribe")
+    public ResponseEntity unsubscribeGame(@RequestParam("gambler_id") int gambler_id, @RequestParam("game_id") int game_id){
+        try{
+            gameSubscriptionService.unsubscribeGame(gambler_id, game_id);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntityBadRequest().createBadRequest(e.getMessage());

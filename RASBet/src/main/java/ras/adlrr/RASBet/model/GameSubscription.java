@@ -14,15 +14,15 @@ import java.util.Objects;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "game_subscribers")
-public class GameSubscriber {
+@Table(name = "game_subscriptions")
+public class GameSubscription {
 
     @Embeddable
     @NoArgsConstructor
     @AllArgsConstructor
     @Getter
     @Setter
-    public static class GameSubscriberID implements Serializable {
+    public static class GameSubscriptionID implements Serializable {
         private int gambler_id;
         private int game_id;
 
@@ -30,7 +30,7 @@ public class GameSubscriber {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            GameSubscriber.GameSubscriberID that = (GameSubscriber.GameSubscriberID) o;
+            GameSubscriptionID that = (GameSubscriptionID) o;
             return gambler_id == that.gambler_id && game_id == that.game_id;
         }
 
@@ -41,7 +41,7 @@ public class GameSubscriber {
     }
 
     @EmbeddedId
-    private GameSubscriberID id;
+    private GameSubscriptionID id;
 
     @MapsId("gambler_id")
     @ManyToOne(optional = false)
@@ -53,8 +53,8 @@ public class GameSubscriber {
     @JoinColumn(name = "game_id", updatable = false, nullable = false)
     private Game game;
 
-    public GameSubscriber(int gambler_id, int game_id){
-        this.id = new GameSubscriberID(gambler_id, game_id);
+    public GameSubscription(int gambler_id, int game_id){
+        this.id = new GameSubscriptionID(gambler_id, game_id);
         this.gambler = new Gambler(); this.gambler.setId(gambler_id);
         this.game = new Game(); this.game.setId(game_id);
     }

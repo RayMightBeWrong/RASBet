@@ -17,10 +17,12 @@ public class ClientNotifier implements IClientNotifier,IGameSubscriber{
         this.client_id = client_id;
         this.emitter = emitter;
         this.gameSubject = gameSubject;
+        gameSubject.subscribe(client_id, this);
     }
 
     @Override
     public void close() {
+        emitter.complete();
         gameSubject.unsubscribe(client_id);
     }
 
