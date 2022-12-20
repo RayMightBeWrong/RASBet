@@ -31,7 +31,7 @@ public class GameController {
     public GameController(@Qualifier("sportsFacade") IGameService gameService,
                           @Qualifier("sportsFacade") IParticipantService participantService,
                           @Qualifier("betGameFacade") IBetGameService betGameService,
-                          @Qualifier("betGameFacade") IGameSubscriptionService gameSubscriptionService){
+                          @Qualifier("sportsFacade") IGameSubscriptionService gameSubscriptionService){
         this.gameService = gameService;
         this.participantService = participantService;
         this.betGameService = betGameService;
