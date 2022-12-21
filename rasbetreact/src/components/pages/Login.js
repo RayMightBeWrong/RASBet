@@ -5,7 +5,8 @@ import { Button } from '../Button';
 
 function Login({
   setUserState,
-  setUserId
+  setUserId,
+  updateNotifications
 }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -18,14 +19,17 @@ function Login({
       headers: { "Content-Type": "application/json" }
     }
 
+    let tipo = -1
     fetch("http://localhost:8080/api/users?email=" + email + "&password=" + password, requestOptions)
       .then(res => res.json())
       .then(result => {
         setUserId(result.user_id)
-        switch (result.type) {
+        tipo = result.type
+        switch (tipo) {
           case 0:
             alert("Gambler Logged in")
             setUserState("gambler")
+            updateNotifications()
             navigate("/")
             break;
           case 1:
@@ -43,7 +47,7 @@ function Login({
             setUserState("loggedOff")
         }
       })
-      .catch(error => alert("Error logging in"));
+      .catch(error => console.log(error));
   }
 
 

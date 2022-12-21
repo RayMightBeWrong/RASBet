@@ -51,7 +51,7 @@ export const GameGambler = ({
             <div className={`game-OPEN`}>
                 <div className='game-title-state'>
                     <h2>{title}</h2>
-                    <h4> </h4>
+                    <h3> subscribe</h3>
                 </div>
                 <div className='game-time-bet'>
                     {getDate(date)}

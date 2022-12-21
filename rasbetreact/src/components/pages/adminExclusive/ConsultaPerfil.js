@@ -6,7 +6,8 @@ import { Link, useNavigate } from 'react-router-dom';
 function ConsultaPerfil({
     userState,
     setUserState,
-    setUserId
+    setUserId,
+    updateNotifications
 }) {
 
     const navigate = useNavigate();
@@ -26,7 +27,7 @@ function ConsultaPerfil({
                 alert("Changed to gambler profile")
                 setUserState("gambler")
                 setUserId(result.id)
-
+                updateNotifications()
             })
             .then(() => navigate("/"))
             .catch(error => {
@@ -42,15 +43,15 @@ function ConsultaPerfil({
                 <div className='greenBackGround'>
                     <div className='white-box'>
                         <form className="container-form" onSubmit={handleSubmit}>
-                            <br/>
-                            <br/>
-                            <br/>
+                            <br />
+                            <br />
+                            <br />
                             <h1>Consulta de perfil</h1>
-                            <br/>
+                            <br />
                             Insere o email do utilizador
 
                             <input type="txtL" placeholder="user@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                            <br/>
+                            <br />
                             <Button type="submit" buttonSize='btn--flex'>Aceder</Button>
                         </form>
                     </div>

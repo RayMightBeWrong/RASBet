@@ -24,34 +24,82 @@ function App() {
   */
 
   const [userState, setUserState] = useState(() => {
-    const userState = window.localStorage.getItem('userState');
+    const userState = localStorage.getItem('userState')
     if (userState) {
       return userState
     }
-    else return "admin"
+    else return "loggedOff"
   })
 
   const [userId, setUserId] = useState(() => {
-    const userId = window.localStorage.getItem('userId');
+    const userId = localStorage.getItem('userId')
     if (userId) {
       return userId
     }
     else return 0
   })
 
+  const [notificationList, setNotificationList] = useState({
+    nova: false,
+    lista: []
+  })
+
+
   useEffect(() => {
-    window.localStorage.setItem('userState', userState)
+    if (userState === "gambler") {
+      let urlEndPoint = "http://localhost:8080/sse/subscribe?gambler_id=" + userId
+      let eventSource = new EventSource(urlEndPoint)
+
+      eventSource.addEventListener("NOTIFICATION", function (event) {
+        let notification = JSON.parse(event.data)
+        console.log(notification)
+        setNotificationList(oldList => ({
+          nova: true, lista: [...oldList.lista, notification]
+        }))
+      })
+    }
+  }, [userId, userState])
+
+  const [updateNotification, setUpdateNotification] = useState(true)
+  useEffect(() => {
+    if (updateNotification) {
+      setUpdateNotification(false)
+
+      const requestOptions = {
+        method: 'GET',
+        headers: { "Content-Type": "application/json" }
+      }
+      fetch("http://localhost:8080/api/games/notifications?gambler_id=" + userId, requestOptions)
+        .then(res => res.json())
+        .then(result => {
+          console.log(result)
+          setNotificationList({
+            nova: true,
+            lista: result
+          })
+        })
+    }
+  }, [updateNotification, userState, userId])
+
+
+
+  useEffect(() => {
+    console.log("Changed to" + userState)
+    localStorage.setItem('userState', userState)
   }, [userState])
 
   useEffect(() => {
-    window.localStorage.setItem('userId', userId)
+    localStorage.setItem('userId', userId)
   }, [userId])
-
 
   return (
     <>
       <Router>
-        <Navbar userState={userState} setUserState={setUserState} />
+        <Navbar userState={userState} setUserState={setUserState} notificationList={notificationList}
+          markAsSeen={() => setNotificationList(oldList => ({
+            nova: false, lista: oldList.lista
+          }))}
+        />
         <Routes>
           {/*Mutual pages*/}
           <Route path="/" element={<Sport sportType="any" userState={userState} userId={userId} />} />
@@ -59,7 +107,7 @@ function App() {
           <Route path='/nba' element={<Sport sportType="NBA" userState={userState} userId={userId} />} />
           <Route path='/f1' element={<Sport sportType="F1" userState={userState} userId={userId} />} />
           <Route path='/nfl' element={<Sport sportType="NFL" userState={userState} userId={userId} />} />
-          <Route path='/login' element={<Login setUserState={setUserState} setUserId={setUserId} />} />
+          <Route path='/login' element={<Login setUserState={setUserState} setUserId={setUserId} updateNotifications={() => setUpdateNotification(true)} />} />
 
           {/*gambler pages*/}
           <Route path='/perfil' element={<Perfil userId={userId} userState={userState} />} />
@@ -73,7 +121,7 @@ function App() {
           <Route path='/admin_Options/coins' element={<MenuCoins userState={userState} />} />
           <Route path='/admin_Options/promocoes' element={<GestorPromocoes userState={userState} />} />
           <Route path='/admin_Options/promocoes/creation' element={<CriarPromocao userState={userState} />} />
-          <Route path='/admin_Options/consultaPerfil' element={<ConsultaPerfil userState={userState} setUserState={setUserState} setUserId={setUserId} />} />
+          <Route path='/admin_Options/consultaPerfil' element={<ConsultaPerfil userState={userState} setUserState={setUserState} setUserId={setUserId} updateNotifications={() => setUpdateNotification(true)} />} />
           <Route path='/admin_Options/expertDelete' element={<ExpertManager userState={userState} />} />
 
         </Routes>
@@ -82,4 +130,4 @@ function App() {
   );
 }
 
-export default App;
+export default App

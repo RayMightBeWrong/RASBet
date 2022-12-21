@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './Button';
 import { Link } from 'react-router-dom';
+import { NotificationBell } from './NotificationBell';
 import './Navbar.css';
 
 function Navbar({
   userState,
-  setUserState
+  setUserState,
+  notificationList,
+  markAsSeen
 }) {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
   const [loggedIn, setloggedIn] = useState(false);
+  const [open, setOpen] = useState(false);
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
 
-  function getImage(){
+  function getImage() {
     var path = window.location.href.split('/');
     let difDirectory = path[3] === 'admin_Options'
 
@@ -175,6 +179,13 @@ function Navbar({
           </ul>
           {!loggedIn && button && <Link to='/login' ><Button buttonStyle='btn--outline'>Log In</Button> </Link>}
           {loggedIn && button && <Link to='/'><Button buttonStyle='btn--outline' onClick={() => setUserState("loggedOff")}>Log Off</Button> </Link>}
+          {userState === 'gambler' && loggedIn && button &&
+            <Button buttonStyle={notificationList.nova ? 'btn--primary' : 'btn--outline'} onClick={function () { setOpen(true) }}>Notifications</Button>}
+          {open ?
+            <NotificationBell notificationList={notificationList} closePopup={() => setOpen(false)} markAsSeen={markAsSeen} />
+            :
+            <></>
+          }
         </div>
       </nav>
     </>
