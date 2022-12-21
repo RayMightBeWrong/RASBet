@@ -350,8 +350,8 @@ public class BetGameFacade implements IBetService, IBetGameService, IGameSubject
      */
     @Transactional
     public void subscribe(int gambler_id, IGameSubscriber gameSubscriber){
-        //Avoids non gambler subscriptions
-        if(!gamblerService.gamblerExistsById(gambler_id))
+        //Avoids non gambler subscriptions and invalid subscribers
+        if(!gamblerService.gamblerExistsById(gambler_id) || gameSubscriber == null)
             return;
 
         var gameSubscriberAux = subscribers.get(gambler_id);
@@ -375,7 +375,7 @@ public class BetGameFacade implements IBetService, IBetGameService, IGameSubject
     @Transactional
     public GameSubscription subscribeGame(int gambler_id, int game_id){
         //Avoids non gambler subscriptions
-        if(!gamblerService.gamblerExistsById(gambler_id))
+        if(!gamblerService.gamblerExistsById(gambler_id) || !gameService.gameExistsById(game_id))
             return null;
 
         //Persists the subscription
