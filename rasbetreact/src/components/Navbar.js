@@ -126,6 +126,11 @@ function Navbar({
 
   return (
     <>
+      {userState === 'gambler' && loggedIn &&
+        <div className='notificationButton'>
+          <Button buttonStyle={notificationList.nova ? 'btn--primary' : 'btn--inverted'} buttonSize="btn--Notify" onClick={function () { setOpen(true) }}>Not</Button>
+        </div>
+      }
       <nav className='navbar'>
         <div className='navbar-container'>
           <Link to='/' className='navbar-logo' onClick={closeMobileMenu}>
@@ -179,12 +184,11 @@ function Navbar({
           </ul>
           {!loggedIn && button && <Link to='/login' ><Button buttonStyle='btn--outline'>Log In</Button> </Link>}
           {loggedIn && button && <Link to='/'><Button buttonStyle='btn--outline' onClick={() => setUserState("loggedOff")}>Log Off</Button> </Link>}
-          {userState === 'gambler' && loggedIn && button &&
-            <Button buttonStyle={notificationList.nova ? 'btn--primary' : 'btn--outline'} onClick={function () { setOpen(true) }}>Notifications</Button>}
+          
           {open ?
             <NotificationBell notificationList={notificationList} closePopup={() => setOpen(false)} markAsSeen={markAsSeen} />
             :
-            <></>
+            null
           }
         </div>
       </nav>

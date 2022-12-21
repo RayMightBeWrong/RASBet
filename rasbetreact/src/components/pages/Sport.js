@@ -28,14 +28,12 @@ function Sport({
 
     return (
         <>
-            <div>
-                <GamesTab games={jogos}
-                    sportType={sportType}
-                    userState={userState}
-                    userId={userId}
-                    rerender={() => setRerender(!rerender)}
-                />
-            </div>
+            <GamesTab games={jogos}
+                sportType={sportType}
+                userState={userState}
+                userId={userId}
+                rerender={() => setRerender(!rerender)}
+            />
         </>
     );
 }

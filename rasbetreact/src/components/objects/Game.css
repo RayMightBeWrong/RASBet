@@ -9,6 +9,7 @@
     max-width: 1300px;
     min-width: max-content;
 }
+
 .game-OPEN{
     background-color: white;
     border: 1px solid #003915;
@@ -20,6 +21,7 @@
     max-width: 1300px;
     min-width: max-content;
 }
+
 .game-SUSPENDED{
     background-color: rgba(128, 128, 128, 0.582);
     border: 1px solid #003915;
@@ -51,6 +53,7 @@
     display: flex;
     flex-direction: row;
     width: 100%;
+    gap: 5px;
 }
 
 .date-hour{

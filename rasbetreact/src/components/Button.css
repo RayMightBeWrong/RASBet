@@ -83,6 +83,13 @@
   width: 100%;
 }
 
+.btn--Notify{
+  font-size: 20px;
+  width: 100%;
+  border-radius: 45px;
+  box-shadow: rgba(0, 0, 0, 0.65) 0px 5px 15px;
+}
+
 
 
 .btn--primary:hover,

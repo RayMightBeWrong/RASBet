@@ -28,7 +28,7 @@ function App() {
     if (userState) {
       return userState
     }
-    else return "loggedOff"
+    else return "gambler"
   })
 
   const [userId, setUserId] = useState(() => {
