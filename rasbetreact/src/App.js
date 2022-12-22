@@ -114,6 +114,7 @@ function App() {
           <Route path='/promocoes' element={<Promocoes userState={userState} />} />
           <Route path='/historico' element={<Historico userId={userId} userState={userState} />} />
           <Route path='/registo' element={<Registo userState={userState} expertMode="false" />} />
+          <Route path='/subscribedGames' element={<Sport sportType="Subscriptions" userState={userState} userId={userId} />} />
 
           {/*Admin TOOLS*/}
           <Route path='/admin_Options' element={<AdminMenu userState={userState} />} />

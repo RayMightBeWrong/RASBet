@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Perfil.css';
 import { Button } from '../../Button';
+import { Link } from 'react-router-dom';
 import { InfoCarteiras } from '../../InfoCarteiras';
 
 
@@ -124,10 +125,12 @@ function Perfil({
             </div>
           </div>
           <InfoCarteiras userId={userId} />
+          <Link to='/subscribedGames'><Button buttonSize={'btn--medium'} >Subscrições</Button> </Link>
         </div>
       </div >
     );
   } else return null;
 }
+
 
 export default Perfil;

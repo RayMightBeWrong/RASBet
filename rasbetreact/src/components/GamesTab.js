@@ -60,11 +60,52 @@ export const GamesTab = ({
         setBets(newbets);
     }
 
+    function subscribeClick(gameId, userId, isSubscribed) {
+        console.log("yo")
+        if (isSubscribed) {
+            const requestOptions = {
+                method: 'DELETE'
+            }
+            fetch("http://localhost:8080/api/games/unsubscribe?gambler_id=" + userId + "&game_id=" + gameId, requestOptions)
+                .then(res => {
+                    if (res.status !== 200) {
+                        var errorMsg;
+                        if ((errorMsg = res.headers.get("x-error")) == null)
+                            errorMsg = "Error occured"
+                        alert(errorMsg)
+                    }
+                    else {
+                        alert("Unsubscribed")
+                    }
+                })
+                .then(() => rerender())
+                .catch(err => alert(err))
+        } else {
+            const requestOptions = {
+                method: 'POST'
+            }
+            fetch("http://localhost:8080/api/games/subscribe?gambler_id=" + userId + "&game_id=" + gameId, requestOptions)
+                .then(res => {
+                    if (res.status !== 200) {
+                        var errorMsg;
+                        if ((errorMsg = res.headers.get("x-error")) == null)
+                            errorMsg = "Error occured"
+                        alert(errorMsg)
+                    }
+                    else {
+                        alert("Subscribed")
+                    }
+                })
+                .then(() => rerender())
+                .catch(err => alert(err))
+        }
+    }
+
     function gameType(game) {
         if ((userState === 'gambler' || userState === 'loggedOff') && game.state === 1) {
             return (
-                <GameGambler id={game.id} title={game.title} date={game.date} participants={game.participants}
-                    removeBet={removeBet} addBet={addBet} changeBet={changeBet} />
+                <GameGambler id={game.id} title={game.title} date={game.date} participants={game.participants} isSubscribed={game.subscribed}
+                    removeBet={removeBet} addBet={addBet} changeBet={changeBet} subscribeClick={() => subscribeClick(game.id, userId, game.subscribed)} />
             )
         } else if (userState === 'admin') {
             return (

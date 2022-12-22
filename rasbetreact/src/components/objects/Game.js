@@ -20,9 +20,11 @@ export const GameGambler = ({
     title,
     date,
     participants,
+    isSubscribed,
     addBet,
     removeBet,
-    changeBet
+    changeBet,
+    subscribeClick
 }) => {
     const [locked, setLock] = useState({
         fechada: false,
@@ -31,15 +33,12 @@ export const GameGambler = ({
 
     const handleClick = (name, odd, participantId) => {
         if (locked.fechada && locked.bet === name) {
-            console.log("remover beeett")
             setLock({ fechada: false, bet: "" })
             removeBet(id)
         } else if (locked.fechada && locked.bet !== name) {
-            console.log("change beeett")
             setLock({ fechada: true, bet: name })
             changeBet(id, title, name, odd, participantId)
         } else if (!locked.fechada) {
-            console.log("add beeett")
             setLock({ fechada: true, bet: name })
             console.log("Locked bet =" + locked.bet)
             addBet(id, title, name, odd, participantId)
@@ -51,7 +50,9 @@ export const GameGambler = ({
             <div className={`game-OPEN`}>
                 <div className='game-title-state'>
                     <h2>{title}</h2>
-                    <h3> subscribe</h3>
+                    <Button buttonStyle={isSubscribed ? "btn--bet-clicked" : "btn--bet"} onClick={() => subscribeClick()}>
+                        <h3>Subscrever</h3>
+                    </Button>
                 </div>
                 <div className='game-time-bet'>
                     {getDate(date)}
