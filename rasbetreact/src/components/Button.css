@@ -68,6 +68,11 @@
   transition: 250ms;
 }
 
+.btn--small{
+  padding: 5px 15px;
+  font-size: 15px;
+}
+
 .btn--medium {
   padding: 8px 20px;
   font-size: 18px;
@@ -81,13 +86,6 @@
 .btn--flex {
   font-size: 20px;
   width: 100%;
-}
-
-.btn--Notify{
-  font-size: 20px;
-  width: 100%;
-  border-radius: 45px;
-  box-shadow: rgba(0, 0, 0, 0.65) 0px 5px 15px;
 }
 
 

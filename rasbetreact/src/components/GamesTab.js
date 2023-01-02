@@ -121,12 +121,16 @@ export const GamesTab = ({
         return (
             <>
                 <div className='gamestab'>
-                    <div className='bets-tab'>
-                        {games.map(game => (
-                            <div key={game.id}>{gameType(game)}</div>
-                        ))}
+                    <div className='gamestab-box'>
+                        <div className='gamestab-content'>
+                            {/* <BoletimLock /> */}
+                            <div className='bets-tab'>
+                                {games.map(game => (
+                                    <div key={game.id}>{gameType(game)}</div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
-                    <BoletimLock />
                 </div>
             </>
         );

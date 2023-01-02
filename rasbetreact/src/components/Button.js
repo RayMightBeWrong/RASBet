@@ -15,7 +15,7 @@ import './Button.css';
 
 const STYLES = ['btn--primary', 'btn--outline', 'btn--bet', 'btn--bet-clicked', 'btn--inverted', 'btn--image', 'btn--image--selected'];
 
-const SIZES = ['btn--medium', 'btn--large', 'btn--flex', 'btn--imageFrame', 'btn--Notify'];
+const SIZES = ['btn--medium', 'btn--large', 'btn--flex', 'btn--small', 'btn--imageFrame'];
 
 export const Button = ({
   children,

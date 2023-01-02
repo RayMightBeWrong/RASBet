@@ -128,7 +128,11 @@ function Navbar({
     <>
       {userState === 'gambler' && loggedIn &&
         <div className='notificationButton'>
-          <Button buttonStyle={notificationList.nova ? 'btn--primary' : 'btn--inverted'} buttonSize="btn--Notify" onClick={function () { setOpen(true) }}>Not</Button>
+          { notificationList.nova ?
+            <img className='btn--Notify' onClick={function () { setOpen(true) }} src={'../images/bell_notification.png'} alt={''} />
+            :
+            <img className='btn--Notify' onClick={function () { setOpen(true) }} src={'../images/bell.png'} alt={''} />
+          }
         </div>
       }
       <nav className='navbar'>

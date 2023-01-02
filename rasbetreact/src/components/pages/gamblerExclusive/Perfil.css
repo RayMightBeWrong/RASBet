@@ -47,7 +47,8 @@ input[type=txtP2]{
 
 input[type=txtP]{
   border-radius: 5px;
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
   padding: 15px;
   margin: 5px 0 22px 0;
   border: none;
@@ -114,15 +115,10 @@ input[type=txtP]:hover{
   }
 }
 
-@media only screen and (max-width: 700px){
-  .perfil {
-    display: block;
-  }
-}
-
-@media only screen and (max-width: 550px){
+@media only screen and (max-width: 780px){
   input[type=txtP]{
     width: 100%;
+    max-width: none;
   }
   .informacoes-perfil-content {
     flex-direction: column;
