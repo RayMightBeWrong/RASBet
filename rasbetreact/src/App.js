@@ -28,7 +28,7 @@ function App() {
     if (userState) {
       return userState
     }
-    else return "gambler"
+    else return "loggedOff"
   })
 
   const [userId, setUserId] = useState(() => {
@@ -93,41 +93,43 @@ function App() {
   }, [userId])
 
   return (
-    <>
-      <Router>
+    <Router>
+      <div className='inv'>
+        <div className='inv2'>
+          <Routes>
+            {/*Mutual pages*/}
+            <Route path="/" element={<Sport sportType="any" userState={userState} userId={userId} />} />
+            <Route path='/futebol' element={<Sport sportType="Football" userState={userState} userId={userId} />} />
+            <Route path='/nba' element={<Sport sportType="NBA" userState={userState} userId={userId} />} />
+            <Route path='/f1' element={<Sport sportType="F1" userState={userState} userId={userId} />} />
+            <Route path='/nfl' element={<Sport sportType="NFL" userState={userState} userId={userId} />} />
+            <Route path='/login' element={<Login setUserState={setUserState} setUserId={setUserId} updateNotifications={() => setUpdateNotification(true)} />} />
+
+            {/*gambler pages*/}
+            <Route path='/perfil' element={<Perfil userId={userId} userState={userState} />} />
+            <Route path='/promocoes' element={<Promocoes userState={userState} />} />
+            <Route path='/historico' element={<Historico userId={userId} userState={userState} />} />
+            <Route path='/registo' element={<Registo userState={userState} expertMode="false" />} />
+            <Route path='/subscribedGames' element={<Sport sportType="Subscriptions" userState={userState} userId={userId} />} />
+
+            {/*Admin TOOLS*/}
+            <Route path='/admin_Options' element={<AdminMenu userState={userState} />} />
+            <Route path='/admin_Options/registo_Expert' element={<Registo userState={userState} expertMode="true" />} />
+            <Route path='/admin_Options/coins' element={<MenuCoins userState={userState} />} />
+            <Route path='/admin_Options/promocoes' element={<GestorPromocoes userState={userState} />} />
+            <Route path='/admin_Options/promocoes/creation' element={<CriarPromocao userState={userState} />} />
+            <Route path='/admin_Options/consultaPerfil' element={<ConsultaPerfil userState={userState} setUserState={setUserState} setUserId={setUserId} updateNotifications={() => setUpdateNotification(true)} />} />
+            <Route path='/admin_Options/expertDelete' element={<ExpertManager userState={userState} />} />
+
+          </Routes>
+        </div>
         <Navbar userState={userState} setUserState={setUserState} notificationList={notificationList}
           markAsSeen={() => setNotificationList(oldList => ({
             nova: false, lista: oldList.lista
           }))}
         />
-        <Routes>
-          {/*Mutual pages*/}
-          <Route path="/" element={<Sport sportType="any" userState={userState} userId={userId} />} />
-          <Route path='/futebol' element={<Sport sportType="Football" userState={userState} userId={userId} />} />
-          <Route path='/nba' element={<Sport sportType="NBA" userState={userState} userId={userId} />} />
-          <Route path='/f1' element={<Sport sportType="F1" userState={userState} userId={userId} />} />
-          <Route path='/nfl' element={<Sport sportType="NFL" userState={userState} userId={userId} />} />
-          <Route path='/login' element={<Login setUserState={setUserState} setUserId={setUserId} updateNotifications={() => setUpdateNotification(true)} />} />
-
-          {/*gambler pages*/}
-          <Route path='/perfil' element={<Perfil userId={userId} userState={userState} />} />
-          <Route path='/promocoes' element={<Promocoes userState={userState} />} />
-          <Route path='/historico' element={<Historico userId={userId} userState={userState} />} />
-          <Route path='/registo' element={<Registo userState={userState} expertMode="false" />} />
-          <Route path='/subscribedGames' element={<Sport sportType="Subscriptions" userState={userState} userId={userId} />} />
-
-          {/*Admin TOOLS*/}
-          <Route path='/admin_Options' element={<AdminMenu userState={userState} />} />
-          <Route path='/admin_Options/registo_Expert' element={<Registo userState={userState} expertMode="true" />} />
-          <Route path='/admin_Options/coins' element={<MenuCoins userState={userState} />} />
-          <Route path='/admin_Options/promocoes' element={<GestorPromocoes userState={userState} />} />
-          <Route path='/admin_Options/promocoes/creation' element={<CriarPromocao userState={userState} />} />
-          <Route path='/admin_Options/consultaPerfil' element={<ConsultaPerfil userState={userState} setUserState={setUserState} setUserId={setUserId} updateNotifications={() => setUpdateNotification(true)} />} />
-          <Route path='/admin_Options/expertDelete' element={<ExpertManager userState={userState} />} />
-
-        </Routes>
-      </Router>
-    </>
+      </div>
+    </Router>
   );
 }
 

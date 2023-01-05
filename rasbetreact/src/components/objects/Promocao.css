@@ -1,13 +1,83 @@
 .promocao {
-    border-top: 1px solid green;
-    border-bottom: 1px solid green;
-    padding: 15px 30px;
-    width: 100%;
+    margin: 10px;
+    border: 1px solid green;
+    width: 300px;
+    border-radius: 25px;
+    height: 330px;
     display: flex;
-    align-items: left;
+    flex-direction: column;
+    align-items: center;
     justify-content: space-between;
 }
 
-.info {
+.promo-title-uses{
+    width: 100%;
+}
+
+.promo-title{
+    padding: 15px 30px;
+    width: 100%;
+    display: flex;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    background-color: #dc7633;
+    justify-content: center;
+    border-bottom: 1px solid green;
+}
+
+.promo-uses{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.promo-uses-text{
+    padding: 5px 20px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background-color: orange;
+    width: max-content;
+    display: flex;
+}
+
+.promo-refrall-validade{
+    border-top: 1px solid green;
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.promo-refrall{
+    display: flex;
     flex-direction: column;
+    gap: 0px;
+    width: max-content;
+    padding: 0px 0px 10px 10px;
+    align-items: center;
+}
+
+.promo-validade{
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    width: max-content;
+    padding: 0px 10px 10px 10px;
+    align-items: flex-end;
+}
+
+.promo-validade-text{
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.promo-line{
+    width: 100%;
+    border-top: 1px solid green;
+    padding-top: 13px;
+    display: flex;
+    justify-content: center;
 }

@@ -6,10 +6,7 @@ import { Button } from '../Button';
 const getDate = (date) => {
     let dateS = date.split('T')
     return(
-        <div className='promo-date-hour'>
-            <h4>{dateS[0]}</h4>
-            <h4>{dateS[1].split('.')[0]}</h4>
-        </div>
+        dateS[0]+" "+dateS[1].split('.')[0]
     )
 }
 
@@ -86,21 +83,27 @@ const PromocaoBoostOdd = ({
 }) => {
     console.log(begin_date)
     return (
-        <>
-            <div className='promocao'>
-                <div className='info'>
-                    <h3> Boost Odd </h3>
-                    <h4> Título: {title} </h4>
-                    <h4>Inicio: {getDate(begin_date)}</h4>
-                    <h4>Fim: {getDate(expiration_date)}</h4>
-                    <h4>Cupão: {coupon}</h4>
-                    <h4>Número de utilizações: {nr_uses}</h4>
-                    <h4>Percentagem de boost: {boost_percentage}</h4>
-                    <h4>Descrição: {description}</h4>
-                </div>
-
+        <div className='promocao'>
+            <div className='promo-title-uses'>
+                <div className='promo-title'><h3> Referral Boost Odd </h3></div>
+                <div className='promo-uses'><div className='promo-uses-text'>x{nr_uses}</div></div>
             </div>
-        </>
+            <h4>Código promocional: {coupon}</h4>
+            <h4>Descrição: {description}</h4>
+            <h4>Boost: {boost_percentage}%</h4>
+            <div className='promo-line'>
+                <div className='promo-validade'>
+                    <div className='promo-validade-text'>
+                        <h5>begin:</h5>
+                        <h5>{getDate(begin_date)}</h5>
+                    </div>
+                    <div className='promo-validade-text'>
+                        <h5>expire:</h5>
+                        <h5>{getDate(expiration_date)}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
     )
 }
 
@@ -116,24 +119,31 @@ const PromocaoReferralBoostOdd = ({
     number_of_referrals_needed
 }) => {
     return (
-        <>
-            <div className='promocao'>
-
-                <div className='info'>
-                    <h3> Referral Boost Odd </h3>
-                    <h4> Título: {title} </h4>
-                    <h4>Inicio: {getDate(begin_date)}</h4>
-                    <h4>Fim: {getDate(expiration_date)}</h4>
-                    <h4>Cupão: {coupon}</h4>
-                    <h4>Número de utilizações: {nr_uses}</h4>
-                    <h4>Percentagem de boost: {boost_percentage}</h4>
-                    <h4>Numero de referrals necessários: {number_of_referrals_needed}</h4>
-                    <h4>Descrição: {description}</h4>
-                </div>
-
-
+        <div className='promocao'>
+            <div className='promo-title-uses'>
+                <div className='promo-title'><h3> Referral Boost Odd </h3></div>
+                <div className='promo-uses'><div className='promo-uses-text'>x{nr_uses}</div></div>
             </div>
-        </>
+            <h4>Código promocional: {coupon}</h4>
+            <h4>Descrição: {description}</h4>
+            <h4>Boost: {boost_percentage}%</h4>
+            <div className='promo-refrall-validade'>
+                <div className='promo-refrall'>
+                    <h4>Referrals:</h4>
+                    <h4>{number_of_referrals_needed}</h4>
+                </div>
+                <div className='promo-validade'>
+                    <div className='promo-validade-text'>
+                        <h5>begin:</h5>
+                        <h5>{getDate(begin_date)}</h5>
+                    </div>
+                    <div className='promo-validade-text'>
+                        <h5>expire:</h5>
+                        <h5>{getDate(expiration_date)}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
     )
 }
 
@@ -150,24 +160,30 @@ const PromocaoReferralBalance = ({
     coin_id
 }) => {
     return (
-        <>
-            <div className='promocao'>
-
-                <div className='info'>
-                    <h3> Referral Balance </h3>
-                    <h4> Título: {title} </h4>
-                    <h4>Inicio: {getDate(begin_date)}</h4>
-                    <h4>Fim: {getDate(expiration_date)}</h4>
-                    <h4>Cupão: {coupon}</h4>
-                    <h4>Número de utilizações: {nr_uses}</h4>
-                    <h4>Numero de referrals necessários: {number_of_referrals_needed}</h4>
-                    <h4>Valor: {value_to_give}</h4>
-                    <h4>Moeda: {coin_id}</h4>
-                    <h4>Descrição: {description}</h4>
-
-                </div>
-
+        <div className='promocao'>
+            <div className='promo-title-uses'>
+                <div className='promo-title'><h3> Referral Boost Odd </h3></div>
+                <div className='promo-uses'><div className='promo-uses-text'>x{nr_uses}</div></div>
             </div>
-        </>
+            <h4>Código promocional: {coupon}</h4>
+            <h4>Descrição: {description}</h4>
+            <h4>Valor: {value_to_give} {coin_id}</h4>
+            <div className='promo-refrall-validade'>
+                <div className='promo-refrall'>
+                    <h4>Referrals:</h4>
+                    <h4>{number_of_referrals_needed}</h4>
+                </div>
+                <div className='promo-validade'>
+                    <div className='promo-validade-text'>
+                        <h5>begin:</h5>
+                        <h5>{getDate(begin_date)}</h5>
+                    </div>
+                    <div className='promo-validade-text'>
+                        <h5>expire:</h5>
+                        <h5>{getDate(expiration_date)}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
     )
 }

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { GameGambler, GameExpert, GameAdmin } from './objects/Game';
 import { Boletim } from './Boletim';
 import './GamesTab.css';
+import './PayMethods.css';
 import Sport from './pages/Sport';
+import { Button } from './Button';
 
 export const GamesTab = ({
     games,
@@ -13,13 +15,26 @@ export const GamesTab = ({
 }) => {
 
     const [bets, setBets] = useState([]);
+    const [openBoletim, setOpenBoletim] = useState(false);
 
     function BoletimLock() {
         if (userState === 'gambler') {
             return (
-                <div className='boletimbox'>
-                    <div><Boletim bets={bets} userId={userId} /></div>
-                </div>
+                <>
+                    <div className="blackBackGround">
+                        {null}
+                    </div>
+                    <div className="Boletim-container">
+                        <div className="Boletim-body">
+                            <div className="payMethods-close-button">
+                                <div className="pmAline"> </div>
+                                <h1>BOLETIM</h1>
+                                <Button buttonStyle={'btn--flex'} onClick={() => setOpenBoletim(false)}> X </Button >
+                            </div>
+                            <Boletim bets={bets} userId={userId}/>
+                        </div>
+                    </div>
+                </>
             );
         }
         else return;
@@ -120,14 +135,20 @@ export const GamesTab = ({
     if (games.length !== 0) {
         return (
             <>
+                {openBoletim ?
+                    <BoletimLock/>
+                    : null
+                }
                 <div className='gamestab'>
                     <div className='gamestab-box'>
                         <div className='gamestab-content'>
-                            {/* <BoletimLock /> */}
+                            <div className='buttonSubmit'>
+                                <img src={'images/cart.png'} alt={''} onClick={() => setOpenBoletim(true)}/>
+                            </div>
                             <div className='bets-tab'>
                                 {games.map(game => (
                                     <div key={game.id}>{gameType(game)}</div>
-                                ))}
+                                    ))}
                             </div>
                         </div>
                     </div>

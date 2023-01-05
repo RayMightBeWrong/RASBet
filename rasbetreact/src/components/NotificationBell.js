@@ -15,8 +15,12 @@ export const NotificationBell = ({
     return (
         <>
             < div className="notificationBell-container" >
-                < div className="notificationBell-body" >
-                    <h1>Notificações</h1>
+                <div className="notificationBell-body" >
+                    <div className="payMethods-close-button">
+                        <div className="pmAline"> </div>
+                        <h1>Notificações</h1>
+                        <Button buttonStyle={'btn--flex'} onClick={function () { closePopup(); markAsSeen() }}> X </Button >
+                    </div>
                     {notificationList.lista.map(notification => (
                         <div key={notification.id}>
                             {notification.type}
@@ -24,7 +28,6 @@ export const NotificationBell = ({
                             {notification.timestamp}
                         </div>
                     ))}
-                    <Button onClick={function () { closePopup(); markAsSeen() }} > Close</Button>
                 </div>
             </div >
         </>

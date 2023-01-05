@@ -78,6 +78,9 @@ export const CarteirasPopUp = ({
     }
     return (
         <>
+            <div className="blackBackGround">
+                {null}
+            </div>
             < div className="carteirasPopUp-container" >
                 < div className="carteirasPopUp-body" >
                     <div className="payMethods-close-button">

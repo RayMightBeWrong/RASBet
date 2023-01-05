@@ -125,6 +125,7 @@ function Perfil({
             </div>
           </div>
           <InfoCarteiras userId={userId} />
+          <br></br>
           <Link to='/subscribedGames'><Button buttonSize={'btn--medium'} >Subscrições</Button> </Link>
         </div>
       </div >

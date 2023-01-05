@@ -51,7 +51,6 @@ export const Boletim = ({
         <>
             <div className='boletim'>
                 <div className='boletim-header'>
-                    <h2>BOLETIM</h2>
                     <h3>{tipoAposta}</h3>
                 </div>
                 <div className='boletim-body'>
@@ -59,6 +58,10 @@ export const Boletim = ({
                         <BoletimBet key={game.id} title={game.title} winner={game.winner} cota={game.cota} />
                     ))}
                     <br/>
+                    <div className='textLines'>
+                        <h3>Possivel ganho:</h3>
+                        <h3>{finalWin.toFixed(3)}</h3>
+                    </div>
                     <div className='boletim-ganhos'>
                         <h3>Aposta:</h3>
                         <input type="txtBoletim"
@@ -73,7 +76,6 @@ export const Boletim = ({
                             value={cupao}
                             onChange={changeCupao} />
                     </div>
-                    <div><h3>Possivel ganho: {finalWin.toFixed(3)}</h3></div>
                     <br/>
                     <Button buttonStyle={"btn--inverted"}
                         buttonSize={'btn--flex'}

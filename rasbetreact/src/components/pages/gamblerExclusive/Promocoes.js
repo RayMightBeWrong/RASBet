@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import '../Comons.css';
+import './Promocoes.css';
 import { Button } from '../../Button'
 import { Link } from 'react-router-dom'
 import { Promocao } from '../../objects/Promocao'
@@ -61,18 +62,45 @@ function Promocoes({
         }
     }
 
+
+    function printPromo() {
+        if (promocoes.length % 2 == 0) {
+            return(
+                <div className='gridPromocoes'>
+                    {promocoes.map((prom) => (
+                        <div key={prom.id}>
+                            {detectPromotionType(prom)}
+                        </div>
+                    ))}
+                </div>
+            )
+        }
+        else{
+            var promo = promocoes.slice(0, -1)
+            var last = promocoes[promocoes.length-1]
+
+            return(
+                <>
+                    <div className='gridPromocoes'>
+                        {promo.map((prom) => (
+                            <div key={prom.id}>
+                                {detectPromotionType(prom)}
+                            </div>
+                        ))}
+                    </div>
+                    {detectPromotionType(last)}
+                </>
+            )
+        }
+        
+    }
+
     if (userState === "gambler") {
         return (
             <>
-                <div className='registo'>
-                    <div className='white-box'>
-                        <div className='container'>
-                            {promocoes.map((prom) => (
-                                <div key={prom.id}>
-                                    {detectPromotionType(prom)}
-                                </div>
-                            ))}
-                        </div>
+                <div className='promocoes'>
+                    <div className='promocoes-box'>
+                        {printPromo()}
                     </div>
                 </div>
             </>

@@ -11,7 +11,6 @@ function Navbar({
   markAsSeen
 }) {
   const [click, setClick] = useState(false);
-  const [button, setButton] = useState(true);
   const [loggedIn, setloggedIn] = useState(false);
   const [open, setOpen] = useState(false);
   const handleClick = () => setClick(!click);
@@ -106,50 +105,24 @@ function Navbar({
     }
   }
 
-  const showButton = () => {
-    if (window.innerWidth <= 1250) {
-      setButton(false);
-    } else {
-      setButton(true);
-    }
-  };
-
-  useEffect(() => {
-    showButton();
-  }, []);
-
   useEffect(() => {
     logButtonLogic();
   }, [userState]);
 
-  window.addEventListener('resize', showButton);
-
   return (
     <>
-      {userState === 'gambler' && loggedIn &&
-        <div className='notificationButton'>
-          { notificationList.nova ?
-            <img className='btn--Notify' onClick={function () { setOpen(true) }} src={'../images/bell_notification.png'} alt={''} />
-            :
-            <img className='btn--Notify' onClick={function () { setOpen(true) }} src={'../images/bell.png'} alt={''} />
-          }
-        </div>
-      }
       <nav className='navbar'>
         <div className='navbar-container'>
           <Link to='/' className='navbar-logo' onClick={closeMobileMenu}>
             {getImage()}
           </Link>
-          <div className='menu-icon' onClick={handleClick}>
-            <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
-          </div>
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
             <li className='nav-item'>
               <Link
                 to='/futebol'
                 className='nav-links'
                 onClick={closeMobileMenu}
-              >
+                >
                 FUTEBOL
               </Link>
             </li>
@@ -158,7 +131,7 @@ function Navbar({
                 to='/nba'
                 className='nav-links'
                 onClick={closeMobileMenu}
-              >
+                >
                 NBA
               </Link>
             </li>
@@ -167,7 +140,7 @@ function Navbar({
                 to='/f1'
                 className='nav-links'
                 onClick={closeMobileMenu}
-              >
+                >
                 F1
               </Link>
             </li>
@@ -176,7 +149,7 @@ function Navbar({
                 to='/nfl'
                 className='nav-links'
                 onClick={closeMobileMenu}
-              >
+                >
                 NFL
               </Link>
             </li>
@@ -186,9 +159,23 @@ function Navbar({
               {logButtonMobile()}
             </li>
           </ul>
-          {!loggedIn && button && <Link to='/login' ><Button buttonStyle='btn--outline'>Log In</Button> </Link>}
-          {loggedIn && button && <Link to='/'><Button buttonStyle='btn--outline' onClick={() => setUserState("loggedOff")}>Log Off</Button> </Link>}
-          
+          <div className='menu-icon' onClick={handleClick}>
+            <i className={click ? 'fas fa-times' : 'fas fa-bars'}/>
+          </div>
+          <div className='bellButtonMenuIcon'>
+            {userState === 'gambler' && loggedIn &&
+              <div className='bellButton'>
+                { notificationList.nova ?
+                  <img className='btn--Notify' onClick={function () { setOpen(true) }} src={'../images/bell_notification.png'} alt={''} />
+                  :
+                  <img className='btn--Notify' onClick={function () { setOpen(true) }} src={'../images/bell.png'} alt={''} />
+                }
+              </div>
+            }
+          </div>
+          {!loggedIn && <Link to='/login' className='sizeBTN'><Button buttonWidth={'btn--content'}  buttonStyle='btn--outline'>Log In</Button></Link>}
+          {loggedIn && <Link to='/' className='sizeBTN'><Button buttonStyle='btn--outline' onClick={() => setUserState("loggedOff")}>Log Off</Button></Link>}
+
           {open ?
             <NotificationBell notificationList={notificationList} closePopup={() => setOpen(false)} markAsSeen={markAsSeen} />
             :

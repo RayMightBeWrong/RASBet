@@ -5,6 +5,16 @@
   font-family: 'PT Sans', sans-serif;
 }
 
+.inv{
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.inv2{
+  display: flex;
+  flex-direction: column;
+}
+
 .whiteBackGround {
   min-height: max-content;
   display: flex;
