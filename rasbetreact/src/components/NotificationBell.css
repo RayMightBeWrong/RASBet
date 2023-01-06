@@ -6,6 +6,7 @@
     left: 0;
     right: 0;
     bottom: 0;
+    color: #003915;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
@@ -25,4 +26,50 @@
     border-radius: 15px;
     background: white;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.notification-box{
+    padding: 30px;
+    
+}
+
+.notification-line{
+    padding: 20px 30px;
+    border-top: 1px solid green;
+    border-bottom: 1px solid green;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.notification-name-time{
+    display: flex;
+    width: 100%;
+    padding-right: 30px;
+    max-width: 180px;
+    min-width: 150px;
+    flex-direction: column;
+}
+
+.notification-name{
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+}
+
+.notification-date-hour{
+    width: 100%;
+    max-width: 180px;
+    min-width: 120px;
+    color: gray;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.notification-text{
+    padding-left: 30px;
+    border-left: 1px solid green;
+    max-width: 400px;
+    min-width:331px;
 }

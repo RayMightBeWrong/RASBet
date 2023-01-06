@@ -94,11 +94,11 @@ const PromocaoBoostOdd = ({
             <div className='promo-line'>
                 <div className='promo-validade'>
                     <div className='promo-validade-text'>
-                        <h5>begin:</h5>
+                        <h5>Começa:</h5>
                         <h5>{getDate(begin_date)}</h5>
                     </div>
                     <div className='promo-validade-text'>
-                        <h5>expire:</h5>
+                        <h5>Acaba:</h5>
                         <h5>{getDate(expiration_date)}</h5>
                     </div>
                 </div>
@@ -134,11 +134,11 @@ const PromocaoReferralBoostOdd = ({
                 </div>
                 <div className='promo-validade'>
                     <div className='promo-validade-text'>
-                        <h5>begin:</h5>
+                        <h5>Começa:</h5>
                         <h5>{getDate(begin_date)}</h5>
                     </div>
                     <div className='promo-validade-text'>
-                        <h5>expire:</h5>
+                        <h5>Acaba:</h5>
                         <h5>{getDate(expiration_date)}</h5>
                     </div>
                 </div>
@@ -175,11 +175,11 @@ const PromocaoReferralBalance = ({
                 </div>
                 <div className='promo-validade'>
                     <div className='promo-validade-text'>
-                        <h5>begin:</h5>
+                        <h5>Começa:</h5>
                         <h5>{getDate(begin_date)}</h5>
                     </div>
                     <div className='promo-validade-text'>
-                        <h5>expire:</h5>
+                        <h5>Acaba:</h5>
                         <h5>{getDate(expiration_date)}</h5>
                     </div>
                 </div>
