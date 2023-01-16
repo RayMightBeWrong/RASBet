@@ -14,7 +14,7 @@ function GestorPromocoes({
                         <div>
                             <Link to='/admin_Options/promocoes/creation'>
                                 <Button buttonStyle="btn--inverted" buttonSize='btn--flex'>
-                                    Criar Promocao
+                                    Criar Promoção
                                 </Button>
                             </Link>
                         </div>

@@ -73,10 +73,13 @@ function App() {
         .then(res => res.json())
         .then(result => {
           console.log(result)
-          setNotificationList({
-            nova: true,
-            lista: result
-          })
+          if (result !== []){
+            console.log("fetch")
+            setNotificationList({
+              nova: true,
+              lista: result
+            })
+          }
         })
     }
   }, [updateNotification, userState, userId])

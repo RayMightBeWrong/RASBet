@@ -88,6 +88,7 @@
 }
 .menu-icon {
   display: none;
+  margin-right: 15px;
 }
 
 .btn--Notify{
@@ -96,6 +97,7 @@
 
 .sizeBTN{
   min-width: 140px;
+  margin-left: 15px;
 }
 
 @media screen and (max-width: 1250px) {

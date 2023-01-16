@@ -53,7 +53,7 @@ function Navbar({
               className='nav-links'
               onClick={closeMobileMenu}
             >
-              PROMOCÕES
+              PROMOÇÕES
             </Link>
           </li>
           <li>

@@ -22,6 +22,10 @@ export const NotificationBell = ({
     useEffect(() => {
         console.log(notificationList)
     }, [notificationList])
+
+    let vReverse = [...notificationList.lista].reverse()
+    console.log("notList->", notificationList.lista);
+    console.log("reverse->", vReverse);
     return (
         <>
             < div className="notificationBell-container" >
@@ -32,7 +36,7 @@ export const NotificationBell = ({
                         <Button buttonStyle={'btn--flex'} onClick={function () { closePopup(); markAsSeen() }}> X </Button >
                     </div>
                     <div className={'notification-box'}>
-                        {notificationList.lista.map(notification => (
+                        {vReverse.map(notification => (
                             <div className={'notification-line'} key={notification.id}>
                                 <div className={'notification-name-time'}>
                                     <div className={'notification-name'}>

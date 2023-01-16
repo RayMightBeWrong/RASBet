@@ -117,10 +117,15 @@ export const GamesTab = ({
     }
 
     function gameType(game) {
-        if ((userState === 'gambler' || userState === 'loggedOff') && game.state === 1) {
+        if (userState === 'gambler' && game.state === 1) {
             return (
                 <GameGambler id={game.id} title={game.title} date={game.date} participants={game.participants} isSubscribed={game.subscribed}
                     removeBet={removeBet} addBet={addBet} changeBet={changeBet} subscribeClick={() => subscribeClick(game.id, userId, game.subscribed)} />
+            )
+        } else if (userState === 'loggedOff' && game.state === 1) {
+            return (
+                <GameGambler id={game.id} title={game.title} date={game.date} participants={game.participants} isSubscribed={game.subscribed}
+                    removeBet={removeBet} addBet={addBet} changeBet={changeBet} subscribeClick={null} />
             )
         } else if (userState === 'admin') {
             return (
@@ -132,7 +137,15 @@ export const GamesTab = ({
             )
         }
     }
-    if (games.length !== 0) {
+
+    let viableGames = 0
+    games.map(game => {
+        if (game.state === 1 || userState !== 'gambler') {
+            viableGames += 1
+        }
+    })
+
+    if (viableGames > 0) {
         return (
             <>
                 {openBoletim ?
@@ -143,7 +156,10 @@ export const GamesTab = ({
                     <div className='gamestab-box'>
                         <div className='gamestab-content'>
                             <div className='buttonSubmit'>
-                                <img src={'images/cart.png'} alt={''} onClick={() => setOpenBoletim(true)}/>
+                                {userState === 'gambler'?
+                                    <img src={'images/cart.png'} alt={''} onClick={() => setOpenBoletim(true)}/>
+                                    : null
+                                }
                             </div>
                             <div className='bets-tab'>
                                 {games.map(game => (

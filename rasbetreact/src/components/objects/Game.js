@@ -50,9 +50,12 @@ export const GameGambler = ({
             <div className={`game-OPEN`}>
                 <div className='game-title-state'>
                     <h2>{title}</h2>
-                    <Button buttonStyle={isSubscribed ? "btn--primary" : "btn--inverted"} buttonSize="btn--small" onClick={() => subscribeClick()}>
-                        <h3>Subscrever</h3>
-                    </Button>
+                    {subscribeClick !== null ?
+                        <Button buttonStyle={isSubscribed ? "btn--primary" : "btn--inverted"} buttonSize="btn--small" onClick={() => subscribeClick()}>
+                            <h3>Subscrever</h3>
+                        </Button>
+                        : null
+                    }
                 </div>
                 <div className='game-time-bet'>
                     {getDate(date)}
