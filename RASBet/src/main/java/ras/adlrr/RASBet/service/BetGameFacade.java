@@ -44,7 +44,6 @@ public class BetGameFacade implements IBetService, IBetGameService, IGameSubject
     private final INotificationService notificationService;
     private final IGameSubscriptionService gameSubscriptionService;
     private final IGameNotificationService gameNotificationService;
-    //TODO - Concurrency in sets?
     private final Map<Integer, Set<Integer>> subscribersOfGames = new ConcurrentHashMap<>(); //Key: game id   |   Value: Set of gambler ids that subscribed the game
     private final Map<Integer, IGameSubscriber> subscribers = new ConcurrentHashMap<>(); //Key: gambler id   |   Value: Class associated with the gambler that should be notified
 
@@ -419,7 +418,7 @@ public class BetGameFacade implements IBetService, IBetGameService, IGameSubject
         return gameSubscriptionService.isSubscribedToGame(gambler_id, game_id);
     }
 
-    private void notifySubscribers(int game_id, String type, String message){
+    public void notifySubscribers(int game_id, String type, String message){
         if(type == null || message == null) return;
 
         LocalDateTime timestamp = LocalDateTime.now(ZoneId.of("UTC+00:00"));

@@ -175,6 +175,8 @@ public class GameController {
         }
     }
 
+    /* **** Subscriptions **** */
+
     @PostMapping("/subscribe")
     public ResponseEntity subscribeGame(@RequestParam("gambler_id") int gambler_id, @RequestParam("game_id") int game_id){
         try{

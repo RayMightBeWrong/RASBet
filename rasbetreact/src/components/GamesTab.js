@@ -16,6 +16,10 @@ export const GamesTab = ({
 
     const [bets, setBets] = useState([]);
     const [openBoletim, setOpenBoletim] = useState(false);
+    useEffect(() => {
+        if (openBoletim == true)
+            window.scrollTo(0, 0)
+    }, [openBoletim])
 
     function BoletimLock() {
         if (userState === 'gambler') {
